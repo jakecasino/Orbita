@@ -20,15 +20,12 @@ class ChatViewController: UIViewController {
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let view = segue.destination as? ResponseCardViewController {
 			ResponseCardViewController = view
-			ResponseCardViewController?.MainViewController = self
+			ResponseCardViewController?.ChatViewController = self
 		}
 		if let view = segue.destination as? ChatToolbarViewController {
 			ChatToolbarViewController = view
-			ChatToolbarViewController?.ChatViewController = self
+			ChatToolbarViewController?.ResponseCardViewController = ResponseCardViewController
 		}
-	}
-	
-	override func viewDidLayoutSubviews() {
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -46,15 +43,6 @@ class ChatViewController: UIViewController {
 		case "Chat Toolbar":
 			ChatToolbar.frame.size = CGSize(width: view.frame.width, height: 108 + view.safeAreaInsets.bottom)
 			ChatToolbar.frame.origin = CGPoint(x: 0, y: view.frame.height - ChatToolbar.frame.height)
-			return
-		case "Response Card":
-			let margin: CGFloat = 16
-			ResponseCard.frame = CGRect(x: margin, y: view.frame.height, width: view.frame.width - (margin * 2), height: 300)
-			ResponseCardViewController?.Header?.initialize(title: "CHOOSE ALL THAT APPLY")
-			UIView.animate(withDuration: 0.3) {
-				self.ResponseCard.alpha = 1
-				self.ResponseCard.frame.origin.y = self.view.frame.height - self.ResponseCard.frame.height - self.ChatToolbar.frame.height - margin
-			}
 			return
 		case "Touch Interactions":
 			ResponseCard.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(ResponseCardWasDragged(gesture:))))

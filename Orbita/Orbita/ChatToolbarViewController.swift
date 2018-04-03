@@ -8,9 +8,11 @@
 import UIKit
 
 class ChatToolbarViewController: UIViewController {
-	var ChatViewController: ChatViewController?
+	var ResponseCardViewController: ResponseCardViewController?
+	
 	@IBAction func ShowResponseCard(_ sender: Any) {
-		ChatViewController?.generate("Response Card")
+		let header = ResponseCardHeader(title: "Choose all that apply")
+		ResponseCardViewController?.showResponseCard(header: header, footer: nil, minimumHeight: 300)
 	}
 	
     override func viewDidLoad() {

@@ -8,6 +8,15 @@
 import UIKit
 class ResponseCardListItem: UICollectionViewCell {
 	@IBOutlet weak var label: UILabel!
+	override var isSelected: Bool {
+		didSet {
+			if self.isSelected  {
+				backgroundColor = UIColor(named: "Orbita Blue")
+			} else {
+				backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15)
+			}
+		}
+	}
 	
 }
 class ResponseCardListCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
