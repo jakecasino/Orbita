@@ -6,15 +6,28 @@
 //
 
 import UIKit
-
+class ResponseCardHeaderViewController: UIViewController {
+	@IBOutlet weak var HeaderTitle: UILabel!
+	
+	func initialize(title: String) {
+		HeaderTitle.text = title
+	}
+}
 class ResponseCardViewController: UIViewController {
 	var MainViewController: ChatViewController?
 	var WindowState: String?
 	var WindowRegularHeight: CGFloat?
+	var Header: ResponseCardHeaderViewController?
 	@IBOutlet weak var ContentView: UIView!
 	
 	@IBAction func Action(_ sender: Any) {
 		ResponseCard("Dismiss")
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if let view = segue.destination as? ResponseCardHeaderViewController {
+			Header = view
+		}
 	}
 	
 	override func viewDidLoad() {

@@ -50,6 +50,7 @@ class ChatViewController: UIViewController {
 		case "Response Card":
 			let margin: CGFloat = 16
 			ResponseCard.frame = CGRect(x: margin, y: view.frame.height, width: view.frame.width - (margin * 2), height: 300)
+			ResponseCardViewController?.Header?.initialize(title: "CHOOSE ALL THAT APPLY")
 			UIView.animate(withDuration: 0.3) {
 				self.ResponseCard.alpha = 1
 				self.ResponseCard.frame.origin.y = self.view.frame.height - self.ResponseCard.frame.height - self.ChatToolbar.frame.height - margin
