@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B49B35C206F17EC0059565C /* ResponseCardListCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35B206F17EC0059565C /* ResponseCardListCollectionViewController.swift */; };
+		0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35D206F27670059565C /* ChatToolbarViewController.swift */; };
+		0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */; };
+		0BB7BB87206EEBF500F0CEE7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB86206EEBF500F0CEE7 /* ChatViewController.swift */; };
+		0BB7BB8A206EEBF500F0CEE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BB7BB88206EEBF500F0CEE7 /* Main.storyboard */; };
+		0BB7BB8C206EEBF600F0CEE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB7BB8B206EEBF600F0CEE7 /* Assets.xcassets */; };
+		0BB7BB8F206EEBF600F0CEE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BB7BB8D206EEBF600F0CEE7 /* LaunchScreen.storyboard */; };
+		0BB7BB9A206EEBF700F0CEE7 /* OrbitaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */; };
+		0BB7BBA5206EEBF700F0CEE7 /* OrbitaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */; };
+		0BB7BBB3206EF33000F0CEE7 /* ResponseCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBB2206EF33000F0CEE7 /* ResponseCardViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0BB7BB96206EEBF700F0CEE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0BB7BB79206EEBF500F0CEE7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0BB7BB80206EEBF500F0CEE7;
+			remoteInfo = Orbita;
+		};
+		0BB7BBA1206EEBF700F0CEE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0BB7BB79206EEBF500F0CEE7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0BB7BB80206EEBF500F0CEE7;
+			remoteInfo = Orbita;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0B49B35B206F17EC0059565C /* ResponseCardListCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCardListCollectionViewController.swift; sourceTree = "<group>"; };
+		0B49B35D206F27670059565C /* ChatToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatToolbarViewController.swift; sourceTree = "<group>"; };
+		0BB7BB81206EEBF500F0CEE7 /* Orbita.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbita.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0BB7BB86206EEBF500F0CEE7 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		0BB7BB89206EEBF500F0CEE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0BB7BB8B206EEBF600F0CEE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0BB7BB8E206EEBF600F0CEE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0BB7BB90206EEBF600F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0BB7BB95206EEBF600F0CEE7 /* OrbitaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitaTests.swift; sourceTree = "<group>"; };
+		0BB7BB9B206EEBF700F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0BB7BBA0206EEBF700F0CEE7 /* OrbitaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitaUITests.swift; sourceTree = "<group>"; };
+		0BB7BBA6206EEBF700F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0BB7BBB2206EF33000F0CEE7 /* ResponseCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCardViewController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0BB7BB7E206EEBF500F0CEE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB92206EEBF600F0CEE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB9D206EEBF700F0CEE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0BB7BB78206EEBF500F0CEE7 = {
+			isa = PBXGroup;
+			children = (
+				0BB7BB83206EEBF500F0CEE7 /* Orbita */,
+				0BB7BB98206EEBF700F0CEE7 /* OrbitaTests */,
+				0BB7BBA3206EEBF700F0CEE7 /* OrbitaUITests */,
+				0BB7BB82206EEBF500F0CEE7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0BB7BB82206EEBF500F0CEE7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0BB7BB81206EEBF500F0CEE7 /* Orbita.app */,
+				0BB7BB95206EEBF600F0CEE7 /* OrbitaTests.xctest */,
+				0BB7BBA0206EEBF700F0CEE7 /* OrbitaUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0BB7BB83206EEBF500F0CEE7 /* Orbita */ = {
+			isa = PBXGroup;
+			children = (
+				0BB7BB88206EEBF500F0CEE7 /* Main.storyboard */,
+				0BB7BB86206EEBF500F0CEE7 /* ChatViewController.swift */,
+				0B49B35D206F27670059565C /* ChatToolbarViewController.swift */,
+				0BB7BBB2206EF33000F0CEE7 /* ResponseCardViewController.swift */,
+				0B49B35B206F17EC0059565C /* ResponseCardListCollectionViewController.swift */,
+				0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */,
+				0BB7BB8B206EEBF600F0CEE7 /* Assets.xcassets */,
+				0BB7BB8D206EEBF600F0CEE7 /* LaunchScreen.storyboard */,
+				0BB7BB90206EEBF600F0CEE7 /* Info.plist */,
+			);
+			path = Orbita;
+			sourceTree = "<group>";
+		};
+		0BB7BB98206EEBF700F0CEE7 /* OrbitaTests */ = {
+			isa = PBXGroup;
+			children = (
+				0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */,
+				0BB7BB9B206EEBF700F0CEE7 /* Info.plist */,
+			);
+			path = OrbitaTests;
+			sourceTree = "<group>";
+		};
+		0BB7BBA3206EEBF700F0CEE7 /* OrbitaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */,
+				0BB7BBA6206EEBF700F0CEE7 /* Info.plist */,
+			);
+			path = OrbitaUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0BB7BB80206EEBF500F0CEE7 /* Orbita */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0BB7BBA9206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "Orbita" */;
+			buildPhases = (
+				0BB7BB7D206EEBF500F0CEE7 /* Sources */,
+				0BB7BB7E206EEBF500F0CEE7 /* Frameworks */,
+				0BB7BB7F206EEBF500F0CEE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Orbita;
+			productName = Orbita;
+			productReference = 0BB7BB81206EEBF500F0CEE7 /* Orbita.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0BB7BB94206EEBF600F0CEE7 /* OrbitaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0BB7BBAC206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "OrbitaTests" */;
+			buildPhases = (
+				0BB7BB91206EEBF600F0CEE7 /* Sources */,
+				0BB7BB92206EEBF600F0CEE7 /* Frameworks */,
+				0BB7BB93206EEBF600F0CEE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0BB7BB97206EEBF700F0CEE7 /* PBXTargetDependency */,
+			);
+			name = OrbitaTests;
+			productName = OrbitaTests;
+			productReference = 0BB7BB95206EEBF600F0CEE7 /* OrbitaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		0BB7BB9F206EEBF700F0CEE7 /* OrbitaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0BB7BBAF206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "OrbitaUITests" */;
+			buildPhases = (
+				0BB7BB9C206EEBF700F0CEE7 /* Sources */,
+				0BB7BB9D206EEBF700F0CEE7 /* Frameworks */,
+				0BB7BB9E206EEBF700F0CEE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0BB7BBA2206EEBF700F0CEE7 /* PBXTargetDependency */,
+			);
+			name = OrbitaUITests;
+			productName = OrbitaUITests;
+			productReference = 0BB7BBA0206EEBF700F0CEE7 /* OrbitaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0BB7BB79206EEBF500F0CEE7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+				TargetAttributes = {
+					0BB7BB80206EEBF500F0CEE7 = {
+						CreatedOnToolsVersion = 9.3;
+					};
+					0BB7BB94206EEBF600F0CEE7 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = 0BB7BB80206EEBF500F0CEE7;
+					};
+					0BB7BB9F206EEBF700F0CEE7 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = 0BB7BB80206EEBF500F0CEE7;
+					};
+				};
+			};
+			buildConfigurationList = 0BB7BB7C206EEBF500F0CEE7 /* Build configuration list for PBXProject "Orbita" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0BB7BB78206EEBF500F0CEE7;
+			productRefGroup = 0BB7BB82206EEBF500F0CEE7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0BB7BB80206EEBF500F0CEE7 /* Orbita */,
+				0BB7BB94206EEBF600F0CEE7 /* OrbitaTests */,
+				0BB7BB9F206EEBF700F0CEE7 /* OrbitaUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0BB7BB7F206EEBF500F0CEE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BB7BB8F206EEBF600F0CEE7 /* LaunchScreen.storyboard in Resources */,
+				0BB7BB8C206EEBF600F0CEE7 /* Assets.xcassets in Resources */,
+				0BB7BB8A206EEBF500F0CEE7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB93206EEBF600F0CEE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB9E206EEBF700F0CEE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0BB7BB7D206EEBF500F0CEE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BB7BBB3206EF33000F0CEE7 /* ResponseCardViewController.swift in Sources */,
+				0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */,
+				0B49B35C206F17EC0059565C /* ResponseCardListCollectionViewController.swift in Sources */,
+				0BB7BB87206EEBF500F0CEE7 /* ChatViewController.swift in Sources */,
+				0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB91206EEBF600F0CEE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BB7BB9A206EEBF700F0CEE7 /* OrbitaTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BB7BB9C206EEBF700F0CEE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BB7BBA5206EEBF700F0CEE7 /* OrbitaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0BB7BB97206EEBF700F0CEE7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0BB7BB80206EEBF500F0CEE7 /* Orbita */;
+			targetProxy = 0BB7BB96206EEBF700F0CEE7 /* PBXContainerItemProxy */;
+		};
+		0BB7BBA2206EEBF700F0CEE7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0BB7BB80206EEBF500F0CEE7 /* Orbita */;
+			targetProxy = 0BB7BBA1206EEBF700F0CEE7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0BB7BB88206EEBF500F0CEE7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0BB7BB89206EEBF500F0CEE7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		0BB7BB8D206EEBF600F0CEE7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0BB7BB8E206EEBF600F0CEE7 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0BB7BBA7206EEBF700F0CEE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		0BB7BBA8206EEBF700F0CEE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0BB7BBAA206EEBF700F0CEE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = Orbita/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.Orbita;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0BB7BBAB206EEBF700F0CEE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = Orbita/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.Orbita;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0BB7BBAD206EEBF700F0CEE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = OrbitaTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.OrbitaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Orbita.app/Orbita";
+			};
+			name = Debug;
+		};
+		0BB7BBAE206EEBF700F0CEE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = OrbitaTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.OrbitaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Orbita.app/Orbita";
+			};
+			name = Release;
+		};
+		0BB7BBB0206EEBF700F0CEE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = OrbitaUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.OrbitaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Orbita;
+			};
+			name = Debug;
+		};
+		0BB7BBB1206EEBF700F0CEE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 28CLY5Z59P;
+				INFOPLIST_FILE = OrbitaUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = orbita.OrbitaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Orbita;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0BB7BB7C206EEBF500F0CEE7 /* Build configuration list for PBXProject "Orbita" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BB7BBA7206EEBF700F0CEE7 /* Debug */,
+				0BB7BBA8206EEBF700F0CEE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0BB7BBA9206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "Orbita" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BB7BBAA206EEBF700F0CEE7 /* Debug */,
+				0BB7BBAB206EEBF700F0CEE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0BB7BBAC206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "OrbitaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BB7BBAD206EEBF700F0CEE7 /* Debug */,
+				0BB7BBAE206EEBF700F0CEE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0BB7BBAF206EEBF700F0CEE7 /* Build configuration list for PBXNativeTarget "OrbitaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BB7BBB0206EEBF700F0CEE7 /* Debug */,
+				0BB7BBB1206EEBF700F0CEE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0BB7BB79206EEBF500F0CEE7 /* Project object */;
+}
