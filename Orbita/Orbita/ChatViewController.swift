@@ -69,13 +69,12 @@ class ChatViewController: UIViewController {
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
 			let newPosition = gesture.view!.frame.origin.y + translation.y
-			let minimumHeight = ResponseCardViewController!.minimumHeight! + 24
+			let minimumStop = ResponseCardViewController!.get(.yOriginWhenMinimized) + 24
 			if newPosition > view.safeAreaInsets.top {
-				if newPosition < minimumHeight {
-					gesture.view?.frame.origin = CGPoint(x: gesture.view!.frame.origin.x, y: newPosition)
-					gesture.view?.frame.size = CGSize(width: (gesture.view?.frame.width)!, height: gesture.view!.frame.height - translation.y)
+				if newPosition < minimumStop {
+					ResponseCard.frame = CGRect(x: gesture.view!.frame.origin.x, y: newPosition, width: gesture.view!.frame.width, height: gesture.view!.frame.height - translation.y)
 					gesture.setTranslation(CGPoint.zero, in: self.view)
-					ResponseCardViewController!.shadow!.frame = gesture.view!.frame
+					ResponseCardViewController!.shadow!.frame = ResponseCard.frame
 				}
 			}
 		}

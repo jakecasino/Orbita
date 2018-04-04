@@ -12,7 +12,7 @@ class ChatToolbarViewController: UIViewController {
 	
 	@IBAction func ShowResponseCard(_ sender: Any) {
 		let header = ResponseCardHeader(title: "Choose all that apply", button: "Send")
-		ResponseCardViewController?.showResponseCard(headerComponents: header, footer: nil, minimumHeight: 300)
+		ResponseCardViewController?.showResponseCard(headerComponents: header, bodyTemplate: .listWithSingleSelection, footer: nil, minimumHeight: 300)
 	}
 	
     override func viewDidLoad() {
