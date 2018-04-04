@@ -11,8 +11,8 @@ class ChatToolbarViewController: UIViewController {
 	var ResponseCardViewController: ResponseCardViewController?
 	
 	@IBAction func ShowResponseCard(_ sender: Any) {
-		let header = ResponseCardHeader(title: "Choose all that apply")
-		ResponseCardViewController?.showResponseCard(header: header, footer: nil, minimumHeight: 300)
+		let header = ResponseCardHeader(title: "Choose all that apply", button: "Send")
+		ResponseCardViewController?.showResponseCard(headerComponents: header, footer: nil, minimumHeight: 300)
 	}
 	
     override func viewDidLoad() {

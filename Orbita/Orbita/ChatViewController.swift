@@ -33,6 +33,7 @@ class ChatViewController: UIViewController {
 	}
 	
 	func initialize() {
+		view.backgroundColor = UIColor(named: "Light Grey")
 		generate("Chat Toolbar")
 		generate("Touch Interactions")
 		ResponseCard.alpha = 0
@@ -67,19 +68,20 @@ class ChatViewController: UIViewController {
 	@objc private func ResponseCardWasDragged(gesture: UIPanGestureRecognizer) {
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
-			let newPosition = (gesture.view?.frame.origin.y)! + translation.y
-			let minimumHeight = ResponseCardViewController?.get("Minimum Stop for Card") as! CGFloat + 24
+			let newPosition = gesture.view!.frame.origin.y + translation.y
+			let minimumHeight = ResponseCardViewController!.minimumHeight! + 24
 			if newPosition > view.safeAreaInsets.top {
 				if newPosition < minimumHeight {
-					gesture.view?.frame.origin = CGPoint(x: (gesture.view?.frame.origin.x)!, y: newPosition)
-					gesture.view?.frame.size = CGSize(width: (gesture.view?.frame.width)!, height: (gesture.view?.frame.height)! - translation.y)
+					gesture.view?.frame.origin = CGPoint(x: gesture.view!.frame.origin.x, y: newPosition)
+					gesture.view?.frame.size = CGSize(width: (gesture.view?.frame.width)!, height: gesture.view!.frame.height - translation.y)
 					gesture.setTranslation(CGPoint.zero, in: self.view)
+					ResponseCardViewController!.shadow!.frame = gesture.view!.frame
 				}
 			}
 		}
 		if gesture.state == .ended {
 			UIView.animate(withDuration: 0.3) {
-				self.ResponseCardViewController?.ResponseCard("Window State Did Change")
+				self.ResponseCardViewController?.responseCardHeightDidChange()
 			}
 		}
 	}
