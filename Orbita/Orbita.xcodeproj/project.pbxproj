@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B1950B22074193200E1AEFE /* ResponseCardComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1950B12074193200E1AEFE /* ResponseCardComponents.swift */; };
-		0B49B35C206F17EC0059565C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35B206F17EC0059565C /* List.swift */; };
+		0B1950B22074193200E1AEFE /* RCResponseCardComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1950B12074193200E1AEFE /* RCResponseCardComponents.swift */; };
+		0B49B35C206F17EC0059565C /* RCBodyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35B206F17EC0059565C /* RCBodyListView.swift */; };
 		0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35D206F27670059565C /* ChatToolbarViewController.swift */; };
 		0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */; };
 		0BB7BB87206EEBF500F0CEE7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB86206EEBF500F0CEE7 /* ChatViewController.swift */; };
@@ -17,7 +17,7 @@
 		0BB7BB8F206EEBF600F0CEE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BB7BB8D206EEBF600F0CEE7 /* LaunchScreen.storyboard */; };
 		0BB7BB9A206EEBF700F0CEE7 /* OrbitaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */; };
 		0BB7BBA5206EEBF700F0CEE7 /* OrbitaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */; };
-		0BB7BBB3206EF33000F0CEE7 /* ResponseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBB2206EF33000F0CEE7 /* ResponseCard.swift */; };
+		0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,8 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B1950B12074193200E1AEFE /* ResponseCardComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCardComponents.swift; sourceTree = "<group>"; };
-		0B49B35B206F17EC0059565C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		0B1950B12074193200E1AEFE /* RCResponseCardComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCResponseCardComponents.swift; sourceTree = "<group>"; };
+		0B49B35B206F17EC0059565C /* RCBodyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCBodyListView.swift; sourceTree = "<group>"; };
 		0B49B35D206F27670059565C /* ChatToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatToolbarViewController.swift; sourceTree = "<group>"; };
 		0BB7BB81206EEBF500F0CEE7 /* Orbita.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbita.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -54,7 +54,7 @@
 		0BB7BBA0206EEBF700F0CEE7 /* OrbitaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitaUITests.swift; sourceTree = "<group>"; };
 		0BB7BBA6206EEBF700F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0BB7BBB2206EF33000F0CEE7 /* ResponseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCard.swift; sourceTree = "<group>"; };
+		0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCResponseCardViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,9 +85,9 @@
 		0B1950B02074161900E1AEFE /* Response Cards */ = {
 			isa = PBXGroup;
 			children = (
-				0BB7BBB2206EF33000F0CEE7 /* ResponseCard.swift */,
-				0B1950B12074193200E1AEFE /* ResponseCardComponents.swift */,
-				0B49B35B206F17EC0059565C /* List.swift */,
+				0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */,
+				0B1950B12074193200E1AEFE /* RCResponseCardComponents.swift */,
+				0B49B35B206F17EC0059565C /* RCBodyListView.swift */,
 			);
 			path = "Response Cards";
 			sourceTree = "<group>";
@@ -275,10 +275,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BB7BBB3206EF33000F0CEE7 /* ResponseCard.swift in Sources */,
+				0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */,
 				0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */,
-				0B1950B22074193200E1AEFE /* ResponseCardComponents.swift in Sources */,
-				0B49B35C206F17EC0059565C /* List.swift in Sources */,
+				0B1950B22074193200E1AEFE /* RCResponseCardComponents.swift in Sources */,
+				0B49B35C206F17EC0059565C /* RCBodyListView.swift in Sources */,
 				0BB7BB87206EEBF500F0CEE7 /* ChatViewController.swift in Sources */,
 				0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */,
 			);

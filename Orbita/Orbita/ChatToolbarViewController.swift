@@ -8,11 +8,21 @@
 import UIKit
 
 class ChatToolbarViewController: UIViewController {
-	var ResponseCardViewController: ResponseCardViewController?
+	var ChatViewController: ChatViewController?
 	
 	@IBAction func ShowResponseCard(_ sender: Any) {
-		let header = ResponseCardHeader(title: "Choose all that apply", button: "Send")
-		ResponseCardViewController?.showResponseCard(headerComponents: header, bodyTemplate: .listWithSingleSelection, footer: nil, minimumHeight: 300)
+		if ChatViewController!.RCViewController == nil {
+			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
+		}
+		
+		let list = ["Lower Back", "Upper Back"]
+		
+		let header = RCHeader(title: "Choose All that Apply", button: "Send", in: ChatViewController!)
+		
+		let RCBodyContent = RCBodyListViewController(list: list, canSelectMultipleItems: true)
+		let RCBodyView = RCBody(RCBodyViewController: RCBodyContent, as: .list)
+		
+		ChatViewController!.showResponseCard(RCHeader: header, RCBody: RCBodyView, footer: nil)
 	}
 	
     override func viewDidLoad() {
