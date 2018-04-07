@@ -8,6 +8,7 @@
 import UIKit
 
 class RCHeader: UIView {
+	var ChatViewController: ChatViewController?
 	var shadow: UIView?
 	
 	enum RCHeaderTextStyles {
@@ -15,38 +16,39 @@ class RCHeader: UIView {
 		case subtitle
 	}
 	
-	convenience init(title: String, in ChatViewController: ChatViewController) {
+	convenience init(title: String, enableSendButton: Bool, in ChatViewController: ChatViewController) {
 		self.init(frame: CGRect(x: 0, y: 0, width: ChatViewController.RCViewController!.constraint(for: .width, in: ChatViewController), height: 0))
+		self.ChatViewController = ChatViewController
 		
 		let RCHeaderTitle = createRCHeaderUILabel(text: title, type: .title)
-		createRCHeaderUIView(RCHeaderTitle: RCHeaderTitle, RCHeaderSubtitle: nil, RCHeaderAction: nil, in: ChatViewController)
+		
+		let RCHeaderActionButtonSize: CGFloat = 30
+		let RCHeaderSendButton = UIButton(frame: CGRect(x: 0, y: 0, width: RCHeaderActionButtonSize, height: RCHeaderActionButtonSize))
+		RCHeaderSendButton.setImage(UIImage(named: "Send"), for: .normal)
+		RCHeaderSendButton.tintColor = UIColor.white
+		RCHeaderSendButton.backgroundColor = UIColor(named: "Orbita Blue")
+		RCHeaderSendButton.layer.cornerRadius = RCHeaderActionButtonSize / 2
+		RCHeaderSendButton.addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
+		
+		createRCHeaderUIView(RCHeaderTitle: RCHeaderTitle, RCHeaderSubtitle: nil, RCHeaderAction: RCHeaderSendButton, in: ChatViewController)
 	}
 	
 	convenience init(title: String, subtitle: String, in ChatViewController: ChatViewController) {
 		self.init(frame: CGRect(x: 0, y: 0, width: ChatViewController.RCViewController!.constraint(for: .width, in: ChatViewController), height: 0))
+		self.ChatViewController = ChatViewController
 		
 		let RCHeaderTitle = createRCHeaderUILabel(text: title, type: .title)
 		let RCHeaderSubtitle = createRCHeaderUILabel(text: subtitle, type: .subtitle)
 		createRCHeaderUIView(RCHeaderTitle: RCHeaderTitle, RCHeaderSubtitle: RCHeaderSubtitle, RCHeaderAction: nil, in: ChatViewController)
 	}
 	
-	convenience init(title: String, button: String, in ChatViewController: ChatViewController) {
-		self.init(frame: CGRect(x: 0, y: 0, width: ChatViewController.RCViewController!.constraint(for: .width, in: ChatViewController), height: 0))
-		
-		let RCHeaderTitle = createRCHeaderUILabel(text: title, type: .title)
-		
-		let RCHeaderActionButtonSize: CGFloat = 30
-		let RCHeaderAction = UIButton(frame: CGRect(x: 0, y: 0, width: RCHeaderActionButtonSize, height: RCHeaderActionButtonSize))
-		RCHeaderAction.setImage(UIImage(named: "Send"), for: .normal)
-		RCHeaderAction.tintColor = UIColor.white
-		RCHeaderAction.backgroundColor = UIColor(named: "Orbita Blue")
-		RCHeaderAction.layer.cornerRadius = RCHeaderActionButtonSize / 2
-		
-		createRCHeaderUIView(RCHeaderTitle: RCHeaderTitle, RCHeaderSubtitle: nil, RCHeaderAction: RCHeaderAction, in: ChatViewController)
+	deinit {
+		ChatViewController = nil
+		shadow = nil
 	}
 	
-	deinit {
-		shadow = nil
+	@objc func send(sender: UIButton) {
+		ChatViewController!.dismissResponseCard()
 	}
 	
 	func createRCHeaderUIView(RCHeaderTitle: UILabel, RCHeaderSubtitle: UILabel?, RCHeaderAction: UIButton?, in ChatViewController: ChatViewController) {

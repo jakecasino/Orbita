@@ -86,17 +86,27 @@ class ChatViewController: UIViewController {
 	}
 	
 	func dismissResponseCard() {
-		for view in view.subviews {
-			if let RCResponseCardView = view as? RCResponseCardView {
-				RCResponseCardView.removeFromSuperview()
-			}
-			if let RCResponseCardViewShadow = view as? RCResponseCardViewShadow {
-				RCResponseCardViewShadow.removeFromSuperview()
-			}
-		}
-		for childViewController in childViewControllers {
-			if let RCViewController = childViewController as? RCResponseCardViewController {
-				RCViewController.removeFromParentViewController()
+		if RCResponseCard != nil {
+			UIView.animate(withDuration: 0.3, animations: {
+				self.RCResponseCard!.alpha = 0
+				self.RCResponseCardShadow!.alpha = 0
+			}) { (finished: Bool) in
+				for view in self.view.subviews {
+					if let RCResponseCardView = view as? RCResponseCardView {
+						RCResponseCardView.removeFromSuperview()
+						self.RCResponseCard = nil
+					}
+					if let RCResponseCardViewShadow = view as? RCResponseCardViewShadow {
+						RCResponseCardViewShadow.removeFromSuperview()
+						self.RCResponseCardShadow = nil
+					}
+				}
+				for childViewController in self.childViewControllers {
+					if let RCResponseCardViewController = childViewController as? RCResponseCardViewController {
+						RCResponseCardViewController.removeFromParentViewController()
+						self.RCViewController = nil
+					}
+				}
 			}
 		}
 	}

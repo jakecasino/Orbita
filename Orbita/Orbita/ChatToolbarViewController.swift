@@ -17,7 +17,7 @@ class ChatToolbarViewController: UIViewController {
 		
 		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
 		
-		let header = RCHeader(title: "Choose All that Apply", button: "Send", in: ChatViewController!)
+		let header = RCHeader(title: "Choose All that Apply", enableSendButton: true, in: ChatViewController!)
 		
 		let RCBodyContent = RCBodyListViewController(list: list, canSelectMultipleItems: true)
 		let RCBodyView = RCBody(RCBodyViewController: RCBodyContent, as: .list)
