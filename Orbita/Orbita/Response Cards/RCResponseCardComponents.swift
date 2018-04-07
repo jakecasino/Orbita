@@ -98,10 +98,12 @@ class RCHeader: UIView {
 		return label
 	}
 }
+enum RCBodyTemplates {
+	case list
+}
 class RCBody {
 	var RCBodyTemplate: RCBodyTemplates?
 	var RCBodyViewController: Any?
-	var RCBodyView: UIView?
 	
 	init(RCBodyViewController: Any, as template: RCBodyTemplates) {
 		switch template {
@@ -130,9 +132,6 @@ class RCBody {
 		RCViewController.view.addSubview(view)
 	}
 	
-}
-enum RCBodyTemplates {
-	case list
 }
 class RCFooter {
 	

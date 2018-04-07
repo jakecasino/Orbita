@@ -15,7 +15,7 @@ class ChatToolbarViewController: UIViewController {
 			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
 		}
 		
-		let list = ["Lower Back", "Upper Back"]
+		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
 		
 		let header = RCHeader(title: "Choose All that Apply", button: "Send", in: ChatViewController!)
 		

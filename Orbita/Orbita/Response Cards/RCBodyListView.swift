@@ -18,6 +18,7 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 		collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
 		collectionView!.backgroundColor = UIColor(named: "Light Grey")
+		collectionView!.isScrollEnabled = false
 		collectionView!.dataSource = self
 		collectionView!.delegate = self
 		collectionView!.register(RCBodyListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
@@ -28,6 +29,11 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	deinit {
+		collectionView = nil
+		list.removeAll()
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

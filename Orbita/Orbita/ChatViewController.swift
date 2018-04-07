@@ -49,6 +49,7 @@ class ChatViewController: UIViewController {
 		
 		RCResponseCard!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(RCResponseCardWasDragged(gesture:))))
 		RCResponseCard!.RCHeader = RCHeader
+		RCResponseCard!.RCBodyView = RCBody
 		
 		// Create shadow for RCResponseCard
 		RCResponseCardShadow = RCResponseCardViewShadow(frame: RCResponseCard!.frame)
@@ -117,7 +118,6 @@ class ChatViewController: UIViewController {
 		if gesture.state == .ended {
 			UIView.animate(withDuration: 0.3) {
 				self.RCViewController!.RCResponseCardViewDidChange()
-				self.RCResponseCardShadow!.frame = self.RCResponseCard!.frame
 			}
 		}
 	}

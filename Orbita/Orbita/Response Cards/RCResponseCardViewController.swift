@@ -22,19 +22,40 @@ class RCResponseCardViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	deinit {
+		ChatViewController = nil
+		minimumHeight = nil
+	}
+	
 	func RCResponseCardViewDidChange() {
 		let percentThreshold: CGFloat = 0.25
 		let originYThresholdForMaximumHeight = constraint(for: .deviceHeight, in: ChatViewController!) * percentThreshold
 		let height: CGFloat
 		let y: CGFloat
+		
 		if ChatViewController!.RCResponseCard!.frame.origin.y < originYThresholdForMaximumHeight {
 			y = constraint(for: .originYwhenMaximized, in: ChatViewController!)
 			height = constraint(for: .maximumHeight, in: ChatViewController!)
+			
+			switch ChatViewController!.RCResponseCard!.RCBodyView!.RCBodyTemplate! {
+			case .list:
+				(ChatViewController!.RCResponseCard!.RCBodyView!.RCBodyViewController as! RCBodyListViewController).collectionView!.isScrollEnabled = true
+				break
+			}
+			
 		} else {
 			y = constraint(for: .originYwhenMinimized, in: ChatViewController!)
 			height = constraint(for: .minimumHeight, in: ChatViewController!)
+			
+			switch ChatViewController!.RCResponseCard!.RCBodyView!.RCBodyTemplate! {
+			case .list:
+				(ChatViewController!.RCResponseCard!.RCBodyView!.RCBodyViewController as! RCBodyListViewController).collectionView!.isScrollEnabled = false
+				break
+			}
 		}
+		
 		ChatViewController!.RCResponseCard!.frame = CGRect(x: constraint(for: .marginLeft, in: ChatViewController!), y: y, width: constraint(for: .width, in: ChatViewController!), height: height)
+		ChatViewController!.RCResponseCardShadow!.frame = ChatViewController!.RCResponseCard!.frame
 	}
 	
 	enum RCResponseCardContraints {
@@ -94,8 +115,8 @@ class RCResponseCardViewController: UIViewController {
 }
 
 class RCResponseCardView: UIView {
-	weak var RCHeader: RCHeader?
-	weak var RCBodyView: RCBody?
+	var RCHeader: RCHeader?
+	var RCBodyView: RCBody?
 	
 	deinit {
 		RCHeader = nil
