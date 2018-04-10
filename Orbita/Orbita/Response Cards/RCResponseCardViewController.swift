@@ -16,7 +16,7 @@ class RCResponseCardView: UIView {
 		
 		// Set up necessary view controller
 		let RCViewController = RCResponseCardViewController(with: RCContent.RCTemplate!)
-		RCViewController.ChatViewController = ChatViewController
+		RCViewController.Chat = ChatViewController
 		ChatViewController.RCViewController = RCViewController
 		
 		// Set up layout for Response Card
@@ -91,18 +91,22 @@ class RCResponseCardView: UIView {
 }
 
 class RCResponseCardViewController: UIViewController {
-	var ChatViewController: ChatViewController?
+	var Chat: ChatViewController?
 	var RCResponseCard: RCResponseCardView?
 	var minimumHeight: CGFloat?
 	var maximumHeight: CGFloat?
 	
 	init(with RCBodyTemplate: RCBodyTemplates) {
 		super.init(nibName: nil, bundle: nil)
+		Chat = ChatViewController()
 		switch RCBodyTemplate {
 		case .list:
 			minimumHeight = 300
 		case .scaleDiscrete:
-			minimumHeight = 124
+			let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: Chat!)
+			let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: Chat!)
+			let height = RCHeader.frame.height + RCFooter.frame.height + 36 + 12
+			minimumHeight = height
 		}
 	}
 	
@@ -111,7 +115,7 @@ class RCResponseCardViewController: UIViewController {
 	}
 	
 	deinit {
-		ChatViewController = nil
+		Chat = nil
 		RCResponseCard = nil
 		minimumHeight = nil
 		maximumHeight = nil
@@ -168,7 +172,7 @@ class RCResponseCardViewController: UIViewController {
 			
 			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
-				(ChatViewController!.RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = true
+				(Chat!.RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = true
 				break
 			default:
 				break
@@ -242,19 +246,19 @@ class RCResponseCardViewController: UIViewController {
 		case .paddingRight:
 			return padding
 		case .deviceWidth:
-			return ChatViewController!.view.frame.width
+			return Chat!.view.frame.width
 		case .deviceHeight:
-			return ChatViewController!.view.frame.height
+			return Chat!.view.frame.height
 		case .width:
 			return self.constraint(for: .deviceWidth) - self.constraint(for: .marginLeft) - self.constraint(for: .marginRight)
 		case .minimumHeight:
 			return self.minimumHeight!
 		case .maximumHeight:
-			return self.constraint(for: .deviceHeight) - ChatViewController!.ChatToolbar.frame.height - self.constraint(for: .originYwhenMaximized) - self.constraint(for: .marginBottom)
+			return self.constraint(for: .deviceHeight) - Chat!.ChatToolbar.frame.height - self.constraint(for: .originYwhenMaximized) - self.constraint(for: .marginBottom)
 		case .originYwhenMinimized:
-			return self.constraint(for: .deviceHeight) - ChatViewController!.ChatToolbar.frame.height - self.constraint(for: .marginBottom) -  self.constraint(for: .minimumHeight)
+			return self.constraint(for: .deviceHeight) - Chat!.ChatToolbar.frame.height - self.constraint(for: .marginBottom) -  self.constraint(for: .minimumHeight)
 		case .originYwhenMaximized:
-			return ChatViewController!.view.safeAreaInsets.top + self.constraint(for: .marginTop)
+			return Chat!.view.safeAreaInsets.top + self.constraint(for: .marginTop)
 		}
 	}
 }

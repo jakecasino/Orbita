@@ -10,9 +10,12 @@ import UIKit
 class RCScale: UIViewController {
 	var range = [Int]()
 	var handle: UIView?
+	var RCHeaderTitle: String?
+	var handleValue: UILabel?
 	
-	init(range: [Int]) {
+	init(title: String, range: [Int]) {
 		super.init(nibName: nil, bundle: nil)
+		self.RCHeaderTitle = title
 		self.range = range
 		
 		handle = UIView(frame: CGRect.zero)
@@ -34,6 +37,8 @@ class RCScale: UIViewController {
 		handle!.frame.size = CGSize(width: 8, height: view.frame.height - 12)
 		handle!.layer.cornerRadius = handle!.frame.width / 2
 		handle!.frame.origin = CGPoint(x: (view.frame.width - handle!.frame.width) / 2, y: (view.frame.height - handle!.frame.height) / 2)
+		handleValue!.text = Int(handle!.frame.origin.x).description
+		handleValue!.textColor = UIColor(named: "Orbita Blue")
 		view.addSubview(handle!)
 	}
 	
@@ -45,6 +50,7 @@ class RCScale: UIViewController {
 				if newPosition < view.frame.width - (handle!.frame.width + ((view.frame.height - handle!.frame.height) / 2)) { // Rightmost stop
 					handle!.frame.origin = CGPoint(x: newPosition, y: gesture.view!.frame.origin.y)
 					gesture.setTranslation(CGPoint.zero, in: self.view)
+					handleValue!.text = Int(newPosition).description
 				}
 			}
 		}

@@ -14,7 +14,7 @@ class ChatToolbarViewController: UIViewController {
 		if ChatViewController!.RCViewController == nil {
 			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
 		}
-		showList()
+		showScale()
 	}
 	
 	func showList() {
@@ -28,7 +28,7 @@ class ChatToolbarViewController: UIViewController {
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}
 	func showScale() {
-		let Body = RCScale(range: [1,2,3,4,5])
+		let Body = RCScale(title: "Pain Level",range: [1,2,3,4,5])
 		
 		// Build and package the necessary RCComponents
 		let Content = RCContent(RCBody: Body, as: .scaleDiscrete, in: ChatViewController!)

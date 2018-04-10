@@ -44,9 +44,12 @@ class RCContent {
 			canExpandCard = false
 			
 			// Create RCHeader for RCScale
-			let RCHeaderTitle = String((RCBody as! RCScale).range.count)
+			let RCHeaderTitle = String((RCBody as! RCScale).RCHeaderTitle!)
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
-			RCFooter = RCBarComponent(.footer, labels: ["Left", "Right"], actions: [], in: ChatViewController)
+			RCFooter = RCBarComponent(.footer, labels: ["Left", "\((RCBody as! RCScale).range.count)", "Right"], actions: [], in: ChatViewController)
+			RCFooter!.labels[1].frame.size = CGSize(width: 100, height: RCFooter!.labels[1].frame.height)
+			RCFooter!.labels[1].textAlignment = .center
+			(RCBody as! RCScale).handleValue = RCFooter!.labels[1]
 			break
 		}
 		RCTemplate = template
@@ -194,6 +197,12 @@ class RCBarComponent: UIView {
 				case 2:
 					labels[1].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[1].frame.width, y: paddingVertical)
 					addSubview(labels[1])
+					break
+				case 3:
+					labels[1].frame.origin = CGPoint(x: (superview.frame.width - labels[1].frame.width) / 2, y: paddingVertical)
+					addSubview(labels[1])
+					labels[2].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[2].frame.width, y: paddingVertical)
+					addSubview(labels[2])
 					break
 				default:
 					break
