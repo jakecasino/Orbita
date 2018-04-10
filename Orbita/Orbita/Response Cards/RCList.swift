@@ -6,7 +6,8 @@
 //
 
 import UIKit
-class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	var collectionView: UICollectionView?
 	var list = [String]()
 	
@@ -21,7 +22,7 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 		collectionView!.isScrollEnabled = false
 		collectionView!.dataSource = self
 		collectionView!.delegate = self
-		collectionView!.register(RCBodyListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
+		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
 		view.addSubview(collectionView!)
 		
 		if canSelectMultipleItems { collectionView!.allowsMultipleSelection = true }
@@ -41,7 +42,7 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResponseCardListItem", for: indexPath) as! RCBodyListItem
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResponseCardListItem", for: indexPath) as! RCListItem
 		cell.createListLabel(for: list[indexPath.row])
 		cell.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
 		cell.layer.cornerRadius = 12
@@ -68,7 +69,7 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 
 }
 
-class RCBodyListItem: UICollectionViewCell {
+class RCListItem: UICollectionViewCell {
 	
 	override var isSelected: Bool {
 		didSet {

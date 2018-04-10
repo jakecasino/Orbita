@@ -15,14 +15,15 @@ class ChatToolbarViewController: UIViewController {
 			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
 		}
 		
+		// Define the body for RCResponse Card
 		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
+		let Body = RCList(list: list, canSelectMultipleItems: false)
 		
-		let header = RCHeader(title: "Choose All that Apply", enableSendButton: true, in: ChatViewController!)
+		// Build and package the necessary RCComponents
+		let Content = RCContent(RCBody: Body, as: .list, in: ChatViewController!)
 		
-		let RCBodyContent = RCBodyListViewController(list: list, canSelectMultipleItems: true)
-		let RCBodyView = RCBody(RCBodyViewController: RCBodyContent, as: .list)
-		
-		ChatViewController!.showResponseCard(RCHeader: header, RCBody: RCBodyView, footer: nil)
+		// Send the RCContent package to ChatViewController
+		ChatViewController!.showResponseCard(RCContent: Content)
 	}
 	
     override func viewDidLoad() {
