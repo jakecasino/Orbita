@@ -122,7 +122,9 @@ class RCResponseCardViewController: UIViewController {
 		let RCHeader = RCContent.RCHeader
 		
 		// Create RCBodyView
-		var height = constraint(for: .maximumHeight) - RCHeader!.frame.height
+		var height =  -(RCHeader!.frame.height)
+		if RCContent.canExpandCard! { height = height + constraint(for: .maximumHeight) }
+		else { height = height + constraint(for: .minimumHeight) }
 		if let RCFooter = RCContent.RCFooter { height = height - RCFooter.frame.height }
 		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: constraint(for: .width), height: height))
 		view.addSubview(RCBodyView)

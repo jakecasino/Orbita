@@ -18,7 +18,6 @@ class ChatToolbarViewController: UIViewController {
 	}
 	
 	func showList() {
-		// Define the body for RCResponse Card
 		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
 		let Body = RCList(list: list, canSelectMultipleItems: false)
 		
@@ -29,7 +28,6 @@ class ChatToolbarViewController: UIViewController {
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}
 	func showScale() {
-		// Define the body for RCResponse Card
 		let Body = RCScale(range: [1,2,3,4,5])
 		
 		// Build and package the necessary RCComponents

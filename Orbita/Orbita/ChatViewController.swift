@@ -110,6 +110,6 @@ extension UIFont {
 			font = "Raleway-Regular"
 			break
 		}
-		self.init(name: font, size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+		self.init(name: font, size: (UIFont.preferredFont(forTextStyle: textStyle).pointSize) * 1.1)
 	}
 }
