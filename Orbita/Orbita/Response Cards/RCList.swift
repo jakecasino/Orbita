@@ -63,7 +63,7 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		}
 		let margin: CGFloat = 8
 		let width: CGFloat = view.frame.width - (margin * 2)
-		let height = labelHeight(font: UIFont.preferredFont(forTextStyle: .body), width: width) + 24
+		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + 24
 		return CGSize(width: width, height: height)
 	}
 
@@ -98,7 +98,7 @@ class RCListItem: UICollectionViewCell {
 		let label = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
 		label.text = listItem
 		label.textColor = UIColor.white
-		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.font = label.Raleway(textStyle: .body, weight: .regular)
 		label.sizeToFit()
 		label.frame.origin = CGPoint(x: 16, y: 12)
 		addSubview(label)

@@ -221,6 +221,41 @@ extension UIView {
 	}
 }
 
+extension UIButton {
+	convenience init(for component: RCBarComponent.Forms, action: actions, size: CGFloat) {
+		self.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
+		tintColor = UIColor.white
+		backgroundColor = UIColor(named: "Orbita Blue")
+		layer.cornerRadius = size / 2
+		
+		switch action {
+		case .send:
+			setImage(UIImage(named: "Send"), for: .normal)
+		}
+	}
+}
+extension UILabel {
+	func Raleway(textStyle: UIFontTextStyle, weight: UIFont.Weight) -> UIFont {
+		adjustsFontForContentSizeCategory = true
+		return UIFontMetrics.default.scaledFont(for: UIFont(Raleway: textStyle, weight: weight)!)
+	}
+}
+
+extension UIFont {
+	convenience init?(Raleway textStyle: UIFontTextStyle, weight: UIFont.Weight) {
+		let font: String
+		switch weight {
+		case .bold:
+			font = "Raleway-Bold"
+			break
+		default:
+			font = "Raleway-Regular"
+			break
+		}
+		self.init(name: font, size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+	}
+}
+
 class RCResponseCardViewShadow: UIView {
 	convenience init(for RCResponseCardView: RCResponseCardView) {
 		self.init(frame: RCResponseCardView.frame)

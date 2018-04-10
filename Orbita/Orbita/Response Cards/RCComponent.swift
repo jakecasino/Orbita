@@ -9,111 +9,72 @@ import UIKit
 enum actions {
 	case send
 }
-enum RCBarComponentForms {
-	case header
-	case footer
-}
+
 class RCBarComponent: UIView {
 	var ChatViewController: ChatViewController?
 	var shadow: UIView?
 	var titles = [UILabel]()
 	var actions = [UIButton]()
-	var RCBarComponentForm: RCBarComponentForms?
+	var RCBarComponentForm: Forms?
 	
-	enum RCBarComponentTextStyles {
+	enum Forms {
+		case header
+		case footer
+	}
+	
+	enum TextStyles {
 		case title
 		case subtitle
 	}
 	
-	convenience init(_ RCBarComponentForm: RCBarComponentForms, labels: [String], actions: [actions], in ChatViewController: ChatViewController) {
+	convenience init(_ RCBarComponentForm: Forms, labels: [String], actions: [actions], in ChatViewController: ChatViewController) {
+		let padding: CGFloat
+		let buttonSize: CGFloat
+		
 		self.init(frame: CGRect.zero)
 		self.ChatViewController = ChatViewController
 		self.RCBarComponentForm = RCBarComponentForm
 		
-		func createUILabels(for titles: [String]) {
-			func createRCHeaderUILabel(text: String, type: RCBarComponentTextStyles) -> UILabel {
-				let label = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-				label.text = text.uppercased()
-				label.textColor = UIColor.black
-				
-				switch type {
-				case .title:
-					label.font = UIFont.boldSystemFont(ofSize: 12.0)
-				case .subtitle:
-					label.font = UIFont.preferredFont(forTextStyle: .footnote)
-				}
-				
-				label.sizeToFit()
-				return label
+		func generateUILabel(text: String, type: TextStyles) -> UILabel {
+			let label = UILabel(frame: CGRect.zero)
+			label.text = text.uppercased()
+			label.textColor = UIColor.black
+			
+			switch type {
+			case .title:
+				label.font = label.Raleway(textStyle: .footnote, weight: .bold)
+			case .subtitle:
+				label.font = UIFont.preferredFont(forTextStyle: .footnote)
 			}
 			
-			switch self.RCBarComponentForm! {
-			case .header:
-				for (index, text) in titles.enumerated() {
-					if index == 0 {
-						let title = createRCHeaderUILabel(text: text, type: .title)
-						self.titles.append(title)
-					} else if index == 1 {
-						let subtitle = createRCHeaderUILabel(text: text, type: .subtitle)
-						self.titles.append(subtitle)
-					} else {
-						break
-					}
-				}
-			case .footer:
-				break
-			}
+			label.sizeToFit()
+			return label
 		}
-		
-		func createUIButtons(for actions: [actions]) {
-			let buttonSize: CGFloat
-			switch self.RCBarComponentForm! {
-			case .header:
-				buttonSize = 30
-				break
-			case .footer:
-				buttonSize = 30
-				break
-			}
-			
-			for action in actions {
-				let image: UIImage
-				switch action {
-				case .send:
-					image = UIImage(named: "Send")!
-					break
-				}
-				
-				let button = UIButton(frame: CGRect(x: 0, y: 0, width: buttonSize, height: buttonSize))
-				button.setImage(image, for: .normal)
-				button.addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
-				
-				switch self.RCBarComponentForm! {
-				case .header:
-					button.tintColor = UIColor.white
-					button.backgroundColor = UIColor(named: "Orbita Blue")
-					button.layer.cornerRadius = buttonSize / 2
-					break
-				case .footer:
-					break
-				}
-				
-				self.actions.append(button)
-			}
-		}
-		
-		createUILabels(for: labels)
-		createUIButtons(for: actions)
-		
-		
-		let padding: CGFloat
 		
 		switch self.RCBarComponentForm! {
 		case .header:
 			padding = 16
-			break
+			buttonSize = 30
+			
+			for (index, text) in labels.enumerated() {
+				if index == 0 {
+					let title = generateUILabel(text: text, type: .title)
+					self.titles.append(title)
+				} else if index == 1 {
+					let subtitle = generateUILabel(text: text, type: .subtitle)
+					self.titles.append(subtitle)
+				} else {
+					break
+				}
+			}
+			
+			if !(actions.isEmpty) {
+				self.actions.append(UIButton(for: self.RCBarComponentForm!, action: actions[0], size: buttonSize))
+				self.actions[0].addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
+			}
 		case .footer:
 			padding = 10
+			buttonSize = 30
 			break
 		}
 		
@@ -199,7 +160,6 @@ class RCContent {
 				RCHeaderTitle = "Choose One"
 			}
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
-			
 			break
 		}
 		RCTemplate = template

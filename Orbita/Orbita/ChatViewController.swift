@@ -22,7 +22,6 @@ class ChatViewController: UIViewController {
 	}
 	
 	override func viewDidLoad() {
-		
 		// Set background color for ChatView
 		view.backgroundColor = UIColor(named: "Light Grey")
 		
@@ -32,7 +31,6 @@ class ChatViewController: UIViewController {
 	}
 	
 	func showResponseCard(RCContent: RCContent) {
-		
 		func show() {
 			RCResponseCard = RCResponseCardView(RCContent: RCContent, in: self)
 			UIView.animate(withDuration: 0.3) {
