@@ -6,139 +6,16 @@
 //
 
 import UIKit
+
 enum actions {
 	case send
 }
 
-class RCBarComponent: UIView {
-	var ChatViewController: ChatViewController?
-	var shadow: UIView?
-	var titles = [UILabel]()
-	var actions = [UIButton]()
-	var RCBarComponentForm: Forms?
-	
-	enum Forms {
-		case header
-		case footer
-	}
-	
-	enum TextStyles {
-		case title
-		case subtitle
-	}
-	
-	convenience init(_ RCBarComponentForm: Forms, labels: [String], actions: [actions], in ChatViewController: ChatViewController) {
-		let padding: CGFloat
-		let buttonSize: CGFloat
-		
-		self.init(frame: CGRect.zero)
-		self.ChatViewController = ChatViewController
-		self.RCBarComponentForm = RCBarComponentForm
-		
-		func generateUILabel(text: String, type: TextStyles) -> UILabel {
-			let label = UILabel(frame: CGRect.zero)
-			label.text = text.uppercased()
-			label.textColor = UIColor.black
-			
-			switch type {
-			case .title:
-				label.font = label.Raleway(textStyle: .footnote, weight: .bold)
-			case .subtitle:
-				label.font = UIFont.preferredFont(forTextStyle: .footnote)
-			}
-			
-			label.sizeToFit()
-			return label
-		}
-		
-		switch self.RCBarComponentForm! {
-		case .header:
-			padding = 16
-			buttonSize = 30
-			
-			for (index, text) in labels.enumerated() {
-				if index == 0 {
-					let title = generateUILabel(text: text, type: .title)
-					self.titles.append(title)
-				} else if index == 1 {
-					let subtitle = generateUILabel(text: text, type: .subtitle)
-					self.titles.append(subtitle)
-				} else {
-					break
-				}
-			}
-			
-			if !(actions.isEmpty) {
-				self.actions.append(UIButton(for: self.RCBarComponentForm!, action: actions[0], size: buttonSize))
-				self.actions[0].addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
-			}
-		case .footer:
-			padding = 10
-			buttonSize = 30
-			break
-		}
-		
-		let height = padding + titles[0].frame.height + padding
-		frame.size = CGSize(width: frame.width, height: height)
-		backgroundColor = UIColor.white
-		
-		shadow = UIView(frame: frame)
-		shadow!.createShadow(opacity: 0.15, offset: CGSize(width: 0, height: 0), cornerRadius: 0, shadowRadius: 1)
-	}
-	
-	deinit {
-		ChatViewController = nil
-		shadow = nil
-		RCBarComponentForm = nil
-	}
-	
-	override func didMoveToSuperview() {
-		if let superview = superview {
-			frame.size = CGSize(width: superview.frame.width, height: frame.height)
-			shadow!.frame = frame
-			shadow!.layer.shadowPath = UIBezierPath(rect: shadow!.bounds).cgPath
-			
-			let padding: CGFloat
-			
-			switch RCBarComponentForm! {
-			case .header:
-				padding = 16
-				let numberOfLabels = titles.count
-				switch numberOfLabels {
-				case 1:
-					titles[0].frame.origin = CGPoint(x: padding, y: padding)
-					addSubview(titles[0])
-					break
-				case 2:
-					titles[0].frame.origin = CGPoint(x: padding, y: padding)
-					break
-				default:
-					break
-				}
-				if !(actions.isEmpty) {
-					let x = frame.width - padding - actions[0].frame.width
-					let y = (frame.height - actions[0].frame.height) / 2
-					actions[0].frame.origin = CGPoint(x: x, y: y)
-					addSubview(actions[0])
-				}
-				break
-			case .footer:
-				padding = 10
-				break
-			}
-		}
-	}
-	
-	@objc func send(sender: UIButton) {
-		ChatViewController!.RCResponseCard!.dismiss {
-			
-		}
-	}
-}
 enum RCBodyTemplates {
 	case list
-	// case scaleDiscrete
+	case scaleDiscrete
 }
+
 class RCContent {
 	var RCHeader: RCBarComponent?
 	var RCBodyContent: Any?
@@ -160,6 +37,16 @@ class RCContent {
 				RCHeaderTitle = "Choose One"
 			}
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
+			RCFooter = RCBarComponent(.footer, labels: ["See Full List"], actions: [], in: ChatViewController)
+			break
+		case .scaleDiscrete:
+			self.RCBodyContent = RCBody as! RCScale
+			canExpandCard = false
+			
+			// Create RCHeader for RCScale
+			let RCHeaderTitle = String((RCBody as! RCScale).range.count)
+			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
+			RCFooter = RCBarComponent(.footer, labels: ["Left", "Right"], actions: [], in: ChatViewController)
 			break
 		}
 		RCTemplate = template
@@ -173,26 +60,152 @@ class RCContent {
 		canExpandCard = nil
 	}
 	
-	func add(to RCResponseCard: RCResponseCardView, in RCViewController: RCResponseCardViewController) {
+}
+
+class RCBarComponent: UIView {
+	var ChatViewController: ChatViewController?
+	var shadow: UIView?
+	var labels = [UILabel]()
+	var actions = [UIButton]()
+	var form: Forms?
+	
+	enum Forms {
+		case header
+		case footer
+	}
+	
+	enum TextStyles {
+		case title
+		case subtitle
+	}
+	
+	convenience init(_ RCBarComponentForm: Forms, labels: [String], actions: [actions], in ChatViewController: ChatViewController) {
+		let paddingVertical: CGFloat
+		let buttonSize: CGFloat
 		
-		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: RCViewController.constraint(for: .width), height: RCViewController.constraint(for: .maximumHeight) - RCHeader!.frame.height))
-		RCViewController.view.addSubview(RCBodyView)
+		self.init(frame: CGRect.zero)
+		self.ChatViewController = ChatViewController
+		self.form = RCBarComponentForm
 		
-		switch RCTemplate! {
-		case .list:
-			let RCBodyContent = self.RCBodyContent as! RCList
-			RCBodyContent.willMove(toParentViewController: RCViewController)
-			RCBodyView.addSubview(RCBodyContent.view)
-			RCBodyContent.view.frame.size = CGSize(width: RCBodyContent.view.superview!.frame.width, height: RCViewController.constraint(for: .maximumHeight) - RCHeader!.frame.height)
-			RCViewController.addChildViewController(RCBodyContent)
-			RCBodyContent.didMove(toParentViewController: RCViewController)
+		func generateUILabel(text: String, type: TextStyles) -> UILabel {
+			let label = UILabel(frame: CGRect.zero)
+			label.text = text.uppercased()
+			label.textColor = UIColor.black
 			
-			RCBodyContent.collectionView!.frame.size = RCBodyContent.collectionView!.superview!.frame.size
+			switch type {
+			case .title:
+				label.font = label.Raleway(textStyle: .footnote, weight: .bold)
+			case .subtitle:
+				label.font = UIFont.preferredFont(forTextStyle: .footnote)
+			}
+			
+			label.sizeToFit()
+			return label
+		}
+		
+		switch self.form! {
+		case .header:
+			paddingVertical = 16
+			buttonSize = 30
+			
+			for (index, text) in labels.enumerated() {
+				if index == 0 {
+					let title = generateUILabel(text: text, type: .title)
+					self.labels.append(title)
+				} else if index == 1 {
+					let subtitle = generateUILabel(text: text, type: .subtitle)
+					self.labels.append(subtitle)
+				} else {
+					break
+				}
+			}
+			
+			if !(actions.isEmpty) {
+				self.actions.append(UIButton(for: self.form!, action: actions[0], size: buttonSize))
+				self.actions[0].addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
+			}
+		case .footer:
+			paddingVertical = 10
+			buttonSize = 30
+			for text in labels {
+				let label = generateUILabel(text: text, type: .title)
+				self.labels.append(label)
+			}
 			break
 		}
 		
-		RCViewController.view.addSubview(RCHeader!.shadow!)
-		RCViewController.view.addSubview(RCHeader!)
+		let height = paddingVertical + self.labels[0].frame.height + paddingVertical
+		frame.size = CGSize(width: frame.width, height: height)
+		backgroundColor = UIColor.white
+		
+		shadow = UIView(frame: frame)
+		shadow!.createShadow(opacity: 0.15, offset: CGSize(width: 0, height: 0), cornerRadius: 0, shadowRadius: 1)
 	}
 	
+	deinit {
+		ChatViewController = nil
+		shadow = nil
+		form = nil
+	}
+	
+	override func didMoveToSuperview() {
+		if let superview = superview {
+			frame.size = CGSize(width: superview.frame.width, height: frame.height)
+			shadow!.frame = frame
+			shadow!.layer.shadowPath = UIBezierPath(rect: shadow!.bounds).cgPath
+			
+			let paddingVertical: CGFloat
+			let paddingHorizontal: CGFloat = 16
+			
+			switch form! {
+			case .header:
+				paddingVertical = 16
+				for (index, label) in labels.enumerated() {
+					if index == 0 {
+						label.frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
+						addSubview(label)
+					}
+					if index == 1 {
+						label.frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
+						addSubview(label)
+					} else {
+						break
+					}
+				}
+				if !(actions.isEmpty) {
+					let x = frame.width - paddingHorizontal - actions[0].frame.width
+					let y = (frame.height - actions[0].frame.height) / 2
+					actions[0].frame.origin = CGPoint(x: x, y: y)
+					addSubview(actions[0])
+				}
+				break
+			case .footer:
+				paddingVertical = 10
+				
+				// Layout first label
+				if !(labels.isEmpty) {
+					labels[0].frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
+					addSubview(labels[0])
+				}
+				
+				// Layout second label
+				let numberOfLabels = labels.count
+				switch numberOfLabels {
+				case 2:
+					labels[1].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[1].frame.width, y: paddingVertical)
+					addSubview(labels[1])
+					break
+				default:
+					break
+				}
+				break
+			}
+		}
+	}
+	
+	@objc func send(sender: UIButton) {
+		ChatViewController!.RCResponseCard!.dismiss {
+			
+		}
+	}
 }

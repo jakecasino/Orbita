@@ -41,7 +41,6 @@ class RCResponseCardView: UIView {
 		RCViewController.didMove(toParentViewController: ChatViewController)
 		
 		// Add RCBodyContent
-		RCContent.add(to: self, in: RCViewController)
 	}
 	
 	convenience init(setUpFrameIn ChatViewController: ChatViewController, canExpandCard: Bool) {
@@ -102,6 +101,8 @@ class RCResponseCardViewController: UIViewController {
 		switch RCBodyTemplate {
 		case .list:
 			minimumHeight = 300
+		case .scaleDiscrete:
+			minimumHeight = 124
 		}
 	}
 	
@@ -110,8 +111,46 @@ class RCResponseCardViewController: UIViewController {
 	}
 	
 	deinit {
+		ChatViewController = nil
 		RCResponseCard = nil
 		minimumHeight = nil
+		maximumHeight = nil
+	}
+	
+	override func didMove(toParentViewController parent: UIViewController?) {
+		let RCContent = RCResponseCard!.RCContent!
+		let RCHeader = RCContent.RCHeader
+		
+		// Create RCBodyView
+		var height = constraint(for: .maximumHeight) - RCHeader!.frame.height
+		if let RCFooter = RCContent.RCFooter { height = height - RCFooter.frame.height }
+		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: constraint(for: .width), height: height))
+		view.addSubview(RCBodyView)
+		
+		// Connect RCBodyView to necessary view controllers
+		switch RCResponseCard!.RCContent!.RCTemplate! {
+		case .list:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCList
+			RCBodyView.addSubview(RCBodyContent.view)
+			addChildViewController(RCBodyContent)
+			RCBodyContent.didMove(toParentViewController: self)
+			break
+		case .scaleDiscrete:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCScale
+			RCBodyView.addSubview(RCBodyContent.view)
+			addChildViewController(RCBodyContent)
+			RCBodyContent.didMove(toParentViewController: self)
+		}
+		
+		// Add headers and footers
+		view.addSubview(RCHeader!.shadow!)
+		view.addSubview(RCHeader!)
+		if let RCFooter = RCContent.RCFooter {
+			RCFooter.frame.origin = CGPoint(x: 0, y: view.superview!.frame.height - RCFooter.frame.height)
+			RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+			view.addSubview(RCFooter.shadow!)
+			view.addSubview(RCFooter)
+		}
 	}
 	
 	func RCResponseCardViewDidChange() {
@@ -125,9 +164,11 @@ class RCResponseCardViewController: UIViewController {
 			y = constraint(for: .originYwhenMaximized)
 			height = constraint(for: .maximumHeight)
 			
-			switch RCResponseCard!.RCContent!.RCTemplate! {
+			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
 				(ChatViewController!.RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = true
+				break
+			default:
 				break
 			}
 			shouldRemoveGestureRecognizer = true
@@ -136,15 +177,22 @@ class RCResponseCardViewController: UIViewController {
 			y = constraint(for: .originYwhenMinimized)
 			height = constraint(for: .minimumHeight)
 			
-			switch RCResponseCard!.RCContent!.RCTemplate! {
+			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
 				(RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = false
+				break
+			default:
 				break
 			}
 		}
 		
 		RCResponseCard!.frame = CGRect(x: constraint(for: .marginLeft), y: y, width: constraint(for: .width), height: height)
 		RCResponseCard!.shadow!.frame = RCResponseCard!.frame
+		
+		if let RCFooter = RCResponseCard!.RCContent!.RCFooter {
+			RCFooter.frame.origin = CGPoint(x: RCFooter.frame.origin.x, y: RCResponseCard!.frame.height - RCFooter.frame.height)
+			RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+		}
 		
 		if shouldRemoveGestureRecognizer {
 			for gestureRecognizer in RCResponseCard!.gestureRecognizers! {
@@ -218,41 +266,6 @@ extension UIView {
 		layer.shadowRadius = shadowRadius
 		layer.shadowOffset = offset
 		layer.shadowOpacity = opacity
-	}
-}
-
-extension UIButton {
-	convenience init(for component: RCBarComponent.Forms, action: actions, size: CGFloat) {
-		self.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
-		tintColor = UIColor.white
-		backgroundColor = UIColor(named: "Orbita Blue")
-		layer.cornerRadius = size / 2
-		
-		switch action {
-		case .send:
-			setImage(UIImage(named: "Send"), for: .normal)
-		}
-	}
-}
-extension UILabel {
-	func Raleway(textStyle: UIFontTextStyle, weight: UIFont.Weight) -> UIFont {
-		adjustsFontForContentSizeCategory = true
-		return UIFontMetrics.default.scaledFont(for: UIFont(Raleway: textStyle, weight: weight)!)
-	}
-}
-
-extension UIFont {
-	convenience init?(Raleway textStyle: UIFontTextStyle, weight: UIFont.Weight) {
-		let font: String
-		switch weight {
-		case .bold:
-			font = "Raleway-Bold"
-			break
-		default:
-			font = "Raleway-Regular"
-			break
-		}
-		self.init(name: font, size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
 	}
 }
 

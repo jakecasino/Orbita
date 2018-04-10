@@ -37,6 +37,11 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		list.removeAll()
 	}
 	
+	override func didMove(toParentViewController parent: UIViewController?) {
+		view.frame = view.superview!.bounds
+		collectionView!.frame.size = collectionView!.superview!.frame.size
+	}
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return list.count
 	}
