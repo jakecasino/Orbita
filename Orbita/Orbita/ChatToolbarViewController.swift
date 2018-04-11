@@ -18,11 +18,13 @@ class ChatToolbarViewController: UIViewController {
 	}
 	
 	func showList() {
-		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
+		let list = ["Upper Back", "Lower Back", "Neck"]
+		
 		let Body = RCList(list: list, canSelectMultipleItems: false)
 		let Content = RCContent(RCBody: Body, as: .list, in: ChatViewController!)
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}
+	
 	func showScale() {
 		let Body = RCScale(title: "Pain Level", range: [1,7])
 		let Content = RCContent(RCBody: Body, as: .scale, in: ChatViewController!)
