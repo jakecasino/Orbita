@@ -27,7 +27,7 @@ class RCResponseCardView: UIView {
 		self.ChatViewController = ChatViewController
 		
 		// Set up visual language for Response Card
-		backgroundColor = UIColor(named: "Light Grey")
+		backgroundColor = UIColor(named: "Lighter Grey")
 		layer.cornerRadius = 12
 		layer.masksToBounds = true
 		alpha = 0
@@ -102,7 +102,7 @@ class RCResponseCardViewController: UIViewController {
 		switch RCBodyTemplate {
 		case .list:
 			minimumHeight = 300
-		case .scaleDiscrete:
+		case .scale:
 			let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: Chat!)
 			let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: Chat!)
 			let height = RCHeader.frame.height + RCFooter.frame.height + 36 + 12
@@ -141,7 +141,7 @@ class RCResponseCardViewController: UIViewController {
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)
 			break
-		case .scaleDiscrete:
+		case .scale:
 			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCScale
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)

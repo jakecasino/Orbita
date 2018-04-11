@@ -13,7 +13,7 @@ enum actions {
 
 enum RCBodyTemplates {
 	case list
-	case scaleDiscrete
+	case scale
 }
 
 class RCContent {
@@ -39,17 +39,22 @@ class RCContent {
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
 			RCFooter = RCBarComponent(.footer, labels: ["See Full List"], actions: [], in: ChatViewController)
 			break
-		case .scaleDiscrete:
+		case .scale:
 			self.RCBodyContent = RCBody as! RCScale
 			canExpandCard = false
 			
 			// Create RCHeader for RCScale
 			let RCHeaderTitle = String((RCBody as! RCScale).RCHeaderTitle!)
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
-			RCFooter = RCBarComponent(.footer, labels: ["Left", "\((RCBody as! RCScale).range.count)", "Right"], actions: [], in: ChatViewController)
-			RCFooter!.labels[1].frame.size = CGSize(width: 100, height: RCFooter!.labels[1].frame.height)
-			RCFooter!.labels[1].textAlignment = .center
-			(RCBody as! RCScale).handleValue = RCFooter!.labels[1]
+			switch (RCBody as! RCScale).type! {
+			case .continuous:
+				RCFooter = RCBarComponent(.footer, labels: ["\((RCBody as! RCScale).range.first!)", "\((RCBody as! RCScale).range.last!)"], actions: [], in: ChatViewController)
+			case .discrete:
+				RCFooter = RCBarComponent(.footer, labels: ["\((RCBody as! RCScale).range.first!)", "slider value", "\((RCBody as! RCScale).range.last!)"], actions: [], in: ChatViewController)
+				RCFooter!.labels[1].textAlignment = .center
+				RCFooter!.labels[1].textColor = UIColor(named: "Orbita Blue")
+				(RCBody as! RCScale).sliderValue = RCFooter!.labels[1]
+			}
 			break
 		}
 		RCTemplate = template
@@ -93,7 +98,13 @@ class RCBarComponent: UIView {
 		func generateUILabel(text: String, type: TextStyles) -> UILabel {
 			let label = UILabel(frame: CGRect.zero)
 			label.text = text.uppercased()
-			label.textColor = UIColor.black
+			
+			switch form! {
+			case .header:
+				label.textColor = UIColor.black
+			case .footer:
+				label.textColor = UIColor(named: "Orbita Blue")
+			}
 			
 			switch type {
 			case .title:
@@ -191,7 +202,7 @@ class RCBarComponent: UIView {
 					addSubview(labels[0])
 				}
 				
-				// Layout second label
+				// Layout other labels
 				let numberOfLabels = labels.count
 				switch numberOfLabels {
 				case 2:
@@ -203,6 +214,15 @@ class RCBarComponent: UIView {
 					addSubview(labels[1])
 					labels[2].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[2].frame.width, y: paddingVertical)
 					addSubview(labels[2])
+					
+					// Adjust sliderValue Label for RCSCale at launch
+					if let RCContent = ChatViewController!.RCResponseCard!.RCContent {
+						if RCContent.RCTemplate! == .scale {
+							let RCScale = RCContent.RCBodyContent as! RCScale
+							RCScale.moveSlider(to: (RCScale.range.count / 2))
+						}
+					}
+					
 					break
 				default:
 					break

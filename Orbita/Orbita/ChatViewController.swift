@@ -23,7 +23,7 @@ class ChatViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		// Set background color for ChatView
-		view.backgroundColor = UIColor(named: "Light Grey")
+		view.backgroundColor = UIColor(named: "Lighter Grey")
 		
 		// Resize Chat Toolbar
 		ChatToolbar.frame.size = CGSize(width: view.frame.width, height: 108 + view.safeAreaInsets.bottom)

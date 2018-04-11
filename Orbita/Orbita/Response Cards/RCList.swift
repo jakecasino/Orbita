@@ -18,7 +18,7 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		let layout = UICollectionViewFlowLayout()
 		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 		collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-		collectionView!.backgroundColor = UIColor(named: "Light Grey")
+		collectionView!.backgroundColor = UIColor(named: "Lighter Grey")
 		collectionView!.isScrollEnabled = false
 		collectionView!.dataSource = self
 		collectionView!.delegate = self
