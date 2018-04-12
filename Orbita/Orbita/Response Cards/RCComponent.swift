@@ -62,7 +62,8 @@ class RCContent {
 			
 			let RCHeaderTitle = "Choose one"
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
-			RCFooter = RCBarComponent(.footer, labels: ["Select an Image"], actions: [], in: ChatViewController)
+			RCFooter = RCBarComponent(.footer, labels: ["Choose from Library"], actions: [], in: ChatViewController)
+			(RCBody as! RCMediaUpload).ChooseFromLibrary = (RCFooter!.labels[0] as! UIButton)
 		}
 		RCTemplate = template
 	}
@@ -123,6 +124,7 @@ class RCBarComponent: UIView {
 				let button = UIButton(frame: CGRect.zero)
 				button.setTitle(text.uppercased(), for: .normal)
 				button.setTitleColor(UIColor(named: "Orbita Blue"), for: .normal)
+				button.setTitleColor(UIColor(named: "Orbita Blue Selected"), for: .highlighted)
 				button.titleLabel!.font = font
 				button.sizeToFit()
 				return button

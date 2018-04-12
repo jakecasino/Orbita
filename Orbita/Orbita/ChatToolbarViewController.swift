@@ -32,7 +32,7 @@ class ChatToolbarViewController: UIViewController {
 	}
 	
 	func showMediaPicker() {
-		let Body = RCMediaUpload(type: RCMediaUpload.mediaTypes.video, enableLive: true)
+		let Body = RCMediaUpload(type: RCMediaUpload.mediaTypes.image, enableLive: true)
 		let Content = RCContent(RCBody: Body, as: .mediaPicker, in: ChatViewController!)
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}
