@@ -98,15 +98,20 @@ class RCResponseCardViewController: UIViewController {
 	
 	init(with RCBodyTemplate: RCBodyTemplates) {
 		super.init(nibName: nil, bundle: nil)
-		Chat = ChatViewController()
+		
+		// Must set a minimum height for each Response Card Type
+		let margin: CGFloat = 16
+		let width = UIScreen.main.bounds.width - (margin * 2)
+		let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: ChatViewController())
+		let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: ChatViewController())
+		
 		switch RCBodyTemplate {
 		case .list:
 			minimumHeight = 300
 		case .scale:
-			let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: Chat!)
-			let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: Chat!)
-			let height = RCHeader.frame.height + RCFooter.frame.height + 36 + 12
-			minimumHeight = height
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 48
+		case .mediaPicker:
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((width * 3) / 4)
 		}
 	}
 	
@@ -143,6 +148,11 @@ class RCResponseCardViewController: UIViewController {
 			break
 		case .scale:
 			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCScale
+			RCBodyView.addSubview(RCBodyContent.view)
+			addChildViewController(RCBodyContent)
+			RCBodyContent.didMove(toParentViewController: self)
+		case .mediaPicker:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCMediaUpload
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)

@@ -14,7 +14,7 @@ class ChatToolbarViewController: UIViewController {
 		if ChatViewController!.RCViewController == nil {
 			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
 		}
-		showScale()
+		showMediaPicker()
 	}
 	
 	func showList() {
@@ -28,6 +28,12 @@ class ChatToolbarViewController: UIViewController {
 	func showScale() {
 		let Body = RCScale(title: "Water Volume (L)", range: [1,7])
 		let Content = RCContent(RCBody: Body, as: .scale, in: ChatViewController!)
+		ChatViewController!.showResponseCard(RCContent: Content)
+	}
+	
+	func showMediaPicker() {
+		let Body = RCMediaUpload(type: RCMediaUpload.mediaTypes.video, enableLive: true)
+		let Content = RCContent(RCBody: Body, as: .mediaPicker, in: ChatViewController!)
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}
 	

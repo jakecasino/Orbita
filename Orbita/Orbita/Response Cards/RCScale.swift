@@ -11,7 +11,7 @@ class RCScale: UIViewController {
 	var range = [Any]()
 	var handle: UIView?
 	var RCHeaderTitle: String?
-	var sliderValue: UIButton?
+	var footerLabels: [UIButton]?
 	var type: ScaleTypes?
 	var touchPosition: UIView?
 	var stops = [CGFloat]()
@@ -102,6 +102,10 @@ class RCScale: UIViewController {
 			stops = stops.reversed()
 			bufferZones = bufferZones.reversed()
 			range = range.reversed()
+			
+			footerLabels![2].addTarget(self, action: #selector(leftValueSelected(sender:)), for: UIControlEvents.touchUpInside)
+			footerLabels![0].addTarget(self, action: #selector(rightValueSelected(sender:)), for: UIControlEvents.touchUpInside)
+			
 		} else {
 			handle!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
 		}
@@ -113,7 +117,7 @@ class RCScale: UIViewController {
 	}
 	
 	func moveSlider(to index: Int) {
-		if let sliderValue = sliderValue {
+		if let sliderValue = footerLabels![1] as? UIButton {
 			handle!.frame.origin = CGPoint(x: stops[index], y: handle!.frame.origin.y)
 			if (index == 0 || index == range.count - 1 ) {
 				sliderValue.setTitle(" ", for: .normal)
@@ -122,7 +126,7 @@ class RCScale: UIViewController {
 				sliderValue.setTitle((range[index] as! Int).description, for: .normal)
 				sliderValue.alpha = 1
 				sliderValue.sizeToFit()
-				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x - (sliderValue.frame.width / 3) , y: sliderValue.frame.origin.y)
+				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x , y: sliderValue.frame.origin.y)
 			}
 		}
 	}

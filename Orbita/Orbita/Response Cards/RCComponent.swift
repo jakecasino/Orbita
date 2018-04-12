@@ -14,6 +14,7 @@ enum actions {
 enum RCBodyTemplates {
 	case list
 	case scale
+	case mediaPicker
 }
 
 class RCContent {
@@ -52,9 +53,16 @@ class RCContent {
 			case .discrete:
 				RCFooter = RCBarComponent(.footer, labels: ["\((RCBody as! RCScale).range.first!)", "slider value", "\((RCBody as! RCScale).range.last!)"], actions: [], in: ChatViewController)
 				(RCFooter!.labels[1] as! UIButton).isEnabled = false
-				(RCBody as! RCScale).sliderValue = (RCFooter!.labels[1] as! UIButton)
+				(RCBody as! RCScale).footerLabels = (RCFooter!.labels as! [UIButton])
 			}
 			break
+		case .mediaPicker:
+			self.RCBodyContent = RCBody as! RCMediaUpload
+			canExpandCard = false
+			
+			let RCHeaderTitle = "Choose one"
+			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [.send], in: ChatViewController)
+			RCFooter = RCBarComponent(.footer, labels: ["Select an Image"], actions: [], in: ChatViewController)
 		}
 		RCTemplate = template
 	}
@@ -117,7 +125,6 @@ class RCBarComponent: UIView {
 				button.setTitleColor(UIColor(named: "Orbita Blue"), for: .normal)
 				button.titleLabel!.font = font
 				button.sizeToFit()
-				button.frame.size = CGSize(width: button.frame.width / 3, height: button.frame.height)
 				return button
 			}
 		}
@@ -210,28 +217,33 @@ class RCBarComponent: UIView {
 				// Layout first label
 				if !(labels.isEmpty) {
 					labels[0].frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
+					labels[0].contentHorizontalAlignment = .left
 					addSubview(labels[0])
 				}
 				
 				// Layout second label
 				let numberOfLabels = labels.count
 				switch numberOfLabels {
+				case 1:
+					labels[0].frame.origin = CGPoint(x: (frame.width - labels[0].frame.width) / 2, y: paddingVertical)
+					break
 				case 2:
 					labels[1].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[1].frame.width, y: paddingVertical)
+					labels[1].contentHorizontalAlignment = .right
 					addSubview(labels[1])
 					break
 				case 3:
 					labels[1].frame.origin = CGPoint(x: (superview.frame.width - labels[1].frame.width) / 2, y: paddingVertical)
+					labels[1].contentHorizontalAlignment = .left
 					addSubview(labels[1])
 					labels[2].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[2].frame.width, y: paddingVertical)
+					labels[2].contentHorizontalAlignment = .right
 					addSubview(labels[2])
 					
 					if let RCContent = ChatViewController!.RCResponseCard!.RCContent {
 						if RCContent.RCTemplate! == .scale {
 							let RCScale = RCContent.RCBodyContent as! RCScale
 							RCScale.moveSlider(to: (RCScale.range.count / 2))
-							labels[2].addTarget(RCScale, action: #selector(RCScale.leftValueSelected(sender:)), for: UIControlEvents.touchUpInside)
-							labels[0].addTarget(RCScale, action: #selector(RCScale.rightValueSelected(sender:)), for: UIControlEvents.touchUpInside)
 						}
 					}
 					
