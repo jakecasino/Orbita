@@ -82,13 +82,19 @@ class ChatViewController: UIViewController {
 extension UIButton {
 	convenience init(for component: RCBarComponent.Forms, action: actions, size: CGFloat) {
 		self.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
-		tintColor = UIColor.white
-		backgroundColor = UIColor(named: "Orbita Blue")
-		layer.cornerRadius = size / 2
 		
-		switch action {
-		case .send:
-			setImage(UIImage(named: "Send"), for: .normal)
+		switch component {
+		case .header:
+			tintColor = UIColor.white
+			backgroundColor = UIColor(named: "Orbita Blue")
+			layer.cornerRadius = size / 2
+			switch action {
+			case .send:
+				setImage(UIImage(named: "Send"), for: .normal)
+			}
+			break
+		case .footer:
+			break
 		}
 	}
 }
