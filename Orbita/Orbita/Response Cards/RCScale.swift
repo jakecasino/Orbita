@@ -11,7 +11,7 @@ class RCScale: UIViewController {
 	var range = [Any]()
 	var handle: UIView?
 	var RCHeaderTitle: String?
-	var sliderValue: UILabel?
+	var sliderValue: UIButton?
 	var type: ScaleTypes?
 	var touchPosition: UIView?
 	var stops = [CGFloat]()
@@ -116,13 +116,26 @@ class RCScale: UIViewController {
 		if let sliderValue = sliderValue {
 			handle!.frame.origin = CGPoint(x: stops[index], y: handle!.frame.origin.y)
 			if (index == 0 || index == range.count - 1 ) {
-				sliderValue.text = ""
+				sliderValue.setTitle(" ", for: .normal)
+				sliderValue.alpha = 0
 			} else {
-				sliderValue.text = (range[index] as! Int).description
+				sliderValue.setTitle((range[index] as! Int).description, for: .normal)
+				sliderValue.alpha = 1
 				sliderValue.sizeToFit()
-				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x , y: sliderValue.frame.origin.y)
+				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x - (sliderValue.frame.width / 3) , y: sliderValue.frame.origin.y)
 			}
 		}
+	}
+	
+	@objc func leftValueSelected(sender: UIButton) {
+		moveSlider(to: 0)
+		touchPosition!.frame = handle!.frame
+		makeSliderGrabbable()
+	}
+	@objc func rightValueSelected(sender: UIButton) {
+		moveSlider(to: stops.count - 1)
+		touchPosition!.frame = handle!.frame
+		makeSliderGrabbable()
 	}
 	
 	@objc func sliderWasDragged(gesture: UIPanGestureRecognizer) {

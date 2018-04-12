@@ -26,7 +26,7 @@ class ChatToolbarViewController: UIViewController {
 	}
 	
 	func showScale() {
-		let Body = RCScale(title: "Pain Level", range: [1,7])
+		let Body = RCScale(title: "Water Volume (L)", range: [1,7])
 		let Content = RCContent(RCBody: Body, as: .scale, in: ChatViewController!)
 		ChatViewController!.showResponseCard(RCContent: Content)
 	}

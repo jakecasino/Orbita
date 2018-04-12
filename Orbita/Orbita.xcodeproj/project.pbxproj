@@ -21,6 +21,7 @@
 		0BB7BB9A206EEBF700F0CEE7 /* OrbitaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */; };
 		0BB7BBA5206EEBF700F0CEE7 /* OrbitaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */; };
 		0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */; };
+		0BEE86FA207FCCCA00F477EB /* RCMediaPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE86F9207FCCCA00F477EB /* RCMediaPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitaUITests.swift; sourceTree = "<group>"; };
 		0BB7BBA6206EEBF700F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCResponseCardViewController.swift; sourceTree = "<group>"; };
+		0BEE86F9207FCCCA00F477EB /* RCMediaPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCMediaPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				0B1950B12074193200E1AEFE /* RCComponent.swift */,
 				0B49B35B206F17EC0059565C /* RCList.swift */,
 				0B0C624620787C2400422130 /* RCScale.swift */,
+				0BEE86F9207FCCCA00F477EB /* RCMediaPicker.swift */,
 			);
 			path = "Response Cards";
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */,
+				0BEE86FA207FCCCA00F477EB /* RCMediaPicker.swift in Sources */,
 				0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */,
 				0B1950B22074193200E1AEFE /* RCComponent.swift in Sources */,
 				0B0C624720787C2400422130 /* RCScale.swift in Sources */,

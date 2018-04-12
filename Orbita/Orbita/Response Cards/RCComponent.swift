@@ -51,9 +51,8 @@ class RCContent {
 				RCFooter = RCBarComponent(.footer, labels: ["\((RCBody as! RCScale).range.first!)", "\((RCBody as! RCScale).range.last!)"], actions: [], in: ChatViewController)
 			case .discrete:
 				RCFooter = RCBarComponent(.footer, labels: ["\((RCBody as! RCScale).range.first!)", "slider value", "\((RCBody as! RCScale).range.last!)"], actions: [], in: ChatViewController)
-				RCFooter!.labels[1].textAlignment = .center
-				RCFooter!.labels[1].textColor = UIColor(named: "Orbita Blue")
-				(RCBody as! RCScale).sliderValue = RCFooter!.labels[1]
+				(RCFooter!.labels[1] as! UIButton).isEnabled = false
+				(RCBody as! RCScale).sliderValue = (RCFooter!.labels[1] as! UIButton)
 			}
 			break
 		}
@@ -73,7 +72,7 @@ class RCContent {
 class RCBarComponent: UIView {
 	var ChatViewController: ChatViewController?
 	var shadow: UIView?
-	var labels = [UILabel]()
+	var labels = [Any]()
 	var actions = [UIButton]()
 	var form: Forms?
 	
@@ -95,28 +94,35 @@ class RCBarComponent: UIView {
 		self.ChatViewController = ChatViewController
 		self.form = RCBarComponentForm
 		
-		func generateUILabel(text: String, type: TextStyles) -> UILabel {
-			let label = UILabel(frame: CGRect.zero)
-			label.text = text.uppercased()
+		func generateUILabel(text: String, type: TextStyles) -> Any {
+			let font: UIFont
+			switch type {
+			case .title:
+				font = UILabel().Raleway(textStyle: .footnote, weight: .bold)
+			case .subtitle:
+				font = UIFont.preferredFont(forTextStyle: .footnote)
+			}
 			
 			switch form! {
 			case .header:
+				let label = UILabel(frame: CGRect.zero)
+				label.text = text.uppercased()
 				label.textColor = UIColor.black
+				label.font = font
+				label.sizeToFit()
+				return label
 			case .footer:
-				label.textColor = UIColor(named: "Orbita Blue")
+				let button = UIButton(frame: CGRect.zero)
+				button.setTitle(text.uppercased(), for: .normal)
+				button.setTitleColor(UIColor(named: "Orbita Blue"), for: .normal)
+				button.titleLabel!.font = font
+				button.sizeToFit()
+				button.frame.size = CGSize(width: button.frame.width / 3, height: button.frame.height)
+				return button
 			}
-			
-			switch type {
-			case .title:
-				label.font = label.Raleway(textStyle: .footnote, weight: .bold)
-			case .subtitle:
-				label.font = UIFont.preferredFont(forTextStyle: .footnote)
-			}
-			
-			label.sizeToFit()
-			return label
 		}
 		
+		let height: CGFloat
 		switch self.form! {
 		case .header:
 			paddingVertical = 16
@@ -138,6 +144,9 @@ class RCBarComponent: UIView {
 				self.actions.append(UIButton(for: self.form!, action: actions[0], size: buttonSize))
 				self.actions[0].addTarget(self, action: #selector(send(sender:)), for: UIControlEvents.touchUpInside)
 			}
+			
+			height = paddingVertical + (self.labels[0] as! UILabel).frame.height + paddingVertical
+			break
 		case .footer:
 			paddingVertical = 10
 			buttonSize = 30
@@ -145,10 +154,11 @@ class RCBarComponent: UIView {
 				let label = generateUILabel(text: text, type: .title)
 				self.labels.append(label)
 			}
+			
+			height = paddingVertical + (self.labels[0] as! UIButton).frame.height + paddingVertical
 			break
 		}
 		
-		let height = paddingVertical + self.labels[0].frame.height + paddingVertical
 		frame.size = CGSize(width: frame.width, height: height)
 		backgroundColor = UIColor.white
 		
@@ -174,7 +184,8 @@ class RCBarComponent: UIView {
 			switch form! {
 			case .header:
 				paddingVertical = 16
-				for (index, label) in labels.enumerated() {
+				for (index, text) in labels.enumerated() {
+					let label = text as! UILabel
 					if index == 0 {
 						label.frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
 						addSubview(label)
@@ -195,14 +206,14 @@ class RCBarComponent: UIView {
 				break
 			case .footer:
 				paddingVertical = 10
-				
+				let labels = self.labels as! [UIButton]
 				// Layout first label
 				if !(labels.isEmpty) {
 					labels[0].frame.origin = CGPoint(x: paddingHorizontal, y: paddingVertical)
 					addSubview(labels[0])
 				}
 				
-				// Layout other labels
+				// Layout second label
 				let numberOfLabels = labels.count
 				switch numberOfLabels {
 				case 2:
@@ -215,11 +226,12 @@ class RCBarComponent: UIView {
 					labels[2].frame.origin = CGPoint(x: superview.frame.width - paddingHorizontal - labels[2].frame.width, y: paddingVertical)
 					addSubview(labels[2])
 					
-					// Adjust sliderValue Label for RCSCale at launch
 					if let RCContent = ChatViewController!.RCResponseCard!.RCContent {
 						if RCContent.RCTemplate! == .scale {
 							let RCScale = RCContent.RCBodyContent as! RCScale
 							RCScale.moveSlider(to: (RCScale.range.count / 2))
+							labels[2].addTarget(RCScale, action: #selector(RCScale.leftValueSelected(sender:)), for: UIControlEvents.touchUpInside)
+							labels[0].addTarget(RCScale, action: #selector(RCScale.rightValueSelected(sender:)), for: UIControlEvents.touchUpInside)
 						}
 					}
 					
