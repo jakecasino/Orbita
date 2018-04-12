@@ -10,7 +10,6 @@ import UIKit
 class ChatViewController: UIViewController {
 	var ChatToolbarViewController: ChatToolbarViewController?
 	var RCResponseCard: RCResponseCardView?
-	var RCResponseCardShadow: RCResponseCardViewShadow?
 	var RCViewController: RCResponseCardViewController?
 	
 	@IBOutlet weak var ChatToolbar: UIView!
@@ -23,105 +22,51 @@ class ChatViewController: UIViewController {
 	}
 	
 	override func viewDidLoad() {
-		
 		// Set background color for ChatView
-		view.backgroundColor = UIColor(named: "Light Grey")
+		view.backgroundColor = UIColor(named: "Lighter Grey")
 		
 		// Resize Chat Toolbar
 		ChatToolbar.frame.size = CGSize(width: view.frame.width, height: 108 + view.safeAreaInsets.bottom)
 		ChatToolbar.frame.origin = CGPoint(x: 0, y: view.frame.height - ChatToolbar.frame.height)
 	}
 	
-	func showResponseCard(RCHeader: RCHeader, RCBody: RCBody, footer: RCFooter?) {
-		dismissResponseCard()
-		
-		// Initialize RCViewController
-		self.RCViewController = RCResponseCardViewController(with: RCBody.RCBodyTemplate!)
-		self.RCViewController!.ChatViewController = self
-		
-		// Initialize RCResponseCard
-		guard RCViewController != nil else { return }
-		RCResponseCard = RCResponseCardView(frame: CGRect(x: RCViewController!.constraint(for: .marginLeft, in: self), y: view.frame.height, width: RCViewController!.constraint(for: .width, in: self), height: RCViewController!.minimumHeight!))
-		RCResponseCard!.backgroundColor = UIColor(named: "Light Grey")
-		RCResponseCard!.layer.cornerRadius = 12
-		RCResponseCard!.layer.masksToBounds = true
-		view.insertSubview(RCResponseCard!, belowSubview: ChatToolbar)
-		
-		RCResponseCard!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(RCResponseCardWasDragged(gesture:))))
-		RCResponseCard!.RCHeader = RCHeader
-		RCResponseCard!.RCBodyView = RCBody
-		
-		// Create shadow for RCResponseCard
-		RCResponseCardShadow = RCResponseCardViewShadow(frame: RCResponseCard!.frame)
-		RCResponseCardShadow!.backgroundColor = UIColor.white
-		RCResponseCardShadow!.layer.shadowColor = UIColor.black.cgColor
-		RCResponseCardShadow!.layer.cornerRadius = RCResponseCard!.layer.cornerRadius
-		RCResponseCardShadow!.layer.shadowOpacity = 0.15
-		RCResponseCardShadow!.layer.shadowRadius = 2
-		RCResponseCardShadow!.layer.masksToBounds = false
-		RCResponseCardShadow!.layer.shadowOffset = CGSize.zero
-		view.insertSubview(RCResponseCardShadow!, belowSubview: RCResponseCard!)
-		
-		// Connect RCViewController to ChatViewController and RCResponseCard
-		guard RCResponseCard != nil else { return }
-		RCViewController!.willMove(toParentViewController: self)
-		RCResponseCard!.addSubview(RCViewController!.view)
-		addChildViewController(RCViewController!)
-		RCViewController!.didMove(toParentViewController: self)
-		RCResponseCard!.alpha = 0
-		
-		// Add RCBody
-		RCBody.addRCBody(to: RCResponseCard!, in: RCViewController!)
-		
-		// Add RCHeader
-		RCViewController!.view.addSubview(RCHeader.shadow!)
-		RCViewController!.view.addSubview(RCHeader)
-		
-		// Display RCResponseCard
-		UIView.animate(withDuration: 0.3) {
+	func showResponseCard(RCContent: RCContent) {
+		func show() {
+			RCResponseCard = RCResponseCardView(RCContent: RCContent, in: self)
+			UIView.animate(withDuration: 0.3) {
 			self.RCResponseCard!.alpha = 1
-			self.RCResponseCard!.frame = CGRect(x: self.RCResponseCard!.frame.origin.x, y: self.RCViewController!.constraint(for: .originYwhenMinimized, in: self), width: self.RCResponseCard!.frame.width, height: self.RCResponseCard!.frame.height)
-			self.RCResponseCardShadow!.frame = self.RCResponseCard!.frame
-		}
-	}
-	
-	func dismissResponseCard() {
-		if RCResponseCard != nil {
-			UIView.animate(withDuration: 0.3, animations: {
-				self.RCResponseCard!.alpha = 0
-				self.RCResponseCardShadow!.alpha = 0
-			}) { (finished: Bool) in
-				for view in self.view.subviews {
-					if let RCResponseCardView = view as? RCResponseCardView {
-						RCResponseCardView.removeFromSuperview()
-						self.RCResponseCard = nil
-					}
-					if let RCResponseCardViewShadow = view as? RCResponseCardViewShadow {
-						RCResponseCardViewShadow.removeFromSuperview()
-						self.RCResponseCardShadow = nil
-					}
-				}
-				for childViewController in self.childViewControllers {
-					if let RCResponseCardViewController = childViewController as? RCResponseCardViewController {
-						RCResponseCardViewController.removeFromParentViewController()
-						self.RCViewController = nil
-					}
-				}
+			self.RCResponseCard!.frame = CGRect(x: self.RCResponseCard!.frame.origin.x, y: self.RCViewController!.constraint(for: .originYwhenMinimized), width: self.RCResponseCard!.frame.width, height: self.RCResponseCard!.frame.height)
+			self.RCResponseCard!.shadow!.frame = self.RCResponseCard!.frame
 			}
 		}
+		
+		// Remove any existing RCResponseCards
+		if RCResponseCard != nil {
+			RCResponseCard!.dismiss {
+				show()
+			}
+		} else {
+			show()
+		}
+		
 	}
 	
-	@objc private func RCResponseCardWasDragged(gesture: UIPanGestureRecognizer) {
+	@objc func RCResponseCardWasDragged(gesture: UIPanGestureRecognizer) {
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
 			let newPosition = gesture.view!.frame.origin.y + translation.y
-			let minimumStop = RCViewController!.constraint(for: .originYwhenMinimized, in: self) + 24
-			if newPosition > RCViewController!.constraint(for: .originYwhenMaximized, in: self) {
+			let minimumStop = RCViewController!.constraint(for: .originYwhenMinimized) + 24
+			if newPosition > RCViewController!.constraint(for: .originYwhenMaximized) {
 				if newPosition < minimumStop {
 					let newFrame = CGRect(x: gesture.view!.frame.origin.x, y: newPosition, width: gesture.view!.frame.width, height: gesture.view!.frame.height - translation.y)
 					RCResponseCard!.frame = newFrame
-					self.RCResponseCardShadow!.frame = self.RCResponseCard!.frame
+					self.RCResponseCard!.shadow!.frame = self.RCResponseCard!.frame
 					gesture.setTranslation(CGPoint.zero, in: self.view)
+					
+					if let RCFooter = RCResponseCard!.RCContent!.RCFooter {
+						RCFooter.frame.origin = CGPoint(x: RCFooter.frame.origin.x, y: RCResponseCard!.frame.height - RCFooter.frame.height)
+						RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+					}
 				}
 			}
 		}
@@ -134,3 +79,37 @@ class ChatViewController: UIViewController {
 
 }
 
+extension UIButton {
+	convenience init(for component: RCBarComponent.Forms, action: actions, size: CGFloat) {
+		self.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
+		tintColor = UIColor.white
+		backgroundColor = UIColor(named: "Orbita Blue")
+		layer.cornerRadius = size / 2
+		
+		switch action {
+		case .send:
+			setImage(UIImage(named: "Send"), for: .normal)
+		}
+	}
+}
+extension UILabel {
+	func Raleway(textStyle: UIFontTextStyle, weight: UIFont.Weight) -> UIFont {
+		adjustsFontForContentSizeCategory = true
+		return UIFontMetrics.default.scaledFont(for: UIFont(Raleway: textStyle, weight: weight)!)
+	}
+}
+
+extension UIFont {
+	convenience init?(Raleway textStyle: UIFontTextStyle, weight: UIFont.Weight) {
+		let font: String
+		switch weight {
+		case .bold:
+			font = "Raleway-Bold"
+			break
+		default:
+			font = "Raleway-Regular"
+			break
+		}
+		self.init(name: font, size: (UIFont.preferredFont(forTextStyle: textStyle).pointSize) * 1.1)
+	}
+}

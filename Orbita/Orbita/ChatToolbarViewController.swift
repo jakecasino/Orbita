@@ -14,15 +14,21 @@ class ChatToolbarViewController: UIViewController {
 		if ChatViewController!.RCViewController == nil {
 			ChatViewController!.RCViewController = RCResponseCardViewController(with: .list)
 		}
+		showScale()
+	}
+	
+	func showList() {
+		let list = ["Upper Back", "Lower Back", "Neck"]
 		
-		let list = ["Lower Back", "Upper Back", "Neck", "Left Shoulder", "Right Shoulder", "Biceps", "Triceps"]
-		
-		let header = RCHeader(title: "Choose All that Apply", enableSendButton: true, in: ChatViewController!)
-		
-		let RCBodyContent = RCBodyListViewController(list: list, canSelectMultipleItems: true)
-		let RCBodyView = RCBody(RCBodyViewController: RCBodyContent, as: .list)
-		
-		ChatViewController!.showResponseCard(RCHeader: header, RCBody: RCBodyView, footer: nil)
+		let Body = RCList(list: list, canSelectMultipleItems: false)
+		let Content = RCContent(RCBody: Body, as: .list, in: ChatViewController!)
+		ChatViewController!.showResponseCard(RCContent: Content)
+	}
+	
+	func showScale() {
+		let Body = RCScale(title: "Water Volume (L)", range: [1,7])
+		let Content = RCContent(RCBody: Body, as: .scale, in: ChatViewController!)
+		ChatViewController!.showResponseCard(RCContent: Content)
 	}
 	
     override func viewDidLoad() {

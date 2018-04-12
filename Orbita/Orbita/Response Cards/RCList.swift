@@ -6,7 +6,8 @@
 //
 
 import UIKit
-class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	var collectionView: UICollectionView?
 	var list = [String]()
 	
@@ -17,11 +18,11 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 		let layout = UICollectionViewFlowLayout()
 		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 		collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-		collectionView!.backgroundColor = UIColor(named: "Light Grey")
+		collectionView!.backgroundColor = UIColor(named: "Lighter Grey")
 		collectionView!.isScrollEnabled = false
 		collectionView!.dataSource = self
 		collectionView!.delegate = self
-		collectionView!.register(RCBodyListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
+		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
 		view.addSubview(collectionView!)
 		
 		if canSelectMultipleItems { collectionView!.allowsMultipleSelection = true }
@@ -36,12 +37,17 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 		list.removeAll()
 	}
 	
+	override func didMove(toParentViewController parent: UIViewController?) {
+		view.frame = view.superview!.bounds
+		collectionView!.frame.size = collectionView!.superview!.frame.size
+	}
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return list.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResponseCardListItem", for: indexPath) as! RCBodyListItem
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResponseCardListItem", for: indexPath) as! RCListItem
 		cell.createListLabel(for: list[indexPath.row])
 		cell.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
 		cell.layer.cornerRadius = 12
@@ -62,13 +68,13 @@ class RCBodyListViewController: UIViewController, UICollectionViewDataSource, UI
 		}
 		let margin: CGFloat = 8
 		let width: CGFloat = view.frame.width - (margin * 2)
-		let height = labelHeight(font: UIFont.preferredFont(forTextStyle: .body), width: width) + 24
+		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + 24
 		return CGSize(width: width, height: height)
 	}
 
 }
 
-class RCBodyListItem: UICollectionViewCell {
+class RCListItem: UICollectionViewCell {
 	
 	override var isSelected: Bool {
 		didSet {
@@ -97,7 +103,7 @@ class RCBodyListItem: UICollectionViewCell {
 		let label = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
 		label.text = listItem
 		label.textColor = UIColor.white
-		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.font = label.Raleway(textStyle: .body, weight: .regular)
 		label.sizeToFit()
 		label.frame.origin = CGPoint(x: 16, y: 12)
 		addSubview(label)
