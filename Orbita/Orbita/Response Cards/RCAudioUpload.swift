@@ -120,7 +120,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
 				}
 			}) { (complete) in
 				for (index, subview) in self.view.subviews.enumerated() {
-					if index == self.view.subviews.count - 2 {
+					if index == self.view.subviews.count - 3 {
 						subview.removeFromSuperview()
 					}
 				}
@@ -148,13 +148,66 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
 		return documentDirectory
 	}
 	
-	class AudioPlayerView: UIView {
-		init(audioPlayer: AVAudioPlayer, in view: RCAudioUpload) {
-			super.init(frame: view.view.bounds)
-			self.backgroundColor = UIColor.clear
-			UIView.animate(withDuration: 0.8) {
-				self.backgroundColor = UIColor(named: "Lighter Grey")
+	func dismissAudioPlayerView() {
+		timerLabel!.text = "0:00"
+		timerLabel!.sizeToFit()
+		for subview in view.subviews {
+			if let subview = subview as? AudioPlayerView {
+				UIView.animate(withDuration: 0.3, animations: {
+					subview.alpha = 0
+				}) { (complete) in
+					subview.removeFromSuperview()
+				}
 			}
+		}
+	}
+	
+	class AudioPlayerView: UIView {
+		var audioPlayer: AVAudioPlayer?
+		var RCAudioUpload: RCAudioUpload?
+		
+		init(audioPlayer: AVAudioPlayer, in RCAudioUpload: RCAudioUpload) {
+			super.init(frame: RCAudioUpload.view.bounds)
+			self.audioPlayer = audioPlayer
+			self.RCAudioUpload = RCAudioUpload
+			
+			self.backgroundColor = UIColor.clear
+			UIView.animate(withDuration: 0.8, animations: {
+				self.backgroundColor = UIColor(named: "Lighter Grey")
+			}) { (complete) in
+				let margin: CGFloat = 16
+				let height = self.frame.height  - (margin * 2)
+				let width = (self.frame.width - (margin * 3)) / 2
+				let playButton = UIButton(frame: CGRect(x: margin, y: (self.frame.height - height) / 2, width: width, height: height))
+				let trashButton = UIButton(frame: CGRect(x: (margin * 2) + width, y: (self.frame.height - height) / 2, width: width, height: height))
+				playButton.layer.cornerRadius = 12
+				trashButton.layer.cornerRadius = 12
+				playButton.tintColor = UIColor(named: "Orbita Blue")
+				trashButton.tintColor = UIColor.white
+				playButton.setImage(UIImage(named: "Play"), for: .normal)
+				trashButton.setImage(UIImage(named: "Trash"), for: .normal)
+				playButton.backgroundColor = UIColor.white
+				trashButton.backgroundColor = UIColor.red
+				playButton.alpha = 0
+				trashButton.alpha = 0
+				playButton.addTarget(self, action: #selector(self.play(sender:)), for: .touchUpInside)
+				trashButton.addTarget(self, action: #selector(self.dismiss(sender:)), for: .touchUpInside)
+				self.addSubview(playButton)
+				self.addSubview(trashButton)
+				
+				UIView.animate(withDuration: 0.15, animations: {
+					playButton.alpha = 1
+					trashButton.alpha = 1
+				})
+			}
+		}
+		
+		@objc func play(sender: UIButton) {
+			audioPlayer!.play()
+		}
+		
+		@objc func dismiss(sender: UIButton) {
+			RCAudioUpload!.dismissAudioPlayerView()
 		}
 		
 		required init?(coder aDecoder: NSCoder) {
