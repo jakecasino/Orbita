@@ -7,16 +7,16 @@
 
 import UIKit
 
-class RCMediaUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 	var mediaType: mediaTypes?
-	var media: Any?
+	var media: UIImageView?
 	var liveIsEnabled: Bool?
-	var ChooseFromLibrary: UIButton?
+	var ChooseFromLibrary: RCAction?
+	var captureButton: UIButton?
 	
 	enum mediaTypes {
 		case image
 		case video
-		case audio
 	}
 	
 	init(type: mediaTypes, enableLive liveIsEnabled: Bool) {
@@ -32,7 +32,7 @@ class RCMediaUpload: UIViewController, UIImagePickerControllerDelegate, UINaviga
 	override func didMove(toParentViewController parent: UIViewController?) {
 		view.frame = view.superview!.bounds
 		
-		if mediaType! != .audio {
+		if !liveIsEnabled! {
 			let dash = CAShapeLayer()
 			dash.strokeColor = UIColor(named: "Medium Grey")!.cgColor
 			dash.lineDashPattern = [13, 13]
@@ -47,12 +47,10 @@ class RCMediaUpload: UIViewController, UIImagePickerControllerDelegate, UINaviga
 		switch mediaType! {
 		case .image:
 			media = UIImageView(frame: view.bounds)
-			view.addSubview(media as! UIImageView)
+			view.addSubview(media!)
 			ChooseFromLibrary!.addTarget(self, action: #selector(launchLibrary), for: UIControlEvents.touchUpInside)
 			break
 		case .video:
-			break
-		case .audio:
 			break
 		}
 	}
@@ -77,15 +75,13 @@ class RCMediaUpload: UIViewController, UIImagePickerControllerDelegate, UINaviga
 				self.present(imagePicker, animated: true, completion: nil)
 			}
 			break
-		case .audio:
-			break
 		}
 	}
 	
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
 		if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-			(media as! UIImageView).image = image
-			(media as! UIImageView).contentMode = .scaleAspectFill
+			media!.image = image
+			media!.contentMode = .scaleAspectFill
 		}
 		
 		self.dismiss(animated: true, completion: nil)

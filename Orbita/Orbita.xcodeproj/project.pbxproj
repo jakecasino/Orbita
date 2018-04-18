@@ -11,6 +11,7 @@
 		0B1950B22074193200E1AEFE /* RCComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1950B12074193200E1AEFE /* RCComponent.swift */; };
 		0B27C50D207C712F0051966D /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B27C50C207C711C0051966D /* Raleway-Bold.ttf */; };
 		0B27C50F207C92E10051966D /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B27C50E207C923A0051966D /* Raleway-Regular.ttf */; };
+		0B318B5B2086C80F0052CCA4 /* RCAudioUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B318B5A2086C80F0052CCA4 /* RCAudioUpload.swift */; };
 		0B49B35C206F17EC0059565C /* RCList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35B206F17EC0059565C /* RCList.swift */; };
 		0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B35D206F27670059565C /* ChatToolbarViewController.swift */; };
 		0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */; };
@@ -21,7 +22,7 @@
 		0BB7BB9A206EEBF700F0CEE7 /* OrbitaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BB99206EEBF700F0CEE7 /* OrbitaTests.swift */; };
 		0BB7BBA5206EEBF700F0CEE7 /* OrbitaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */; };
 		0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */; };
-		0BEE86FA207FCCCA00F477EB /* RCMediaUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE86F9207FCCCA00F477EB /* RCMediaUpload.swift */; };
+		0BEE86FA207FCCCA00F477EB /* RCVisualUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE86F9207FCCCA00F477EB /* RCVisualUpload.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		0B1950B12074193200E1AEFE /* RCComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCComponent.swift; sourceTree = "<group>"; };
 		0B27C50C207C711C0051966D /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Bold.ttf"; sourceTree = "<group>"; };
 		0B27C50E207C923A0051966D /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Regular.ttf"; sourceTree = "<group>"; };
+		0B318B5A2086C80F0052CCA4 /* RCAudioUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCAudioUpload.swift; sourceTree = "<group>"; };
 		0B49B35B206F17EC0059565C /* RCList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCList.swift; sourceTree = "<group>"; };
 		0B49B35D206F27670059565C /* ChatToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatToolbarViewController.swift; sourceTree = "<group>"; };
 		0BB7BB81206EEBF500F0CEE7 /* Orbita.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbita.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,7 +64,7 @@
 		0BB7BBA4206EEBF700F0CEE7 /* OrbitaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitaUITests.swift; sourceTree = "<group>"; };
 		0BB7BBA6206EEBF700F0CEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BB7BBB2206EF33000F0CEE7 /* RCResponseCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCResponseCardViewController.swift; sourceTree = "<group>"; };
-		0BEE86F9207FCCCA00F477EB /* RCMediaUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCMediaUpload.swift; sourceTree = "<group>"; };
+		0BEE86F9207FCCCA00F477EB /* RCVisualUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCVisualUpload.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +99,8 @@
 				0B1950B12074193200E1AEFE /* RCComponent.swift */,
 				0B49B35B206F17EC0059565C /* RCList.swift */,
 				0B0C624620787C2400422130 /* RCScale.swift */,
-				0BEE86F9207FCCCA00F477EB /* RCMediaUpload.swift */,
+				0BEE86F9207FCCCA00F477EB /* RCVisualUpload.swift */,
+				0B318B5A2086C80F0052CCA4 /* RCAudioUpload.swift */,
 			);
 			path = "Response Cards";
 			sourceTree = "<group>";
@@ -298,10 +301,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BB7BBB3206EF33000F0CEE7 /* RCResponseCardViewController.swift in Sources */,
-				0BEE86FA207FCCCA00F477EB /* RCMediaUpload.swift in Sources */,
+				0BEE86FA207FCCCA00F477EB /* RCVisualUpload.swift in Sources */,
 				0B49B35E206F27670059565C /* ChatToolbarViewController.swift in Sources */,
 				0B1950B22074193200E1AEFE /* RCComponent.swift in Sources */,
 				0B0C624720787C2400422130 /* RCScale.swift in Sources */,
+				0B318B5B2086C80F0052CCA4 /* RCAudioUpload.swift in Sources */,
 				0B49B35C206F17EC0059565C /* RCList.swift in Sources */,
 				0BB7BB87206EEBF500F0CEE7 /* ChatViewController.swift in Sources */,
 				0BB7BB85206EEBF500F0CEE7 /* AppDelegate.swift in Sources */,

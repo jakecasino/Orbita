@@ -6,7 +6,9 @@
 //
 
 import UIKit
-
+protocol RCResponseCard {
+	var RCHeaderSendButton: RCAction? { get set }
+}
 class RCResponseCardView: UIView {
 	var shadow: RCResponseCardViewShadow?
 	var RCContent: RCContent?
@@ -16,7 +18,6 @@ class RCResponseCardView: UIView {
 		
 		// Set up necessary view controller
 		let RCViewController = RCResponseCardViewController(with: RCContent.RCTemplate!)
-		RCViewController.Chat = ChatViewController
 		ChatViewController.RCViewController = RCViewController
 		
 		// Set up layout for Response Card
@@ -25,6 +26,7 @@ class RCResponseCardView: UIView {
 		RCViewController.view.frame.size = self.frame.size // Need to update when height changes
 		self.RCContent = RCContent
 		self.ChatViewController = ChatViewController
+		RCViewController.Chat = self.ChatViewController
 		
 		// Set up visual language for Response Card
 		backgroundColor = UIColor(named: "Lighter Grey")
@@ -110,8 +112,10 @@ class RCResponseCardViewController: UIViewController {
 			minimumHeight = 300
 		case .scale:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 48
-		case .mediaPicker:
+		case .visualUpload:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((width * 3) / 4)
+		case .audioUpload:
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 104
 		}
 	}
 	
@@ -145,14 +149,20 @@ class RCResponseCardViewController: UIViewController {
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)
+			RCBodyContent.RCViewController = self
 			break
 		case .scale:
 			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCScale
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)
-		case .mediaPicker:
-			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCMediaUpload
+		case .visualUpload:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCVisualUpload
+			RCBodyView.addSubview(RCBodyContent.view)
+			addChildViewController(RCBodyContent)
+			RCBodyContent.didMove(toParentViewController: self)
+		case .audioUpload:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCAudioUpload
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)
@@ -172,11 +182,31 @@ class RCResponseCardViewController: UIViewController {
 	func RCResponseCardViewDidChange() {
 		let percentThreshold: CGFloat = 0.25
 		let originYThresholdForMaximumHeight = constraint(for: .deviceHeight) * percentThreshold
+		if RCResponseCard!.frame.origin.y < originYThresholdForMaximumHeight {
+			RCResponseCardChangeState(to: .maximized)
+		} else {
+			RCResponseCardChangeState(to: .minimized)
+		}
+	}
+	
+	func RCResponseCardChangeState(to state: cardStates) {
 		let height: CGFloat
 		let y: CGFloat
 		var shouldRemoveGestureRecognizer = false
 		
-		if RCResponseCard!.frame.origin.y < originYThresholdForMaximumHeight {
+		switch state {
+		case .minimized:
+			y = constraint(for: .originYwhenMinimized)
+			height = constraint(for: .minimumHeight)
+			
+			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
+			case .list:
+				(RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = false
+				break
+			default:
+				break
+			}
+		case .maximized:
 			y = constraint(for: .originYwhenMaximized)
 			height = constraint(for: .maximumHeight)
 			
@@ -188,26 +218,16 @@ class RCResponseCardViewController: UIViewController {
 				break
 			}
 			shouldRemoveGestureRecognizer = true
-			
-		} else {
-			y = constraint(for: .originYwhenMinimized)
-			height = constraint(for: .minimumHeight)
-			
-			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
-			case .list:
-				(RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = false
-				break
-			default:
-				break
-			}
 		}
 		
-		RCResponseCard!.frame = CGRect(x: constraint(for: .marginLeft), y: y, width: constraint(for: .width), height: height)
-		RCResponseCard!.shadow!.frame = RCResponseCard!.frame
-		
-		if let RCFooter = RCResponseCard!.RCContent!.RCFooter {
-			RCFooter.frame.origin = CGPoint(x: RCFooter.frame.origin.x, y: RCResponseCard!.frame.height - RCFooter.frame.height)
-			RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+		UIView.animate(withDuration: 0.3) {
+			self.RCResponseCard!.frame = CGRect(x: self.constraint(for: .marginLeft), y: y, width: self.constraint(for: .width), height: height)
+			self.RCResponseCard!.shadow!.frame = self.RCResponseCard!.frame
+			
+			if let RCFooter = self.RCResponseCard!.RCContent!.RCFooter {
+				RCFooter.frame.origin = CGPoint(x: RCFooter.frame.origin.x, y: self.RCResponseCard!.frame.height - RCFooter.frame.height)
+				RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+			}
 		}
 		
 		if shouldRemoveGestureRecognizer {
@@ -215,6 +235,11 @@ class RCResponseCardViewController: UIViewController {
 				RCResponseCard!.removeGestureRecognizer(gestureRecognizer)
 			}
 		}
+	}
+	
+	enum cardStates {
+		case minimized
+		case maximized
 	}
 	
 	enum RCResponseCardContraints {

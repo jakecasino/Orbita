@@ -43,6 +43,8 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allows you to send photos to the Chatbot</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allows you to send voice recordings to the Chatbot</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Raleway-Bold.ttf</string>
