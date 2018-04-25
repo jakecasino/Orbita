@@ -116,6 +116,8 @@ class RCResponseCardViewController: UIViewController {
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((width * 3) / 4)
 		case .audioUpload:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 104
+		case .datePicker:
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 204
 		}
 	}
 	
@@ -163,6 +165,11 @@ class RCResponseCardViewController: UIViewController {
 			RCBodyContent.didMove(toParentViewController: self)
 		case .audioUpload:
 			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCAudioUpload
+			RCBodyView.addSubview(RCBodyContent.view)
+			addChildViewController(RCBodyContent)
+			RCBodyContent.didMove(toParentViewController: self)
+		case .datePicker:
+			let RCBodyContent = RCResponseCard!.RCContent!.RCBodyContent as! RCDatePickerController
 			RCBodyView.addSubview(RCBodyContent.view)
 			addChildViewController(RCBodyContent)
 			RCBodyContent.didMove(toParentViewController: self)

@@ -7,7 +7,9 @@
 
 import UIKit
 
-class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RCResponseCard {
+	var RCHeaderSendButton: RCAction?
+	
 	var mediaType: mediaTypes?
 	var media: UIImageView?
 	var liveIsEnabled: Bool?
@@ -33,15 +35,21 @@ class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavig
 		view.frame = view.superview!.bounds
 		
 		if !liveIsEnabled! {
-			let dash = CAShapeLayer()
-			dash.strokeColor = UIColor(named: "Medium Grey")!.cgColor
-			dash.lineDashPattern = [13, 13]
-			dash.lineWidth = 2
-			dash.frame = view.bounds
-			dash.transform = CATransform3DMakeScale(-0.85, -0.85, 0)
-			dash.fillColor = nil
-			dash.path = UIBezierPath(rect: view.bounds).cgPath
-			view.layer.addSublayer(dash)
+			let dashBorder = CAShapeLayer()
+			dashBorder.strokeColor = UIColor(named: "Medium Grey")!.cgColor
+			dashBorder.lineDashPattern = [13, 13]
+			dashBorder.lineWidth = 2
+			dashBorder.frame = view.bounds
+			dashBorder.transform = CATransform3DMakeScale(-0.85, -0.85, 0)
+			dashBorder.fillColor = nil
+			dashBorder.path = UIBezierPath(rect: view.bounds).cgPath
+			view.layer.addSublayer(dashBorder)
+			
+			let placeholderIconSize: CGFloat = 72
+			let placeholderIcon = UIImageView(frame: CGRect(x: (view.frame.width - placeholderIconSize) / 2, y: (view.frame.height - placeholderIconSize) / 2, width: placeholderIconSize, height: placeholderIconSize))
+			placeholderIcon.image = UIImage(named: "Photo")
+			placeholderIcon.tintColor = UIColor(named: "Medium Grey")
+			view.addSubview(placeholderIcon)
 		}
 		
 		switch mediaType! {
@@ -82,6 +90,7 @@ class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavig
 		if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
 			media!.image = image
 			media!.contentMode = .scaleAspectFill
+			RCHeaderSendButton!.isEnabled = true
 		}
 		
 		self.dismiss(animated: true, completion: nil)

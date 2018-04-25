@@ -160,6 +160,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
 				}
 			}
 		}
+		RCHeaderSendButton!.isEnabled = false
 	}
 	
 	class AudioPlayerView: UIView {
@@ -212,6 +213,16 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
 		
 		required init?(coder aDecoder: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
+		}
+		
+		class AudioPlayerButton: UIButton {
+			override var isHighlighted: Bool {
+				didSet {
+					if isHighlighted {
+						tintColor = UIColor.white
+					}
+				}
+			}
 		}
 	}
 }

@@ -50,12 +50,18 @@ class ChatToolbarViewController: UIViewController {
 			let Content = RCContent(RCBody: Body, as: .audioUpload, in: self.ChatViewController!)
 			self.ChatViewController!.showResponseCard(RCContent: Content)
 		}
+		let showDatePicker = UIAlertAction(title: "Date Picker", style: .default) { (action) in
+			let Body = RCDatePickerController(HeaderTitle: "New Appointment", pickerStyle: .date)
+			let Content = RCContent(RCBody: Body, as: .datePicker, in: self.ChatViewController!)
+			self.ChatViewController!.showResponseCard(RCContent: Content)
+		}
 		alertView.addAction(showSingleSelectionList)
 		alertView.addAction(showMultipleSelectionList)
 		alertView.addAction(showDiscreteScale)
 		alertView.addAction(showContinuousScale)
 		alertView.addAction(showImageUpload)
 		alertView.addAction(showAudioUpload)
+		alertView.addAction(showDatePicker)
 		present(alertView, animated: true, completion: nil)
 	}
 	

@@ -20,6 +20,7 @@ class RCScale: UIViewController {
 	var SliderEndValues: [RCAction]?
 	var stops = [CGFloat]()
 	var bufferZones = [CGFloat]()
+	var ticks = [UIView]()
 	
 	enum ScaleTypes {
 		case continuous
@@ -70,13 +71,26 @@ class RCScale: UIViewController {
 		
 		let margin: CGFloat = 16
 		let numberOfStops: Int
-		var leftValue: Int?
-		var rightValue: Int?
-		var bufferWidth: CGFloat?
+		var leftValue: Int
+		var rightValue: Int
+		var bufferWidth: CGFloat
 		
 		switch type! {
 		case .continuous:
-			numberOfStops = 2
+			leftValue = 0
+			rightValue = 0
+			
+			var limitNotReached = true
+			while limitNotReached {
+				let tickWidth = 2
+				let tickGutter = 8
+					
+				if (rightValue * (tickWidth + tickGutter)) > Int(view.frame.width + (margin * 2)) {
+					limitNotReached = false
+				} else {
+					rightValue += 1
+				}
+			}
 			break
 		case .discrete:
 			if (range[0] as! Int) < (range[1] as! Int) {
@@ -86,45 +100,51 @@ class RCScale: UIViewController {
 				leftValue = (range[1] as! Int)
 				rightValue = (range[0] as! Int)
 			}
-			numberOfStops = rightValue! - leftValue! + 1
-			bufferWidth = (view.frame.width - (margin * 2)) / CGFloat(numberOfStops - 1)
 		}
+		
+		numberOfStops = rightValue - leftValue + 1
+		bufferWidth = (view.frame.width - (margin * 2)) / CGFloat(numberOfStops - 1)
 		
 		for index in 1 ... numberOfStops {
 			if index == 1 {
 				stops.append(margin)
-				if type! == .discrete {
-					bufferZones.append(margin + (bufferWidth! / 2))
-				}
+				bufferZones.append(margin + (bufferWidth / 2))
 			} else if index == numberOfStops {
 				stops.append(view.frame.width - margin - handle!.frame.width)
-				if type! == .discrete {
-					bufferZones.append(bufferZones[0] + (bufferWidth! * CGFloat(index - 1)))
-				}
+				bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
 			} else {
-				if type! == .discrete {
-					stops.append(margin + (bufferWidth! * CGFloat(index - 1)) - (handle!.frame.width / 2))
-					bufferZones.append(bufferZones[0] + (bufferWidth! * CGFloat(index - 1)))
+				let width: CGFloat
+				switch type! {
+				case .continuous:
+					width = 2
+				case .discrete:
+					width = handle!.frame.width
 				}
+				stops.append(margin + (bufferWidth * CGFloat(index - 1)) - (width / 2))
+				bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
 			}
 		}
 		
-		if type! == .discrete {
-			range = []
-			
-			for (index, stop) in stops.enumerated() {
-				let tick = UIView(frame: CGRect.zero)
-				tick.frame.size = CGSize(width: 2, height: 12)
-				tick.frame.origin = CGPoint(x: stop + (handle!.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
-				tick.backgroundColor = UIColor(named: "Light Grey")
-				tick.layer.cornerRadius = tick.frame.width / 2
-				view.insertSubview(tick, belowSubview: handle!)
-				range.append(Int(index) + leftValue!)
+		
+		range = []
+		
+		for (index, stop) in stops.enumerated() {
+			let tick = UIView(frame: CGRect.zero)
+			tick.frame.size = CGSize(width: 2, height: 12)
+			tick.frame.origin = CGPoint(x: stop + (handle!.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
+			tick.backgroundColor = UIColor(named: "Light Grey")
+			tick.layer.cornerRadius = tick.frame.width / 2
+			ticks.append(tick)
+			view.insertSubview(ticks[index], belowSubview: handle!)
+			if ((type! == .continuous) && (index == stops.count - 2)) {
+				tick.backgroundColor = UIColor.clear
 			}
-			
-			bufferZones = bufferZones.reversed()
-			range = range.reversed()
+			range.append(Int(index) + leftValue)
 		}
+		
+		bufferZones = bufferZones.reversed()
+		range = range.reversed()
+		ticks = ticks.reversed()
 		
 		stops = stops.reversed()
 		SliderEndValues![1].addTarget(self, action: #selector(leftValueSelected(sender:)), for: .touchUpInside)
@@ -182,6 +202,19 @@ class RCScale: UIViewController {
 					switch type! {
 					case .continuous:
 						handle!.frame = touchPosition!.frame
+						print((handle!.frame.origin.x + (handle!.frame.width / 2)).description)
+						for (index, bufferZone) in bufferZones.enumerated() {
+							let handlePosition = handle!.frame.origin.x + (handle!.frame.width / 2)
+							if handlePosition > bufferZone {
+								if bufferZones.indices.contains(index + 1) {
+									if handlePosition < bufferZones[index + 1] {
+										if ticks.indices.contains(index - 2) {
+											ticks[index - 2].backgroundColor = UIColor.red
+										}
+									}
+								}
+							}
+						}
 						break
 					case .discrete:
 						for (index, bufferZone) in bufferZones.enumerated() {

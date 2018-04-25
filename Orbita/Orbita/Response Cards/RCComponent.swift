@@ -12,6 +12,7 @@ enum RCBodyTemplates {
 	case scale
 	case visualUpload
 	case audioUpload
+	case datePicker
 }
 
 class RCContent {
@@ -72,8 +73,10 @@ class RCContent {
 			
 			let RCHeaderTitle = "Choose one" // FIX
 			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [RCAction.glyphs.send], in: ChatViewController)
-			RCFooter = RCBarComponent(.footer, labels: [], actions: ["Choose from Library"], in: ChatViewController)
+			guard RCHeader!.RCActions.indices.contains(0) else { break }
+			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
 			
+			RCFooter = RCBarComponent(.footer, labels: [], actions: ["Choose from Library"], in: ChatViewController)
 			guard RCFooter!.RCActions.indices.contains(0) else { break }
 			RCBody.ChooseFromLibrary = RCFooter!.RCActions[0]
 		case .audioUpload:
@@ -87,6 +90,15 @@ class RCContent {
 			RCFooter = RCBarComponent(.footer, labels: ["0:00"], actions: [], in: ChatViewController)
 			guard RCFooter!.RCLabels.indices.contains(0) else { break }
 			RCBody.timerLabel = RCFooter!.RCLabels[0]
+		case .datePicker:
+			let RCBody = RCBody as! RCDatePickerController
+			self.RCBodyContent = RCBody
+			
+			RCHeader = RCBarComponent(.header, labels: [RCBody.HeaderTitle!], actions: [RCAction.glyphs.send], in: ChatViewController)
+			guard RCHeader!.RCActions.indices.contains(0) else { break }
+			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
+			
+			RCFooter = RCBarComponent(.footer, labels: [" "], actions: [], in: ChatViewController)
 		}
 		RCTemplate = template
 	}
@@ -296,20 +308,26 @@ class RCAction: UIButton {
 	
 	override var isHighlighted: Bool {
 		didSet {
-			if isHighlighted {
-				tintColor = backgroundColor
-			} else {
-				tintColor = UIColor.white
+			UIView.animate(withDuration: 0.15) {
+				if self.isHighlighted {
+					self.tintColor = self.backgroundColor
+				} else {
+					self.tintColor = UIColor.white
+				}
 			}
 		}
 	}
 	
 	override var isEnabled: Bool {
 		didSet {
-			if isEnabled {
-				backgroundColor = backgroundColor_store
-			} else {
-				backgroundColor = UIColor(named: "Medium Grey")
+			UIView.animate(withDuration: 0.3) {
+				if self.isEnabled {
+					self.tintColor = UIColor.white
+					self.backgroundColor = self.backgroundColor_store
+				} else {
+					self.tintColor = UIColor.white
+					self.backgroundColor = UIColor(named: "Medium Grey")
+				}
 			}
 		}
 	}
