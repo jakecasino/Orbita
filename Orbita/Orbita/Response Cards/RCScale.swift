@@ -8,14 +8,19 @@
 import UIKit
 
 class RCScale: UIViewController {
-	var range = [Any]()
-	var handle: UIView?
 	var RCHeaderTitle: String?
-	var sliderValue: UIButton?
+	var RCHeaderSendButton: RCAction?
 	var type: ScaleTypes?
+	
+	var handle: UIView?
 	var touchPosition: UIView?
+	
+	var range = [Any]()
+	var SliderValue: RCLabel?
+	var SliderEndValues: [RCAction]?
 	var stops = [CGFloat]()
 	var bufferZones = [CGFloat]()
+	var ticks = [UIView]()
 	
 	enum ScaleTypes {
 		case continuous
@@ -53,89 +58,134 @@ class RCScale: UIViewController {
 		handle!.frame.origin = CGPoint(x: (view.frame.width - handle!.frame.width) / 2, y: (view.frame.height - handle!.frame.height) / 2)
 		view.addSubview(handle!)
 		
-		if type! == .discrete {
-			touchPosition = UIView(frame: handle!.frame)
-			makeSliderGrabbable()
-			touchPosition!.backgroundColor = UIColor.clear
-			touchPosition!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
-			view.addSubview(touchPosition!)
+		touchPosition = UIView(frame: handle!.frame)
+		makeSliderGrabbable()
+		touchPosition!.backgroundColor = UIColor.clear
+		touchPosition!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
+		touchPosition!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(sliderWasTapped(gesture:))))
+		view.addSubview(touchPosition!)
+		
+		if let sliderValue = SliderValue {
+			sliderValue.textColor = UIColor(named: "Orbita Blue")
+		}
+		
+		let margin: CGFloat = 16
+		let numberOfStops: Int
+		var leftValue: Int
+		var rightValue: Int
+		var bufferWidth: CGFloat
+		
+		switch type! {
+		case .continuous:
+			leftValue = 0
+			rightValue = 0
 			
-			// Create stops
-			let margin: CGFloat = 16
-			let leftValue: Int
-			let rightValue: Int
-			if (range[0] as! Int) < (range[1] as! Int) {
-				leftValue = range[0] as! Int
-				rightValue = range[1] as! Int
-			} else {
-				leftValue = range[1] as! Int
-				rightValue = range[0] as! Int
-			}
-			let numberOfStops = rightValue - leftValue + 1
-			let bufferWidth = (view.frame.width - (margin * 2)) / CGFloat(numberOfStops - 1)
-			
-			for index in 1 ... numberOfStops {
-				if index == 1 {
-					stops.append(margin)
-					bufferZones.append(margin + ((bufferWidth / 2)))
-				} else if index == numberOfStops {
-					stops.append(view.frame.width - margin - handle!.frame.width)
-					bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
+			var limitNotReached = true
+			while limitNotReached {
+				let tickWidth = 2
+				let tickGutter = 8
+					
+				if (rightValue * (tickWidth + tickGutter)) > Int(view.frame.width + (margin * 2)) {
+					limitNotReached = false
 				} else {
-					stops.append(margin + (bufferWidth * CGFloat(index - 1)) - (handle!.frame.width / 2))
-					bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
+					rightValue += 1
 				}
 			}
-			
-			range = []
-			
-			for (index, stop) in stops.enumerated() {
-				let tick = UIView(frame: CGRect.zero)
-				tick.frame.size = CGSize(width: 2, height: 12)
-				tick.frame.origin = CGPoint(x: stop + (handle!.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
-				tick.backgroundColor = UIColor(named: "Light Grey")
-				tick.layer.cornerRadius = tick.frame.width / 2
-				view.insertSubview(tick, belowSubview: handle!)
-				range.append(Int(index) + leftValue)
+			break
+		case .discrete:
+			if (range[0] as! Int) < (range[1] as! Int) {
+				leftValue = (range[0] as! Int)
+				rightValue = (range[1] as! Int)
+			} else {
+				leftValue = (range[1] as! Int)
+				rightValue = (range[0] as! Int)
 			}
-			
-			stops = stops.reversed()
-			bufferZones = bufferZones.reversed()
-			range = range.reversed()
-		} else {
-			handle!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
 		}
+		
+		numberOfStops = rightValue - leftValue + 1
+		bufferWidth = (view.frame.width - (margin * 2)) / CGFloat(numberOfStops - 1)
+		
+		for index in 1 ... numberOfStops {
+			if index == 1 {
+				stops.append(margin)
+				bufferZones.append(margin + (bufferWidth / 2))
+			} else if index == numberOfStops {
+				stops.append(view.frame.width - margin - handle!.frame.width)
+				bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
+			} else {
+				let width: CGFloat
+				switch type! {
+				case .continuous:
+					width = 2
+				case .discrete:
+					width = handle!.frame.width
+				}
+				stops.append(margin + (bufferWidth * CGFloat(index - 1)) - (width / 2))
+				bufferZones.append(bufferZones[0] + (bufferWidth * CGFloat(index - 1)))
+			}
+		}
+		
+		
+		range = []
+		
+		for (index, stop) in stops.enumerated() {
+			let tick = UIView(frame: CGRect.zero)
+			tick.frame.size = CGSize(width: 2, height: 12)
+			tick.frame.origin = CGPoint(x: stop + (handle!.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
+			tick.backgroundColor = UIColor(named: "Light Grey")
+			tick.layer.cornerRadius = tick.frame.width / 2
+			ticks.append(tick)
+			view.insertSubview(ticks[index], belowSubview: handle!)
+			if ((type! == .continuous) && (index == stops.count - 2)) {
+				tick.backgroundColor = UIColor.clear
+			}
+			range.append(Int(index) + leftValue)
+		}
+		
+		bufferZones = bufferZones.reversed()
+		range = range.reversed()
+		ticks = ticks.reversed()
+		
+		stops = stops.reversed()
+		SliderEndValues![1].addTarget(self, action: #selector(leftValueSelected(sender:)), for: .touchUpInside)
+		SliderEndValues![0].addTarget(self, action: #selector(rightValueSelected(sender:)), for: .touchUpInside)
 	}
 	
 	func makeSliderGrabbable() {
+		touchPosition!.frame = handle!.frame
 		touchPosition!.frame.size = CGSize(width: 44, height: touchPosition!.frame.height)
 		touchPosition!.frame.origin = CGPoint(x: touchPosition!.frame.origin.x - (touchPosition!.frame.width / 2), y: touchPosition!.frame.origin.y)
 	}
 	
 	func moveSlider(to index: Int) {
-		if let sliderValue = sliderValue {
-			handle!.frame.origin = CGPoint(x: stops[index], y: handle!.frame.origin.y)
+		handle!.frame.origin = CGPoint(x: stops[index], y: handle!.frame.origin.y)
+		if let sliderValue = SliderValue {
 			if (index == 0 || index == range.count - 1 ) {
-				sliderValue.setTitle(" ", for: .normal)
 				sliderValue.alpha = 0
 			} else {
-				sliderValue.setTitle((range[index] as! Int).description, for: .normal)
+				sliderValue.text = (range[index] as! Int).description
 				sliderValue.alpha = 1
 				sliderValue.sizeToFit()
-				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x - (sliderValue.frame.width / 3) , y: sliderValue.frame.origin.y)
+				sliderValue.frame.origin = CGPoint(x: handle!.frame.origin.x , y: sliderValue.frame.origin.y)
 			}
 		}
 	}
 	
 	@objc func leftValueSelected(sender: UIButton) {
 		moveSlider(to: 0)
-		touchPosition!.frame = handle!.frame
 		makeSliderGrabbable()
+		RCHeaderSendButton!.isEnabled = true
 	}
 	@objc func rightValueSelected(sender: UIButton) {
 		moveSlider(to: stops.count - 1)
-		touchPosition!.frame = handle!.frame
 		makeSliderGrabbable()
+		RCHeaderSendButton!.isEnabled = true
+	}
+	
+	@objc func sliderWasTapped(gesture: UITapGestureRecognizer) {
+		if gesture.state == .ended {
+			RCHeaderSendButton!.isEnabled = true
+		}
 	}
 	
 	@objc func sliderWasDragged(gesture: UIPanGestureRecognizer) {
@@ -148,11 +198,25 @@ class RCScale: UIViewController {
 			let margin: CGFloat = 16
 			if newPosition >= margin { // Leftmost stop
 				if newPosition <= view.frame.width - margin - handle!.frame.width { // Rightmost stop
+					touchPosition!.frame.origin = CGPoint(x: newPosition, y: gesture.view!.frame.origin.y)
 					switch type! {
 					case .continuous:
-						handle!.frame.origin = CGPoint(x: newPosition, y: gesture.view!.frame.origin.y)
+						handle!.frame = touchPosition!.frame
+						print((handle!.frame.origin.x + (handle!.frame.width / 2)).description)
+						for (index, bufferZone) in bufferZones.enumerated() {
+							let handlePosition = handle!.frame.origin.x + (handle!.frame.width / 2)
+							if handlePosition > bufferZone {
+								if bufferZones.indices.contains(index + 1) {
+									if handlePosition < bufferZones[index + 1] {
+										if ticks.indices.contains(index - 2) {
+											ticks[index - 2].backgroundColor = UIColor.red
+										}
+									}
+								}
+							}
+						}
+						break
 					case .discrete:
-						touchPosition!.frame.origin = CGPoint(x: newPosition, y: gesture.view!.frame.origin.y)
 						for (index, bufferZone) in bufferZones.enumerated() {
 							if touchPosition!.frame.origin.x < bufferZone {
 								moveSlider(to: index)
@@ -164,6 +228,7 @@ class RCScale: UIViewController {
 			}
 		}
 		if gesture.state == .ended {
+			RCHeaderSendButton!.isEnabled = true
 			if let touchPosition = touchPosition {
 				touchPosition.frame = handle!.frame
 				makeSliderGrabbable()

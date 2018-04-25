@@ -7,9 +7,13 @@
 
 import UIKit
 
-class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, RCResponseCard {
+	var RCHeaderSendButton: RCAction?
+	
 	var collectionView: UICollectionView?
 	var list = [String]()
+	var SeeFullListButton: RCAction?
+	var RCViewController: RCResponseCardViewController?
 	
 	init(list: [String], canSelectMultipleItems: Bool) {
 		super.init(nibName: nil, bundle: nil)
@@ -40,6 +44,8 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	override func didMove(toParentViewController parent: UIViewController?) {
 		view.frame = view.superview!.bounds
 		collectionView!.frame.size = collectionView!.superview!.frame.size
+		
+		SeeFullListButton!.addTarget(self, action: #selector(maximizeCard), for: .touchUpInside)
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -71,7 +77,28 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + 24
 		return CGSize(width: width, height: height)
 	}
-
+	
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		toggleSendButtonInRCHeader()
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+		toggleSendButtonInRCHeader()
+	}
+	
+	func toggleSendButtonInRCHeader() {
+		if RCViewController!.RCResponseCard!.RCContent!.RCHeader!.RCActions.indices.contains(0) {
+			if !collectionView!.indexPathsForSelectedItems!.isEmpty {
+				RCHeaderSendButton!.isEnabled = true
+			} else {
+				RCHeaderSendButton!.isEnabled = false
+			}
+		}
+	}
+	
+	@objc func maximizeCard() {
+		RCViewController!.RCResponseCardChangeState(to: .maximized)
+	}
 }
 
 class RCListItem: UICollectionViewCell {
