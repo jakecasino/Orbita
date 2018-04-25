@@ -71,26 +71,10 @@ class ChatViewController: UIViewController {
 			}
 		}
 		if gesture.state == .ended {
-			UIView.animate(withDuration: 0.3) {
-				self.RCViewController!.RCResponseCardViewDidChange()
-			}
+			self.RCViewController!.RCResponseCardViewDidChange()
 		}
 	}
 
-}
-
-extension UIButton {
-	convenience init(for component: RCBarComponent.Forms, action: actions, size: CGFloat) {
-		self.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
-		tintColor = UIColor.white
-		backgroundColor = UIColor(named: "Orbita Blue")
-		layer.cornerRadius = size / 2
-		
-		switch action {
-		case .send:
-			setImage(UIImage(named: "Send"), for: .normal)
-		}
-	}
 }
 extension UILabel {
 	func Raleway(textStyle: UIFontTextStyle, weight: UIFont.Weight) -> UIFont {
