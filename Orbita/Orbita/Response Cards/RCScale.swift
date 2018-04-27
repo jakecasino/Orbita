@@ -202,19 +202,32 @@ class RCScale: UIViewController {
 					switch type! {
 					case .continuous:
 						handle!.frame = touchPosition!.frame
-						print((handle!.frame.origin.x + (handle!.frame.width / 2)).description)
-						for (index, bufferZone) in bufferZones.enumerated() {
+						handle!.backgroundColor = UIColor.clear
+						var tickPlus1 = 0
+						for (index, tick) in ticks.enumerated() {
 							let handlePosition = handle!.frame.origin.x + (handle!.frame.width / 2)
-							if handlePosition > bufferZone {
-								if bufferZones.indices.contains(index + 1) {
-									if handlePosition < bufferZones[index + 1] {
-										if ticks.indices.contains(index - 2) {
-											ticks[index - 2].backgroundColor = UIColor.red
-										}
-									}
-								}
+							if handlePosition > (tick.frame.origin.x) {
+								tickPlus1 = index
+								break
 							}
 						}
+						for tick in ticks {
+							tick.backgroundColor = UIColor(named: "Light Grey")
+							if tick.frame.size.width > 2 {
+								tick.frame.origin = CGPoint(x: tick.frame.origin.x + 3, y: tick.frame.origin.y)
+							}
+							tick.frame.size = CGSize(width: 2, height: 12)
+							tick.frame.origin = CGPoint(x: tick.frame.origin.x, y: ((view.frame.height - tick.frame.height) / 2))
+						}
+						ticks[tickPlus1].frame.size = handle!.frame.size
+						ticks[tickPlus1].frame.origin = CGPoint(x: (ticks[tickPlus1].frame.origin.x - 3), y: ((view.frame.height - ticks[tickPlus1].frame.height) / 2))
+						if ticks.indices.contains(tickPlus1 - 1) {
+							ticks[tickPlus1 - 1].backgroundColor = UIColor.red
+						}
+						if ticks.indices.contains(tickPlus1 + 1) {
+							ticks[tickPlus1 + 1].backgroundColor = UIColor.red
+						}
+						
 						break
 					case .discrete:
 						for (index, bufferZone) in bufferZones.enumerated() {

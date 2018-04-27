@@ -51,7 +51,7 @@ class ChatToolbarViewController: UIViewController {
 			self.ChatViewController!.showResponseCard(RCContent: Content)
 		}
 		let showDatePicker = UIAlertAction(title: "Date Picker", style: .default) { (action) in
-			let Body = RCDatePickerController(HeaderTitle: "New Appointment", pickerStyle: .date)
+			let Body = RCDatePickerController(HeaderTitle: "Birthday", pickerStyle: .date)
 			let Content = RCContent(RCBody: Body, as: .datePicker, in: self.ChatViewController!)
 			self.ChatViewController!.showResponseCard(RCContent: Content)
 		}

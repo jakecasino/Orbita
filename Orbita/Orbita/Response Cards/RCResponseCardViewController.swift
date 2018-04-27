@@ -117,7 +117,14 @@ class RCResponseCardViewController: UIViewController {
 		case .audioUpload:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 104
 		case .datePicker:
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 204
+			let row = UIButton(frame: CGRect.zero)
+			row.setTitle(" ", for: .normal)
+			row.titleLabel!.font = UILabel().Raleway(textStyle: .body, weight: .bold)
+			row.sizeToFit()
+			
+			let innerPaddingVertical = RCDatePickerComponent().innerPaddingVertical
+			row.frame.size = CGSize(width: 0, height: row.frame.height + (innerPaddingVertical * 2))
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + (row.frame.height * 5)
 		}
 	}
 	
@@ -140,7 +147,10 @@ class RCResponseCardViewController: UIViewController {
 		var height =  -(RCHeader!.frame.height)
 		if RCContent.canExpandCard! { height = height + constraint(for: .maximumHeight) }
 		else { height = height + constraint(for: .minimumHeight) }
-		if let RCFooter = RCContent.RCFooter { height = height - RCFooter.frame.height }
+		if let RCFooter = RCContent.RCFooter {
+			height -= RCFooter.frame.height
+			
+		}
 		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: constraint(for: .width), height: height))
 		view.addSubview(RCBodyView)
 		

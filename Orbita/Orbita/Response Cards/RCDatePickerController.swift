@@ -16,14 +16,13 @@ class RCDatePickerController: UIViewController, RCResponseCard {
 		self.init(nibName: nil, bundle: nil)
 		self.HeaderTitle = HeaderTitle
 		
-		picker = RCDatePickerView(pickerStyle: pickerStyle)
+		picker = RCDatePickerView(pickerStyle: pickerStyle, in: self)
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
-		if let parent = parent {
-			view.frame = parent.view.bounds
+		if let superview = view.superview {
+			view.frame = superview.bounds
 			view.addSubview(picker)
-			picker.reloadAllComponents()
 		}
 	}
 }
@@ -33,9 +32,57 @@ enum RCDatePickerStyles {
 	case dateAndTime
 }
 
-class RCDatePickerView: UIPickerView {
-	var components = [component]()
+class RCDatePickerView: UIView {
+	var DatePickerController: RCDatePickerController!
+	var components = [RCDatePickerComponent]()
 	var style: RCDatePickerStyles!
+	
+	init(pickerStyle: RCDatePickerStyles, in RCDatePickerController: RCDatePickerController) {
+		super.init(frame: CGRect.zero)
+		style = pickerStyle
+		DatePickerController = RCDatePickerController
+		
+		components.append(RCDatePickerComponent(for: .months))
+		components.append(RCDatePickerComponent(for: .days))
+		components.append(RCDatePickerComponent(for: .years))
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	override func didMoveToSuperview() {
+		if let superview = superview {
+			frame = superview.bounds
+			
+			for (index, component) in components.enumerated() {
+				addSubview(component)
+				
+				if index == 0 {
+					component.set(width: bounds.width * 0.4)
+					component.setAlignmentForRows(to: .right)
+				} else if index == 1 {
+					component.frame.origin = CGPoint(x: components[0].frame.width + (bounds.width * 0.05), y: 0)
+					component.set(width: bounds.width * 0.15)
+				} else if index == 2 {
+					component.frame.origin = CGPoint(x: components[1].frame.origin.x + components[1].frame.width + bounds.width * 0.05, y: 0)
+					component.set(width: bounds.width * 0.35)
+				}
+			}
+		}
+	}
+}
+
+class RCDatePickerComponent: UIScrollView {
+	let innerPaddingVertical: CGFloat = 4
+	var template: componentTemplates?
+	var rows = [UIButton]()
+	
+	enum componentTemplates {
+		case months
+		case days
+		case years
+	}
 	
 	enum Months: String {
 		case JAN = "January"
@@ -54,24 +101,79 @@ class RCDatePickerView: UIPickerView {
 		static let all = [JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC]
 	}
 	
-	struct component {
-		var items: [String]!
+	init() {
+		super.init(frame: CGRect.zero)
 	}
 	
-	init(pickerStyle: RCDatePickerStyles) {
+	init(for template: componentTemplates) {
 		super.init(frame: CGRect.zero)
-		style = pickerStyle
-		dataSource = self
+		self.template = template
+		contentSize = CGSize.zero
+		showsVerticalScrollIndicator = false
 		delegate = self
+		
+		var rows = [String]()
+		switch template {
+		case .months:
+			for month in Months.all {
+				rows.append(month.rawValue)
+			}
+		case .days:
+			for day in 1...31 {
+				rows.append("\(day)")
+			}
+		case .years:
+			for year in 1930...2018 {
+				rows.append("\(year)")
+			}
+			rows = rows.reversed()
+		}
+		
+		for (index, rowLabel) in rows.enumerated() {
+			let row = UIButton(frame: CGRect.zero)
+			row.setTitle(rowLabel, for: .normal)
+			row.setTitleColor(UIColor.black, for: .normal)
+			row.titleLabel!.font = UILabel().Raleway(textStyle: .body, weight: .bold)
+			row.isUserInteractionEnabled = false
+			row.contentHorizontalAlignment = .left
+			row.sizeToFit()
+			
+			row.frame.size = CGSize(width: 0, height: row.frame.height + (innerPaddingVertical * 2))
+			
+			if index == 0 {
+				let startingPoint = row.frame.height * 2
+				row.frame.origin = CGPoint(x: 0, y: startingPoint)
+				contentSize = CGSize(width: 0, height: contentSize.height + (startingPoint * 2))
+			} else {
+				row.frame.origin = CGPoint(x: 0, y: self.rows[index - 1].frame.origin.y + row.frame.height)
+			}
+			
+			self.rows.append(row)
+			contentSize = CGSize(width: 0, height: contentSize.height + row.frame.height)
+		}
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	override func didMoveToSuperview() {
+	func set(width: CGFloat) {
 		if let superview = superview {
-			frame = superview.bounds
+			frame.size = CGSize(width: width, height: superview.bounds.height)
+			
+			for row in rows {
+				let padding: CGFloat = 12
+				row.frame.size = CGSize(width: bounds.width - padding, height: row.frame.height)
+				addSubview(row)
+			}
+			
+			contentSize = CGSize(width: bounds.width, height: contentSize.height)
+		}
+	}
+	
+	func setAlignmentForRows(to alignment: UIControlContentHorizontalAlignment) {
+		for row in rows {
+			row.contentHorizontalAlignment = alignment
 		}
 	}
 	
@@ -93,46 +195,15 @@ class RCDatePickerView: UIPickerView {
 	}
 }
 
-extension RCDatePickerView: UIPickerViewDataSource {
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		switch style! {
-		case .date:
-			switch component {
-			case 0: return Months.all.count
-			case 1: return 31
-			case 2: return 100
-			default: return 0
-			}
-		case .dateAndTime:
-			return 0
+extension RCDatePickerComponent: UIScrollViewDelegate {
+	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		if let parentView = superview as? RCDatePickerView {
+			parentView.DatePickerController.RCHeaderSendButton!.isEnabled = true
 		}
 	}
-	
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 3
-	}
-}
-
-extension RCDatePickerView: UIPickerViewDelegate {
-	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return getTitle(forRow: row, inComponent: component)
-	}
-	func getTitle(forRow row: Int, inComponent component: Int) -> String {
-		switch style! {
-		case .date:
-			switch component {
-			case 0: return Months.all[row].rawValue
-			case 1: return String(row + 1)
-			case 2: return String(2018 - row)
-			default: return "bye"
-			}
-		case .dateAndTime:
-			return "Hello"
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		if let parentView = superview as? RCDatePickerView {
+			parentView.DatePickerController.RCHeaderSendButton!.isEnabled = true
 		}
-	}
-	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-		let title = getTitle(forRow: row, inComponent: component)
-		let titleFormat = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font: UIFont(name: "Raleway-Bold", size: UIFont.preferredFont(forTextStyle: .body).pointSize)!])
-		return titleFormat
 	}
 }
