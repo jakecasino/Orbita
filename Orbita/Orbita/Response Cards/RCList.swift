@@ -7,26 +7,26 @@
 
 import UIKit
 
-class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, RCResponseCard {
+class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RCResponseCardComponents {
+	let CELL_ID = "ListItem"
 	var RCHeaderSendButton: RCAction?
 	
-	var collectionView: UICollectionView?
 	var list = [String]()
 	var SeeFullListButton: RCAction?
-	var RCViewController: RCResponseCardViewController?
+	var RCViewController: RCDelegate?
 	
 	init(list: [String], canSelectMultipleItems: Bool) {
 		super.init(nibName: nil, bundle: nil)
+		view = UIView(frame: CGRect.zero)
 		self.list = list
 		
 		let layout = UICollectionViewFlowLayout()
 		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-		collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-		collectionView!.backgroundColor = UIColor(named: "Lighter Grey")
+		
+		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+		collectionView!.backgroundColor = color(.lighterGrey)
 		collectionView!.isScrollEnabled = false
-		collectionView!.dataSource = self
-		collectionView!.delegate = self
-		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: "ResponseCardListItem")
+		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: CELL_ID)
 		view.addSubview(collectionView!)
 		
 		if canSelectMultipleItems { collectionView!.allowsMultipleSelection = true }
@@ -42,18 +42,20 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
-		view.frame = view.superview!.bounds
-		collectionView!.frame.size = collectionView!.superview!.frame.size
+		if let superview = view.superview {
+			view.frame = superview.bounds
+			collectionView!.frame = view.bounds
+		}
 		
 		SeeFullListButton!.addTarget(self, action: #selector(maximizeCard), for: .touchUpInside)
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return list.count
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResponseCardListItem", for: indexPath) as! RCListItem
+	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_ID, for: indexPath) as! RCListItem
 		cell.createListLabel(for: list[indexPath.row])
 		cell.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
 		cell.layer.cornerRadius = 12
@@ -72,17 +74,16 @@ class RCList: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 			label.sizeToFit()
 			return label.frame.height
 		}
-		let margin: CGFloat = 8
-		let width: CGFloat = view.frame.width - (margin * 2)
+		let width: CGFloat = view.frame.width - (spacing(.small) * 2)
 		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + 24
 		return CGSize(width: width, height: height)
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		toggleSendButtonInRCHeader()
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+	override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		toggleSendButtonInRCHeader()
 	}
 	
@@ -107,11 +108,10 @@ class RCListItem: UICollectionViewCell {
 		didSet {
 			if self.isSelected  {
 				UIView.animate(withDuration: 0.15) {
-					self.backgroundColor = UIColor(named: "Orbita Blue")
+					self.backgroundColor = color(.orbitaBlue)
 					let checkmarkSize: CGFloat = 30
-					let padding: CGFloat = 8
-					let checkmark = UIButton(frame: CGRect(x: self.frame.width - checkmarkSize - padding, y: (self.frame.height - checkmarkSize) / 2, width: checkmarkSize, height: checkmarkSize))
-					checkmark.setImage(UIImage(named: "Checkmark"), for: .normal)
+					let checkmark = UIButton(frame: CGRect(x: self.frame.width - checkmarkSize - spacing(.small), y: (self.frame.height - checkmarkSize) / 2, width: checkmarkSize, height: checkmarkSize))
+					checkmark.setImage(glyph(.checkmark), for: .normal)
 					checkmark.tintColor = UIColor.white
 					self.addSubview(checkmark)
 				}

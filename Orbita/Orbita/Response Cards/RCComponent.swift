@@ -22,7 +22,7 @@ class RCContent {
 	var RCFooter: RCBarComponent?
 	var canExpandCard: Bool?
 	
-	init(RCBody: Any, as template: RCBodyTemplates, in ChatViewController: ChatViewController) {
+	init(RCBody: Any, as template: RCBodyTemplates, in ChatViewController: MainViewController) {
 		canExpandCard = false
 		switch template {
 		case .list:
@@ -114,7 +114,7 @@ class RCContent {
 }
 
 class RCBarComponent: UIView {
-	var ChatViewController: ChatViewController?
+	var ChatViewController: MainViewController?
 	var shadow: UIView?
 	var RCLabels = [RCLabel]()
 	var RCActions = [RCAction]()
@@ -125,7 +125,7 @@ class RCBarComponent: UIView {
 		case footer
 	}
 	
-	convenience init(_ RCBarComponentForm: Forms, labels: [String], actions: [Any], in ChatViewController: ChatViewController) {
+	convenience init(_ RCBarComponentForm: Forms, labels: [String], actions: [Any], in ChatViewController: MainViewController) {
 		let paddingVertical: CGFloat
 		
 		self.init(frame: CGRect.zero)
@@ -210,7 +210,7 @@ class RCBarComponent: UIView {
 				}
 				RCLabels[0].frame.origin = CGPoint(x: x, y: (frame.height - RCLabels[0].frame.height) / 2)
 				
-				if let RCContent = ChatViewController!.RCResponseCard!.RCContent {
+				if let RCContent = ChatViewController!.ResponseCard!.RCContent {
 					if RCContent.RCTemplate! == .scale {
 						let RCScale = RCContent.RCBodyContent as! RCScale
 						if RCScale.type! == .discrete {
@@ -299,7 +299,7 @@ class RCLabel: UILabel {
 }
 
 class RCAction: UIButton {
-	var ChatViewController: ChatViewController?
+	var ChatViewController: MainViewController?
 	var backgroundColor_store: UIColor!
 	enum glyphs {
 		case send
@@ -344,7 +344,7 @@ class RCAction: UIButton {
 		sizeToFit()
 	}
 	
-	init(glyph: glyphs, for form: RCBarComponent.Forms?, size: CGFloat, customColor: UIColor?, in ChatViewController: ChatViewController) {
+	init(glyph: glyphs, for form: RCBarComponent.Forms?, size: CGFloat, customColor: UIColor?, in ChatViewController: MainViewController) {
 		super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
 		self.ChatViewController = ChatViewController
 		
@@ -392,7 +392,7 @@ class RCAction: UIButton {
 	}
 	
 	@objc func dismissResponseCard(sender: UIButton) {
-		ChatViewController!.RCResponseCard!.dismiss {
+		ChatViewController!.ResponseCard!.dismiss {
 			
 		}
 	}

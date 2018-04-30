@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RCDatePickerController: UIViewController, RCResponseCard {
+class RCDatePickerController: UIViewController, RCResponseCardComponents {
 	var HeaderTitle: String!
 	var RCHeaderSendButton: RCAction?
 	var picker: RCDatePickerView!

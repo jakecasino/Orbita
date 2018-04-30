@@ -6,26 +6,28 @@
 //
 
 import UIKit
-protocol RCResponseCard {
+
+protocol RCResponseCardComponents {
 	var RCHeaderSendButton: RCAction? { get set }
 }
-class RCResponseCardView: UIView {
+
+class RCResponseCard: UIView {
 	var shadow: RCResponseCardViewShadow?
 	var RCContent: RCContent?
-	var ChatViewController: ChatViewController?
+	var ChatViewController: MainViewController?
 	
-	convenience init(RCContent: RCContent, in ChatViewController: ChatViewController) {
+	convenience init(RCContent: RCContent, in MainViewController: MainViewController) {
 		
 		// Set up necessary view controller
-		let RCViewController = RCResponseCardViewController(with: RCContent.RCTemplate!)
-		ChatViewController.RCViewController = RCViewController
+		let RCViewController = RCDelegate(with: RCContent.RCTemplate!)
+		MainViewController.RCViewController = RCViewController
 		
 		// Set up layout for Response Card
-		self.init(setUpFrameIn: ChatViewController, canExpandCard: RCContent.canExpandCard!)
+		self.init(setUpFrameIn: MainViewController, canExpandCard: RCContent.canExpandCard!)
 		RCViewController.RCResponseCard = self
 		RCViewController.view.frame.size = self.frame.size // Need to update when height changes
 		self.RCContent = RCContent
-		self.ChatViewController = ChatViewController
+		self.ChatViewController = MainViewController
 		RCViewController.Chat = self.ChatViewController
 		
 		// Set up visual language for Response Card
@@ -34,30 +36,27 @@ class RCResponseCardView: UIView {
 		layer.masksToBounds = true
 		alpha = 0
 		shadow = RCResponseCardViewShadow(for: self)
-		ChatViewController.view.insertSubview(shadow!, belowSubview: self)
+		MainViewController.view.insertSubview(shadow!, belowSubview: self)
 		
 		// Connect RCViewController to Response Card and ChatViewController
-		RCViewController.willMove(toParentViewController: ChatViewController)
-		addSubview(ChatViewController.RCViewController!.view)
-		ChatViewController.addChildViewController(RCViewController)
-		RCViewController.didMove(toParentViewController: ChatViewController)
+		RCViewController.willMove(toParentViewController: MainViewController)
+		addSubview(MainViewController.RCViewController!.view)
+		MainViewController.addChildViewController(RCViewController)
+		RCViewController.didMove(toParentViewController: MainViewController)
 		
 		// Add RCBodyContent
 	}
 	
-	convenience init(setUpFrameIn ChatViewController: ChatViewController, canExpandCard: Bool) {
-		let margin: CGFloat = 16
-		let x = margin
-		let y = ChatViewController.view.frame.height
-		let width = ChatViewController.view.frame.width - (margin * 2)
-		let height = ChatViewController.RCViewController!.minimumHeight!
-		self.init(frame: CGRect(x: x, y: y, width: width, height: height))
+	convenience init(setUpFrameIn ChatViewController: MainViewController, canExpandCard: Bool) {
+		self.init(frame: CGRect.zero)
+		frame.origin = CGPoint(x: spacing(.medium), y: ChatViewController.view.frame.height)
+		frame.size = CGSize(width: ChatViewController.view.frame.width - (spacing(.medium) * 2), height: ChatViewController.RCViewController!.minimumHeight!)
 		
-		ChatViewController.RCResponseCard = self
+		ChatViewController.ResponseCard = self
 		ChatViewController.view.insertSubview(self, belowSubview: ChatViewController.ChatToolbar)
 		
 		if canExpandCard {
-			addGestureRecognizer(UIPanGestureRecognizer(target: ChatViewController, action: #selector(ChatViewController.RCResponseCardWasDragged(gesture:))))
+			addGestureRecognizer(UIPanGestureRecognizer(target: ChatViewController, action: #selector(MainViewController.responseCardWasDragged(gesture:))))
 		}
 	}
 	
@@ -72,9 +71,9 @@ class RCResponseCardView: UIView {
 			self.shadow!.alpha = 0
 		}) { (finished: Bool) in
 			for view in self.ChatViewController!.view.subviews {
-				if let RCResponseCardView = view as? RCResponseCardView {
+				if let RCResponseCardView = view as? RCResponseCard {
 					RCResponseCardView.removeFromSuperview()
-					self.ChatViewController!.RCResponseCard = nil
+					self.ChatViewController!.ResponseCard = nil
 				}
 				if let RCResponseCardViewShadow = view as? RCResponseCardViewShadow {
 					RCResponseCardViewShadow.removeFromSuperview()
@@ -82,7 +81,7 @@ class RCResponseCardView: UIView {
 				}
 			}
 			for childViewController in self.ChatViewController!.childViewControllers {
-				if let RCResponseCardViewController = childViewController as? RCResponseCardViewController {
+				if let RCResponseCardViewController = childViewController as? RCDelegate {
 					RCResponseCardViewController.removeFromParentViewController()
 					self.ChatViewController!.RCViewController = nil
 				}
@@ -92,9 +91,9 @@ class RCResponseCardView: UIView {
 	}
 }
 
-class RCResponseCardViewController: UIViewController {
-	var Chat: ChatViewController?
-	var RCResponseCard: RCResponseCardView?
+class RCDelegate: UIViewController {
+	var Chat: MainViewController?
+	var RCResponseCard: RCResponseCard?
 	var minimumHeight: CGFloat?
 	var maximumHeight: CGFloat?
 	
@@ -104,8 +103,8 @@ class RCResponseCardViewController: UIViewController {
 		// Must set a minimum height for each Response Card Type
 		let margin: CGFloat = 16
 		let width = UIScreen.main.bounds.width - (margin * 2)
-		let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: ChatViewController())
-		let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: ChatViewController())
+		let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: MainViewController())
+		let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: MainViewController())
 		
 		switch RCBodyTemplate {
 		case .list:
@@ -229,7 +228,7 @@ class RCResponseCardViewController: UIViewController {
 			
 			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
-				(Chat!.RCResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = true
+				(Chat!.ResponseCard!.RCContent!.RCBodyContent as! RCList).collectionView!.isScrollEnabled = true
 				break
 			default:
 				break
@@ -328,7 +327,7 @@ extension UIView {
 }
 
 class RCResponseCardViewShadow: UIView {
-	convenience init(for RCResponseCardView: RCResponseCardView) {
+	convenience init(for RCResponseCardView: RCResponseCard) {
 		self.init(frame: RCResponseCardView.frame)
 		createShadow(opacity: 0.15, offset: CGSize.zero, cornerRadius: RCResponseCardView.layer.cornerRadius, shadowRadius: 2)
 	}

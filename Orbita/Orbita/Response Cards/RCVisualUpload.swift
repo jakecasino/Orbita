@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RCResponseCard {
+class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RCResponseCardComponents {
 	var RCHeaderSendButton: RCAction?
 	
 	var mediaType: mediaTypes?

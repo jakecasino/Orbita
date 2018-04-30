@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
+class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardComponents {
 	var RCHeaderTitle: String?
 	var RCHeaderSendButton: RCAction?
 	
@@ -57,7 +57,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCard {
 		view.addSubview(borderCutout)
 		
 		let captureButtonSize = borderCutoutSize * (44 / 48)
-		captureButton = RCAction(glyph: .microphone, for: nil, size: captureButtonSize, customColor: UIColor.red, in: ChatViewController())
+		captureButton = RCAction(glyph: .microphone, for: nil, size: captureButtonSize, customColor: UIColor.red, in: MainViewController())
 		captureButton!.frame.origin = CGPoint(x: (view.frame.width - captureButtonSize) / 2, y: (view.frame.height - captureButtonSize) / 2)
 		captureButton!.addTarget(self, action: #selector(toggleRecordingSession(sender:)), for: .touchUpInside)
 		view.addSubview(captureButton!)
