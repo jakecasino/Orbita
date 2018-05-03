@@ -22,7 +22,7 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 		
 		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-		collectionView!.backgroundColor = UIColor(named: "Lighter Grey")
+		collectionView!.backgroundColor = color(.lighterGrey)
 		collectionView!.allowsSelection = false
 		collectionView!.alwaysBounceVertical = true
 		
@@ -74,7 +74,7 @@ class ChatBubble: UICollectionViewCell {
 	
 	func setupVisualLayout() {
 		backgroundColor = UIColor.white
-		layer.cornerRadius = 12
+		layer.cornerRadius = cornerRadius(.medium)
 		
 		addSubview(scrubber)
 		
@@ -130,7 +130,7 @@ class RCScrubberBar: UIView {
 		
 		// Design setup
 		backgroundColor = color(.lighterGrey)
-		layer.cornerRadius = frame.height / 2
+		layer.cornerRadius = roundedCorners(size: frame.height)
 		layer.masksToBounds = true
 		
 		cap.backgroundColor = color(.orbitaBlue)

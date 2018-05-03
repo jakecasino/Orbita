@@ -36,7 +36,7 @@ class MainViewController: UIViewController {
 			ResponseCard = RCResponseCard(RCContent: RCContent, in: self)
 			UIView.animate(withDuration: 0.3) {
 			self.ResponseCard!.alpha = 1
-			self.ResponseCard!.frame = CGRect(x: self.ResponseCard!.frame.origin.x, y: self.RCViewController!.constraint(for: .originYwhenMinimized), width: self.ResponseCard!.frame.width, height: self.ResponseCard!.frame.height)
+			self.ResponseCard!.frame = CGRect(x: self.ResponseCard!.frame.origin.x, y: self.RCViewController!.cardConstraint(.originYwhenMinimized), width: self.ResponseCard!.frame.width, height: self.ResponseCard!.frame.height)
 			self.ResponseCard!.shadow!.frame = self.ResponseCard!.frame
 			}
 		}
@@ -56,8 +56,8 @@ class MainViewController: UIViewController {
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
 			let newPosition = gesture.view!.frame.origin.y + translation.y
-			let minimumStop = RCViewController!.constraint(for: .originYwhenMinimized) + 24
-			if newPosition > RCViewController!.constraint(for: .originYwhenMaximized) {
+			let minimumStop = RCViewController!.cardConstraint(.originYwhenMinimized) + 24
+			if newPosition > RCViewController!.cardConstraint(.originYwhenMaximized) {
 				if newPosition < minimumStop {
 					let newFrame = CGRect(x: gesture.view!.frame.origin.x, y: newPosition, width: gesture.view!.frame.width, height: gesture.view!.frame.height - translation.y)
 					ResponseCard!.frame = newFrame

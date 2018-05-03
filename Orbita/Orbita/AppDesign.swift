@@ -7,6 +7,13 @@
 
 import UIKit
 
+enum constraints {
+	case deviceWidth
+	case deviceHeight
+	case contentSpacing
+	case contentWidth
+}
+
 enum sizes {
 	case small
 	case medium
@@ -24,6 +31,19 @@ enum glyphs {
 	case send
 	case skip
 	case skipBack
+}
+
+func constraint(_ object: constraints) -> CGFloat {
+	switch object {
+	case .deviceWidth:
+		return UIScreen.main.bounds.width
+	case .deviceHeight:
+		return UIScreen.main.bounds.height
+	case .contentSpacing:
+		return spacing(.medium)
+	case .contentWidth:
+		return constraint(.deviceWidth) - (constraint(.contentSpacing) * 2)
+	}
 }
 
 func color(_ color: colors) -> UIColor {
@@ -59,4 +79,19 @@ func glyph(_ glyph: glyphs) -> UIImage {
 	case .skipBack:
 		return UIImage(named: "Skip Back")!
 	}
+}
+
+func cornerRadius(_ size: sizes) -> CGFloat {
+	switch size {
+	case .small:
+		return 6
+	case .medium:
+		return 12
+	case .large:
+		return 18
+	}
+}
+
+func roundedCorners(size: CGFloat) -> CGFloat {
+	return size / 2
 }

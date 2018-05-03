@@ -358,7 +358,7 @@ class RCAction: UIButton {
 		}
 		
 		func createCircleButton() {
-			layer.cornerRadius = size / 2
+			layer.cornerRadius = roundedCorners(size: size)
 		}
 		
 		if let form = form {

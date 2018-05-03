@@ -54,7 +54,7 @@ class RCScale: UIViewController {
 		handle!.backgroundColor = UIColor(named: "Orbita Blue")
 		handle!.layer.masksToBounds = true
 		handle!.frame.size = CGSize(width: 8, height: view.frame.height - 12)
-		handle!.layer.cornerRadius = handle!.frame.width / 2
+		handle!.layer.cornerRadius = roundedCorners(size: handle!.frame.width)
 		handle!.frame.origin = CGPoint(x: (view.frame.width - handle!.frame.width) / 2, y: (view.frame.height - handle!.frame.height) / 2)
 		view.addSubview(handle!)
 		
@@ -133,7 +133,7 @@ class RCScale: UIViewController {
 			tick.frame.size = CGSize(width: 2, height: 12)
 			tick.frame.origin = CGPoint(x: stop + (handle!.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
 			tick.backgroundColor = UIColor(named: "Light Grey")
-			tick.layer.cornerRadius = tick.frame.width / 2
+			tick.layer.cornerRadius = roundedCorners(size: tick.frame.width)
 			ticks.append(tick)
 			view.insertSubview(ticks[index], belowSubview: handle!)
 			if ((type! == .continuous) && (index == stops.count - 2)) {

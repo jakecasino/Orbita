@@ -12,9 +12,9 @@ protocol RCResponseCardComponents {
 }
 
 class RCResponseCard: UIView {
-	var shadow: RCResponseCardViewShadow?
+	var shadow: RCResponseCardViewShadow!
 	var RCContent: RCContent?
-	var ChatViewController: MainViewController?
+	var Main: MainViewController!
 	
 	convenience init(RCContent: RCContent, in MainViewController: MainViewController) {
 		
@@ -27,36 +27,34 @@ class RCResponseCard: UIView {
 		RCViewController.RCResponseCard = self
 		RCViewController.view.frame.size = self.frame.size // Need to update when height changes
 		self.RCContent = RCContent
-		self.ChatViewController = MainViewController
-		RCViewController.Chat = self.ChatViewController
+		self.Main = MainViewController
+		RCViewController.Chat = self.Main
 		
 		// Set up visual language for Response Card
-		backgroundColor = UIColor(named: "Lighter Grey")
-		layer.cornerRadius = 12
+		backgroundColor = color(.lighterGrey)
+		layer.cornerRadius = cornerRadius(.medium)
 		layer.masksToBounds = true
 		alpha = 0
 		shadow = RCResponseCardViewShadow(for: self)
-		MainViewController.view.insertSubview(shadow!, belowSubview: self)
+		Main.view.insertSubview(shadow!, belowSubview: self)
 		
 		// Connect RCViewController to Response Card and ChatViewController
-		RCViewController.willMove(toParentViewController: MainViewController)
-		addSubview(MainViewController.RCViewController!.view)
-		MainViewController.addChildViewController(RCViewController)
-		RCViewController.didMove(toParentViewController: MainViewController)
-		
-		// Add RCBodyContent
+		addSubview(Main.RCViewController!.view)
+		Main.addChildViewController(RCViewController)
+		RCViewController.didMove(toParentViewController: Main)
 	}
 	
-	convenience init(setUpFrameIn ChatViewController: MainViewController, canExpandCard: Bool) {
+	convenience init(setUpFrameIn Main: MainViewController, canExpandCard: Bool) {
 		self.init(frame: CGRect.zero)
-		frame.origin = CGPoint(x: spacing(.medium), y: ChatViewController.view.frame.height)
-		frame.size = CGSize(width: ChatViewController.view.frame.width - (spacing(.medium) * 2), height: ChatViewController.RCViewController!.minimumHeight!)
+		frame.origin = CGPoint(x: spacing(.medium), y: Main.view.frame.height)
+		frame.size = CGSize(width: Main.view.frame.width - (spacing(.medium) * 2), height: Main.RCViewController!.minimumHeight!)
 		
-		ChatViewController.ResponseCard = self
-		ChatViewController.view.insertSubview(self, belowSubview: ChatViewController.ChatToolbar)
+		Main.ResponseCard = self
+		Main.view.insertSubview(self, belowSubview: Main.ChatToolbar)
 		
 		if canExpandCard {
-			addGestureRecognizer(UIPanGestureRecognizer(target: ChatViewController, action: #selector(MainViewController.responseCardWasDragged(gesture:))))
+			let pan = UIPanGestureRecognizer(target: Main, action: #selector(MainViewController.responseCardWasDragged(gesture:)))
+			addGestureRecognizer(pan)
 		}
 	}
 	
@@ -70,20 +68,21 @@ class RCResponseCard: UIView {
 			self.alpha = 0
 			self.shadow!.alpha = 0
 		}) { (finished: Bool) in
-			for view in self.ChatViewController!.view.subviews {
+			
+			for view in self.Main!.view.subviews {
 				if let RCResponseCardView = view as? RCResponseCard {
 					RCResponseCardView.removeFromSuperview()
-					self.ChatViewController!.ResponseCard = nil
+					self.Main!.ResponseCard = nil
 				}
 				if let RCResponseCardViewShadow = view as? RCResponseCardViewShadow {
 					RCResponseCardViewShadow.removeFromSuperview()
 					self.shadow = nil
 				}
 			}
-			for childViewController in self.ChatViewController!.childViewControllers {
+			for childViewController in self.Main!.childViewControllers {
 				if let RCResponseCardViewController = childViewController as? RCDelegate {
 					RCResponseCardViewController.removeFromParentViewController()
-					self.ChatViewController!.RCViewController = nil
+					self.Main!.RCViewController = nil
 				}
 			}
 			finishedDisimissing()
@@ -94,15 +93,14 @@ class RCResponseCard: UIView {
 class RCDelegate: UIViewController {
 	var Chat: MainViewController?
 	var RCResponseCard: RCResponseCard?
-	var minimumHeight: CGFloat?
+	var minimumHeight: CGFloat!
 	var maximumHeight: CGFloat?
 	
 	init(with RCBodyTemplate: RCBodyTemplates) {
 		super.init(nibName: nil, bundle: nil)
 		
 		// Must set a minimum height for each Response Card Type
-		let margin: CGFloat = 16
-		let width = UIScreen.main.bounds.width - (margin * 2)
+		
 		let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: MainViewController())
 		let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: MainViewController())
 		
@@ -112,7 +110,7 @@ class RCDelegate: UIViewController {
 		case .scale:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 48
 		case .visualUpload:
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((width * 3) / 4)
+			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((constraint(.contentWidth) * 3) / 4)
 		case .audioUpload:
 			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 104
 		case .datePicker:
@@ -144,13 +142,13 @@ class RCDelegate: UIViewController {
 		
 		// Create RCBodyView
 		var height =  -(RCHeader!.frame.height)
-		if RCContent.canExpandCard! { height = height + constraint(for: .maximumHeight) }
-		else { height = height + constraint(for: .minimumHeight) }
+		if RCContent.canExpandCard! { height = height + cardConstraint(.maximumHeight) }
+		else { height = height + minimumHeight }
 		if let RCFooter = RCContent.RCFooter {
 			height -= RCFooter.frame.height
 			
 		}
-		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: constraint(for: .width), height: height))
+		let RCBodyView = UIView(frame: CGRect(x: 0, y: RCHeader!.frame.height, width: constraint(.contentWidth), height: height))
 		view.addSubview(RCBodyView)
 		
 		// Connect RCBodyView to necessary view controllers
@@ -197,7 +195,7 @@ class RCDelegate: UIViewController {
 	
 	func RCResponseCardViewDidChange() {
 		let percentThreshold: CGFloat = 0.25
-		let originYThresholdForMaximumHeight = constraint(for: .deviceHeight) * percentThreshold
+		let originYThresholdForMaximumHeight = constraint(.deviceHeight) * percentThreshold
 		if RCResponseCard!.frame.origin.y < originYThresholdForMaximumHeight {
 			RCResponseCardChangeState(to: .maximized)
 		} else {
@@ -212,8 +210,8 @@ class RCDelegate: UIViewController {
 		
 		switch state {
 		case .minimized:
-			y = constraint(for: .originYwhenMinimized)
-			height = constraint(for: .minimumHeight)
+			y = cardConstraint(.originYwhenMinimized)
+			height = minimumHeight!
 			
 			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
@@ -223,8 +221,8 @@ class RCDelegate: UIViewController {
 				break
 			}
 		case .maximized:
-			y = constraint(for: .originYwhenMaximized)
-			height = constraint(for: .maximumHeight)
+			y = cardConstraint(.originYwhenMaximized)
+			height = cardConstraint(.maximumHeight)
 			
 			switch RCResponseCard!.RCContent!.RCTemplate! { // Determine any card maximization specialties
 			case .list:
@@ -237,7 +235,7 @@ class RCDelegate: UIViewController {
 		}
 		
 		UIView.animate(withDuration: 0.3) {
-			self.RCResponseCard!.frame = CGRect(x: self.constraint(for: .marginLeft), y: y, width: self.constraint(for: .width), height: height)
+			self.RCResponseCard!.frame = CGRect(x: constraint(.contentSpacing), y: y, width: constraint(.contentWidth), height: height)
 			self.RCResponseCard!.shadow!.frame = self.RCResponseCard!.frame
 			
 			if let RCFooter = self.RCResponseCard!.RCContent!.RCFooter {
@@ -259,57 +257,19 @@ class RCDelegate: UIViewController {
 	}
 	
 	enum RCResponseCardContraints {
-		case marginTop
-		case marginBottom
-		case marginLeft
-		case marginRight
-		case paddingTop
-		case paddingBottom
-		case paddingLeft
-		case paddingRight
-		case deviceWidth
-		case deviceHeight
-		case width
-		case minimumHeight
 		case maximumHeight
 		case originYwhenMinimized
 		case originYwhenMaximized
 	}
 	
-	func constraint(for constraint: RCResponseCardContraints) -> CGFloat {
-		let margin: CGFloat = 16
-		let padding: CGFloat = 16
-		switch constraint {
-		case .marginTop:
-			return margin
-		case .marginBottom:
-			return margin
-		case .marginLeft:
-			return margin
-		case .marginRight:
-			return margin
-		case .paddingTop:
-			return padding
-		case .paddingBottom:
-			return padding
-		case .paddingLeft:
-			return padding
-		case .paddingRight:
-			return padding
-		case .deviceWidth:
-			return Chat!.view.frame.width
-		case .deviceHeight:
-			return Chat!.view.frame.height
-		case .width:
-			return self.constraint(for: .deviceWidth) - self.constraint(for: .marginLeft) - self.constraint(for: .marginRight)
-		case .minimumHeight:
-			return self.minimumHeight!
+	func cardConstraint(_ object: RCResponseCardContraints) -> CGFloat {
+		switch object {
 		case .maximumHeight:
-			return self.constraint(for: .deviceHeight) - Chat!.ChatToolbar.frame.height - self.constraint(for: .originYwhenMaximized) - self.constraint(for: .marginBottom)
+			return constraint(.deviceHeight) - Chat!.ChatToolbar.frame.height - self.cardConstraint(.originYwhenMaximized) - constraint(.contentSpacing)
 		case .originYwhenMinimized:
-			return self.constraint(for: .deviceHeight) - Chat!.ChatToolbar.frame.height - self.constraint(for: .marginBottom) -  self.constraint(for: .minimumHeight)
+			return constraint(.deviceHeight) - Chat!.ChatToolbar.frame.height - constraint(.contentSpacing) -  self.minimumHeight!
 		case .originYwhenMaximized:
-			return Chat!.view.safeAreaInsets.top + self.constraint(for: .marginTop)
+			return Chat!.view.safeAreaInsets.top + constraint(.contentSpacing)
 		}
 	}
 }

@@ -47,13 +47,13 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 		let borderSize = view.frame.height - (margin * 2)
 		let border = UIView(frame: CGRect(x: (view.frame.width - borderSize) / 2, y: margin, width: borderSize, height: borderSize))
 		border.backgroundColor = UIColor(named: "Medium Grey")
-		border.layer.cornerRadius = borderSize / 2
+		border.layer.cornerRadius = roundedCorners(size: borderSize)
 		view.addSubview(border)
 		
 		let borderCutoutSize = borderSize * (48 / 56)
 		let borderCutout = UIView(frame: CGRect(x: (view.frame.width - borderCutoutSize) / 2, y: (view.frame.height - borderCutoutSize) / 2, width: borderCutoutSize, height: borderCutoutSize))
 		borderCutout.backgroundColor = UIColor(named: "Lighter Grey")
-		borderCutout.layer.cornerRadius = borderCutoutSize / 2
+		borderCutout.layer.cornerRadius = roundedCorners(size: borderCutoutSize)
 		view.addSubview(borderCutout)
 		
 		let captureButtonSize = borderCutoutSize * (44 / 48)
@@ -80,7 +80,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 			}
 			
 			let captureButtonFlash = UIButton(frame: captureButton!.frame)
-			captureButtonFlash.layer.cornerRadius = captureButtonFlash.frame.width / 2
+			captureButtonFlash.layer.cornerRadius = roundedCorners(size: captureButtonFlash.frame.width)
 			captureButtonFlash.backgroundColor = UIColor.red
 			view.insertSubview(captureButtonFlash, belowSubview: captureButton!)
 			captureButton!.backgroundColor = UIColor.clear
@@ -181,8 +181,8 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 				let width = (self.frame.width - (margin * 3)) / 2
 				let playButton = UIButton(frame: CGRect(x: margin, y: (self.frame.height - height) / 2, width: width, height: height))
 				let trashButton = UIButton(frame: CGRect(x: (margin * 2) + width, y: (self.frame.height - height) / 2, width: width, height: height))
-				playButton.layer.cornerRadius = 12
-				trashButton.layer.cornerRadius = 12
+				playButton.layer.cornerRadius = cornerRadius(.medium)
+				trashButton.layer.cornerRadius = cornerRadius(.medium)
 				playButton.tintColor = UIColor(named: "Orbita Blue")
 				trashButton.tintColor = UIColor.white
 				playButton.setImage(UIImage(named: "Play"), for: .normal)

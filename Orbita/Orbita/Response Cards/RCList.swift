@@ -58,7 +58,7 @@ class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RC
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_ID, for: indexPath) as! RCListItem
 		cell.createListLabel(for: list[indexPath.row])
 		cell.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-		cell.layer.cornerRadius = 12
+		cell.layer.cornerRadius = cornerRadius(.medium)
 		cell.layer.masksToBounds = true
 		return cell
 	}
