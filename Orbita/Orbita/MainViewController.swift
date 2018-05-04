@@ -23,8 +23,8 @@ class MainViewController: UIViewController {
 	override func viewDidLoad() {
 		
 		// Resize Chat Toolbar
-		ChatToolbar.frame.size = CGSize(width: view.frame.width, height: 108 + view.safeAreaInsets.bottom)
-		ChatToolbar.frame.origin = CGPoint(x: 0, y: view.frame.height - ChatToolbar.frame.height)
+		ChatToolbar.resizeTo(width: view.bounds.width, height: 108 + view.safeAreaInsets.bottom)
+		ChatToolbar.moveTo(x: 0, y: view.bounds.height - ChatToolbar.frame.height)
 		
 		let chat = ChatViewController(withMessages: [])
 		addChildViewController(chat)
@@ -32,24 +32,9 @@ class MainViewController: UIViewController {
 	}
 	
 	func showResponseCard(RCContent: RCContent) {
-		func show() {
-			ResponseCard = RCResponseCard(RCContent: RCContent, in: self)
-			UIView.animate(withDuration: 0.3) {
-			self.ResponseCard!.alpha = 1
-			self.ResponseCard!.frame = CGRect(x: self.ResponseCard!.frame.origin.x, y: self.RCViewController!.cardConstraint(.originYwhenMinimized), width: self.ResponseCard!.frame.width, height: self.ResponseCard!.frame.height)
-			self.ResponseCard!.shadow!.frame = self.ResponseCard!.frame
-			}
-		}
-		
-		// Remove any existing RCResponseCards
-		if ResponseCard != nil {
-			ResponseCard!.dismiss {
-				show()
-			}
-		} else {
-			show()
-		}
-		
+		ResponseCard = RCResponseCard(RCContent: RCContent, in: self)
+		UIView.animate(withDuration: 0.3) { self.ResponseCard!.alpha = 1 }
+		self.RCViewController!.RCResponseCardChangeState(to: .minimized)
 	}
 	
 	@objc func responseCardWasDragged(gesture: UIPanGestureRecognizer) {
@@ -59,14 +44,15 @@ class MainViewController: UIViewController {
 			let minimumStop = RCViewController!.cardConstraint(.originYwhenMinimized) + 24
 			if newPosition > RCViewController!.cardConstraint(.originYwhenMaximized) {
 				if newPosition < minimumStop {
-					let newFrame = CGRect(x: gesture.view!.frame.origin.x, y: newPosition, width: gesture.view!.frame.width, height: gesture.view!.frame.height - translation.y)
-					ResponseCard!.frame = newFrame
-					self.ResponseCard!.shadow!.frame = self.ResponseCard!.frame
+					ResponseCard!.resizeTo(width: nil, height: gesture.view!.frame.height - translation.y)
+					ResponseCard!.moveTo(x: nil, y: newPosition)
+					ResponseCard!.shadow!.setFrame(equalTo: ResponseCard!)
+					
 					gesture.setTranslation(CGPoint.zero, in: self.view)
 					
 					if let RCFooter = ResponseCard!.RCContent!.RCFooter {
-						RCFooter.frame.origin = CGPoint(x: RCFooter.frame.origin.x, y: ResponseCard!.frame.height - RCFooter.frame.height)
-						RCFooter.shadow!.frame.origin = RCFooter.frame.origin
+						RCFooter.moveTo(x: nil, y: ResponseCard!.frame.height - RCFooter.frame.height)
+						RCFooter.shadow!.setOrigin(equalTo: RCFooter)
 					}
 				}
 			}

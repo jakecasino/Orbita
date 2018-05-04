@@ -25,16 +25,13 @@ class RCResponseCard: UIView {
 		// Set up layout for Response Card
 		self.init(setUpFrameIn: MainViewController, canExpandCard: RCContent.canExpandCard!)
 		RCViewController.RCResponseCard = self
-		RCViewController.view.frame.size = self.frame.size // Need to update when height changes
+		RCViewController.view.setSize(equalTo: frame) // Need to update when height changes
 		self.RCContent = RCContent
 		self.Main = MainViewController
 		RCViewController.Chat = self.Main
 		
 		// Set up visual language for Response Card
-		backgroundColor = color(.lighterGrey)
-		layer.cornerRadius = cornerRadius(.medium)
-		layer.masksToBounds = true
-		alpha = 0
+		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: 0)
 		shadow = RCResponseCardViewShadow(for: self)
 		Main.view.insertSubview(shadow!, belowSubview: self)
 		
@@ -46,8 +43,8 @@ class RCResponseCard: UIView {
 	
 	convenience init(setUpFrameIn Main: MainViewController, canExpandCard: Bool) {
 		self.init(frame: CGRect.zero)
-		frame.origin = CGPoint(x: spacing(.medium), y: Main.view.frame.height)
-		frame.size = CGSize(width: Main.view.frame.width - (spacing(.medium) * 2), height: Main.RCViewController!.minimumHeight!)
+		resizeTo(width: Main.view.frame.width - (spacing(.medium) * 2), height: Main.RCViewController!.minimumHeight!)
+		moveTo(x: spacing(.medium), y: Main.view.frame.height)
 		
 		Main.ResponseCard = self
 		Main.view.insertSubview(self, belowSubview: Main.ChatToolbar)
@@ -104,15 +101,17 @@ class RCDelegate: UIViewController {
 		let RCHeader = RCBarComponent(.header, labels: ["l"], actions: [], in: MainViewController())
 		let RCFooter = RCBarComponent(.footer, labels: ["l"], actions: [], in: MainViewController())
 		
+		minimumHeight = RCHeader.frame.height + RCFooter.frame.height
+		
 		switch RCBodyTemplate {
 		case .list:
-			minimumHeight = 300
+			minimumHeight = minimumHeight + 200
 		case .scale:
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 48
+			minimumHeight = minimumHeight + 48
 		case .visualUpload:
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + ((constraint(.contentWidth) * 3) / 4)
+			minimumHeight = minimumHeight + ((constraint(.contentWidth) * 3) / 4)
 		case .audioUpload:
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + 104
+			minimumHeight = minimumHeight + 104
 		case .datePicker:
 			let row = UIButton(frame: CGRect.zero)
 			row.setTitle(" ", for: .normal)
@@ -120,8 +119,9 @@ class RCDelegate: UIViewController {
 			row.sizeToFit()
 			
 			let innerPaddingVertical = RCDatePickerComponent().innerPaddingVertical
-			row.frame.size = CGSize(width: 0, height: row.frame.height + (innerPaddingVertical * 2))
-			minimumHeight = RCHeader.frame.height + RCFooter.frame.height + (row.frame.height * 5)
+			row.resizeTo(width: 0, height: row.frame.height + (innerPaddingVertical * 2))
+			
+			minimumHeight = minimumHeight + (row.frame.height * 5)
 		}
 	}
 	
@@ -271,18 +271,6 @@ class RCDelegate: UIViewController {
 		case .originYwhenMaximized:
 			return Chat!.view.safeAreaInsets.top + constraint(.contentSpacing)
 		}
-	}
-}
-
-extension UIView {
-	func createShadow(opacity: Float, offset: CGSize, cornerRadius: CGFloat, shadowRadius: CGFloat) {
-		backgroundColor = UIColor.white
-		layer.shadowColor = UIColor.black.cgColor
-		layer.cornerRadius = cornerRadius
-		layer.masksToBounds = false
-		layer.shadowRadius = shadowRadius
-		layer.shadowOffset = offset
-		layer.shadowOpacity = opacity
 	}
 }
 

@@ -34,10 +34,11 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
-		if let main = parent as? MainViewController {
-			main.view.addSubview(collectionView!)
-			main.view.sendSubview(toBack: collectionView!)
-			collectionView!.frame = main.view.frame
+		if let Main = parent as? MainViewController {
+			Main.view.addSubview(collectionView!)
+			Main.view.sendSubview(toBack: collectionView!)
+			
+			collectionView!.setFrame(equalTo: Main.view)
 		}
 	}
 
@@ -53,8 +54,7 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatBubble
 		cell.setupVisualLayout()
-		
-		cell.frame.origin = CGPoint(x: spacing(.medium), y: cell.frame.origin.y)
+		cell.moveTo(x: spacing(.medium), y: nil)
     
         return cell
     }
@@ -79,14 +79,14 @@ class ChatBubble: UICollectionViewCell {
 		addSubview(scrubber)
 		
 		playButton.setImage(glyph(.play), for: .normal)
-		playButton.frame.origin = CGPoint(x: (bounds.width - playButton.frame.width) / 2, y: scrubber.frame.origin.x + scrubber.frame.height + spacing(.large))
+		playButton.moveTo(x: (bounds.width - playButton.frame.width) / 2, y: scrubber.frame.origin.x + scrubber.frame.height + spacing(.large))
 		addSubview(playButton)
 		
 		skipBackButton.setImage(glyph(.skipBack), for: .normal)
-		skipBackButton.frame.origin = CGPoint(x: (playButton.frame.origin.x - skipButton.frame.width) / 2, y: playButton.frame.origin.y)
+		skipBackButton.moveTo(x: (playButton.frame.origin.x - skipButton.frame.width) / 2, y: playButton.frame.origin.y)
 		
 		skipButton.setImage(glyph(.skip), for: .normal)
-		skipButton.frame.origin = CGPoint(x: playButton.frame.origin.x + playButton.frame.width + skipBackButton.frame.origin.x, y: playButton.frame.origin.y)
+		skipButton.moveTo(x: playButton.frame.origin.x + playButton.frame.width + skipBackButton.frame.origin.x, y: playButton.frame.origin.y)
 		
 		addSubview(skipButton)
 		addSubview(skipBackButton)
@@ -100,7 +100,7 @@ class RCButton: UIButton {
 	
 	init(type: types, size: CGSize) {
 		super.init(frame: CGRect.zero)
-		frame.size = size
+		setSize(equalTo: size)
 		
 		switch type {
 		case .glyph:
@@ -118,22 +118,17 @@ class RCScrubberBar: UIView {
 	var cap = UIView(frame: CGRect.zero)
 	
 	override func didMoveToSuperview() {
-		
 		// Frame setup
-		frame.origin = CGPoint(x: spacing(.medium), y: spacing(.large))
+		moveTo(x: spacing(.medium), y: spacing(.large))
 		if let superview = superview {
-			frame.size = CGSize(width: superview.bounds.width - (spacing(.medium) * 2), height: 6)
+			resizeTo(width: superview.bounds.width - (spacing(.medium) * 2), height: 6)
 			
-			cap.frame.size = CGSize(width: (bounds.width * 0.05), height: bounds.height)
+			cap.resizeTo(width: bounds.width * 0.05, height: bounds.height)
 			addSubview(cap)
 		}
 		
 		// Design setup
-		backgroundColor = color(.lighterGrey)
-		layer.cornerRadius = roundedCorners(size: frame.height)
-		layer.masksToBounds = true
-		
-		cap.backgroundColor = color(.orbitaBlue)
-		cap.layer.cornerRadius = layer.cornerRadius
+		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: roundedCorners(size: frame.height), masksToBounds: true, alpha: nil)
+		cap.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: layer.cornerRadius, masksToBounds: nil, alpha: nil)
 	}
 }
