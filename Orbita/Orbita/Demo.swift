@@ -8,10 +8,12 @@
 import Foundation
 
 class Demo {
-	func messages() -> [Message] {
-		var messages = [Message]()
-		messages.append(Message(sender: "ChatBot", message: "Hello"))
+	func ChatExample1() -> [RCChatBubble] {
+		var content = [RCChatBubble]()
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Hello Rachel!"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "I'm your Orbita Assistant"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "Tap below to see some of the things I can do for you"))
 		
-		return messages
+		return content
 	}
 }

@@ -7,27 +7,33 @@
 
 import UIKit
 
-class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RCResponseCardComponents {
-	let CELL_ID = "ListItem"
-	var RCHeaderSendButton: RCAction?
+class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RCResponseCardDataSource {
 	
-	var list = [String]()
-	var SeeFullListButton: RCAction?
-	var RCViewController: RCDelegate?
+	// Properties
+	var HEADER_TITLE: String?
+	var HEADER_ACTION: RCAction?
+	var FOOTER_ACTION: RCAction?
+	var delegate: RCDelegate?
 	
+	var items = [String]()
+	let CELL_ITEM = "item"
+	
+	// Initializers
 	init(list: [String], canSelectMultipleItems: Bool) {
 		super.init(nibName: nil, bundle: nil)
 		view = UIView(frame: CGRect.zero)
-		self.list = list
+		items = list
 		
 		let layout = UICollectionViewFlowLayout()
-		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+		let inset = spacing(.small)
+		layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
 		
 		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
 		collectionView!.backgroundColor = color(.lighterGrey)
 		collectionView!.isScrollEnabled = false
-		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: CELL_ID)
 		view.addSubview(collectionView!)
+		
+		collectionView!.register(RCListItem.self, forCellWithReuseIdentifier: CELL_ITEM)
 		
 		if canSelectMultipleItems { collectionView!.allowsMultipleSelection = true }
 	}
@@ -37,35 +43,37 @@ class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RC
 	}
 	
 	deinit {
+		HEADER_TITLE = nil
+		HEADER_ACTION = nil
+		FOOTER_ACTION = nil
+		delegate = nil
+		items.removeAll()
 		collectionView = nil
-		list.removeAll()
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
 		if let superview = view.superview {
-			view.frame = superview.bounds
-			collectionView!.frame = view.bounds
+			view.setFrame(equalTo: superview.bounds)
+			collectionView!.setFrame(equalTo: view)
+			FOOTER_ACTION!.addTarget(self, action: #selector(maximizeCard), for: .touchUpInside)
 		}
-		
-		SeeFullListButton!.addTarget(self, action: #selector(maximizeCard), for: .touchUpInside)
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return list.count
+		return items.count
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_ID, for: indexPath) as! RCListItem
-		cell.createListLabel(for: list[indexPath.row])
-		cell.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-		cell.layer.cornerRadius = cornerRadius(.medium)
-		cell.layer.masksToBounds = true
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_ITEM, for: indexPath) as! RCListItem
+		cell.createListLabel(for: items[indexPath.row])
+		cell.visualSetup(backgroundColor: UIColor(white: 0, alpha: 0.15), cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: nil)
 		return cell
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		func labelHeight(font: UIFont, width: CGFloat) -> CGFloat {
-			let label = UILabel(frame: CGRect(x: 0,y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
+			let label = UILabel(frame: CGRect.zero)
+			label.resizeTo(width: width, height: CGFloat.greatestFiniteMagnitude)
 			label.numberOfLines = 0
 			label.lineBreakMode = NSLineBreakMode.byWordWrapping
 			label.font = font
@@ -75,30 +83,32 @@ class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RC
 			return label.frame.height
 		}
 		let width: CGFloat = view.frame.width - (spacing(.small) * 2)
-		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + 24
+		let height = labelHeight(font: UILabel().Raleway(textStyle: .body, weight: .regular), width: width) + (ALT_spacing(.medium) * 2)
 		return CGSize(width: width, height: height)
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		toggleSendButtonInRCHeader()
+		HEADER_TOGGLE_ACTION()
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-		toggleSendButtonInRCHeader()
+		HEADER_TOGGLE_ACTION()
 	}
 	
-	func toggleSendButtonInRCHeader() {
-		if RCViewController!.RCResponseCard!.RCContent!.RCHeader!.RCActions.indices.contains(0) {
-			if !collectionView!.indexPathsForSelectedItems!.isEmpty {
-				RCHeaderSendButton!.isEnabled = true
-			} else {
-				RCHeaderSendButton!.isEnabled = false
+	func HEADER_TOGGLE_ACTION() {
+		if let main = delegate!.parent as? MainViewController {
+			if main.ResponseCard!.content!.header!.RCActions.indices.contains(0) {
+				if !collectionView!.indexPathsForSelectedItems!.isEmpty {
+					HEADER_ACTION!.isEnabled = true
+				} else {
+					HEADER_ACTION!.isEnabled = false
+				}
 			}
 		}
 	}
 	
 	@objc func maximizeCard() {
-		RCViewController!.RCResponseCardChangeState(to: .maximized)
+		delegate!.changeState(to: .maximized)
 	}
 }
 
@@ -107,13 +117,17 @@ class RCListItem: UICollectionViewCell {
 	override var isSelected: Bool {
 		didSet {
 			if self.isSelected  {
+				let checkmark = UIButton(frame: CGRect.zero)
+				addSubview(checkmark)
+				
+				let checkmarkSize: CGFloat = 30
+				checkmark.resizeTo(width: checkmarkSize, height: checkmarkSize)
+				checkmark.moveTo(x: self.frame.width - checkmarkSize - spacing(.small), y: origins.middle)
+				checkmark.setImage(glyph(.checkmark), for: .normal)
+				checkmark.tintColor = UIColor.white
+				
 				UIView.animate(withDuration: 0.15) {
 					self.backgroundColor = color(.orbitaBlue)
-					let checkmarkSize: CGFloat = 30
-					let checkmark = UIButton(frame: CGRect(x: self.frame.width - checkmarkSize - spacing(.small), y: (self.frame.height - checkmarkSize) / 2, width: checkmarkSize, height: checkmarkSize))
-					checkmark.setImage(glyph(.checkmark), for: .normal)
-					checkmark.tintColor = UIColor.white
-					self.addSubview(checkmark)
 				}
 			} else {
 				backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15)
@@ -127,12 +141,12 @@ class RCListItem: UICollectionViewCell {
 	}
 	
 	func createListLabel(for listItem: String) {
-		let label = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+		let label = UILabel(frame: CGRect.zero)
 		label.text = listItem
 		label.textColor = UIColor.white
 		label.font = label.Raleway(textStyle: .body, weight: .regular)
 		label.sizeToFit()
-		label.frame.origin = CGPoint(x: 16, y: 12)
+		label.moveTo(x: spacing(.medium), y: ALT_spacing(.medium))
 		addSubview(label)
 	}
 }

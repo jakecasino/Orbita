@@ -15,107 +15,105 @@ enum RCBodyTemplates {
 	case datePicker
 }
 
+protocol RCResponseCardDataSource {
+	var HEADER_TITLE: String? { get set }
+	var HEADER_ACTION: RCAction? { get set }
+	var FOOTER_ACTION: RCAction? { get set }
+}
+
 class RCContent {
-	var RCHeader: RCBarComponent?
-	var RCBodyContent: Any?
-	var RCTemplate: RCBodyTemplates?
-	var RCFooter: RCBarComponent?
-	var canExpandCard: Bool?
+	var template: RCBodyTemplates!
+	
+	var header: RCBarComponent!
+	var body: Any!
+	var footer: RCBarComponent?
 	
 	init(RCBody: Any, as template: RCBodyTemplates, in ChatViewController: MainViewController) {
-		canExpandCard = false
+		self.template = template
+		
 		switch template {
 		case .list:
-			let RCBody = RCBody as! RCList
-			self.RCBodyContent = RCBody
-			canExpandCard = true
+			let body = RCBody as! RCList
+			self.body = body
 			
-			let RCHeaderTitle: String
-			if RCBody.collectionView!.allowsMultipleSelection {
-				RCHeaderTitle = "Choose All that Apply"
+			let HEADER_TITLE: String
+			if body.collectionView!.allowsMultipleSelection {
+				HEADER_TITLE = "Choose All that Apply"
 			} else {
-				RCHeaderTitle = "Choose One"
+				HEADER_TITLE = "Choose One"
 			}
-			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [RCAction.glyphs.send], in: ChatViewController)
-			guard RCHeader!.RCActions.indices.contains(0) else { break }
-			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
+			header = RCBarComponent(.header, labels: [HEADER_TITLE], actions: [RCAction.glyphs.send], in: ChatViewController)
+			body.HEADER_ACTION = header!.RCActions[0]
 			
-			RCFooter = RCBarComponent(.footer, labels: [], actions: ["See Full List"], in: ChatViewController)
-			
-			guard RCFooter!.RCActions.indices.contains(0) else { break }
-			RCBody.SeeFullListButton = RCFooter!.RCActions[0]
+			footer = RCBarComponent(.footer, labels: [], actions: ["See Full List"], in: ChatViewController)
+			body.FOOTER_ACTION = footer!.RCActions[0]
 			break
+		
 		case .scale:
-			let RCBody = RCBody as! RCScale
-			self.RCBodyContent = RCBody
+			let body = RCBody as! RCScale
+			self.body = body
 			
-			let RCHeaderTitle = String(RCBody.RCHeaderTitle!)
-			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [RCAction.glyphs.send], in: ChatViewController)
+			header = RCBarComponent(.header, labels: [body.HEADER_TITLE!], actions: [RCAction.glyphs.send], in: ChatViewController)
+			body.HEADER_ACTION = header!.RCActions[0]
 			
-			guard RCHeader!.RCActions.indices.contains(0) else { break }
-			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
-			
-			switch RCBody.type! {
+			switch body.type! {
 			case .continuous:
-				RCFooter = RCBarComponent(.footer, labels: [], actions: [(RCBody.range.first! as! String), (RCBody.range.last! as! String)], in: ChatViewController)
+				footer = RCBarComponent(.footer, labels: [], actions: [(body.range.first! as! String), (body.range.last! as! String)], in: ChatViewController)
 			case .discrete:
-				RCFooter = RCBarComponent(.footer, labels: ["SliderValue"], actions: ["\(RCBody.range.first!)", "\(RCBody.range.last!)"], in: ChatViewController)
+				footer = RCBarComponent(.footer, labels: ["SliderValue"], actions: ["\(body.range.first!)", "\(body.range.last!)"], in: ChatViewController)
 				
-				guard RCFooter!.RCLabels.indices.contains(0) else { break }
-				RCBody.SliderValue = RCFooter!.RCLabels[0]
+				body.SliderValue = footer!.RCLabels[0]
 			}
 			
-			RCBody.SliderEndValues = RCFooter!.RCActions
+			body.SliderEndValues = footer!.RCActions
 			break
 		case .visualUpload:
 			let RCBody = RCBody as! RCVisualUpload
-			self.RCBodyContent = RCBody
+			self.body = RCBody
 			
 			let RCHeaderTitle = "Choose one" // FIX
-			RCHeader = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [RCAction.glyphs.send], in: ChatViewController)
-			guard RCHeader!.RCActions.indices.contains(0) else { break }
-			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
+			header = RCBarComponent(.header, labels: [RCHeaderTitle], actions: [RCAction.glyphs.send], in: ChatViewController)
+			guard header!.RCActions.indices.contains(0) else { break }
+			RCBody.HEADER_ACTION = header!.RCActions[0]
 			
-			RCFooter = RCBarComponent(.footer, labels: [], actions: ["Choose from Library"], in: ChatViewController)
-			guard RCFooter!.RCActions.indices.contains(0) else { break }
-			RCBody.ChooseFromLibrary = RCFooter!.RCActions[0]
+			footer = RCBarComponent(.footer, labels: [], actions: ["Choose from Library"], in: ChatViewController)
+			guard footer!.RCActions.indices.contains(0) else { break }
+			RCBody.ChooseFromLibrary = footer!.RCActions[0]
 		case .audioUpload:
 			let RCBody = RCBody as! RCAudioUpload
-			self.RCBodyContent = RCBody
+			self.body = RCBody
 			
-			RCHeader = RCBarComponent(.header, labels: [RCBody.RCHeaderTitle!], actions: [RCAction.glyphs.send], in: ChatViewController)
-			guard RCHeader!.RCActions.indices.contains(0) else { break }
-			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
+			header = RCBarComponent(.header, labels: [RCBody.HEADER_TITLE!], actions: [RCAction.glyphs.send], in: ChatViewController)
+			guard header!.RCActions.indices.contains(0) else { break }
+			RCBody.HEADER_ACTION = header!.RCActions[0]
 			
-			RCFooter = RCBarComponent(.footer, labels: ["0:00"], actions: [], in: ChatViewController)
-			guard RCFooter!.RCLabels.indices.contains(0) else { break }
-			RCBody.timerLabel = RCFooter!.RCLabels[0]
+			footer = RCBarComponent(.footer, labels: ["0:00"], actions: [], in: ChatViewController)
+			guard footer!.RCLabels.indices.contains(0) else { break }
+			RCBody.timerLabel = footer!.RCLabels[0]
 		case .datePicker:
 			let RCBody = RCBody as! RCDatePickerController
-			self.RCBodyContent = RCBody
+			self.body = RCBody
 			
-			RCHeader = RCBarComponent(.header, labels: [RCBody.HeaderTitle!], actions: [RCAction.glyphs.send], in: ChatViewController)
-			guard RCHeader!.RCActions.indices.contains(0) else { break }
-			RCBody.RCHeaderSendButton = RCHeader!.RCActions[0]
+			header = RCBarComponent(.header, labels: [RCBody.HEADER_TITLE!], actions: [RCAction.glyphs.send], in: ChatViewController)
+			guard header!.RCActions.indices.contains(0) else { break }
+			RCBody.HEADER_ACTION = header!.RCActions[0]
 			
-			RCFooter = RCBarComponent(.footer, labels: [" "], actions: [], in: ChatViewController)
+			footer = RCBarComponent(.footer, labels: [" "], actions: [], in: ChatViewController)
 		}
-		RCTemplate = template
 	}
 	
 	deinit {
-		RCHeader = nil
-		RCBodyContent = nil
-		RCTemplate = nil
-		RCFooter = nil
-		canExpandCard = nil
+		header = nil
+		body = nil
+		template = nil
+		footer = nil
 	}
 	
 }
 
 class RCBarComponent: UIView {
 	var ChatViewController: MainViewController?
-	var shadow: UIView?
+	var shadow: UIView!
 	var RCLabels = [RCLabel]()
 	var RCActions = [RCAction]()
 	var form: Forms?
@@ -170,6 +168,7 @@ class RCBarComponent: UIView {
 			paddingVertical = 10
 			break
 		}
+		
 		let height: CGFloat
 		if !self.RCLabels.isEmpty {
 			height = paddingVertical + self.RCLabels[0].frame.height + paddingVertical
@@ -180,7 +179,7 @@ class RCBarComponent: UIView {
 		
 		backgroundColor = UIColor.white
 		shadow = UIView(frame: frame)
-		shadow!.createShadow(opacity: 0.15, offset: CGSize(width: 0, height: 0), cornerRadius: 0, shadowRadius: 1)
+		shadow!.convertToShadow(opacity: 0.15, offset: CGSize(width: 0, height: 0), cornerRadius: 0, shadowRadius: 1)
 	}
 	
 	deinit {
@@ -210,9 +209,9 @@ class RCBarComponent: UIView {
 				}
 				RCLabels[0].frame.origin = CGPoint(x: x, y: (frame.height - RCLabels[0].frame.height) / 2)
 				
-				if let RCContent = ChatViewController!.ResponseCard!.RCContent {
-					if RCContent.RCTemplate! == .scale {
-						let RCScale = RCContent.RCBodyContent as! RCScale
+				if let RCContent = ChatViewController!.ResponseCard!.content {
+					if RCContent.template! == .scale {
+						let RCScale = RCContent.body as! RCScale
 						if RCScale.type! == .discrete {
 							RCScale.moveSlider(to: (RCScale.range.count / 2))
 						}

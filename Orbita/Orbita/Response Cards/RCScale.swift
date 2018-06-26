@@ -7,13 +7,15 @@
 
 import UIKit
 
-class RCScale: UIViewController {
-	var RCHeaderTitle: String?
-	var RCHeaderSendButton: RCAction?
+class RCScale: UIViewController, RCResponseCardDataSource {
+	var HEADER_TITLE: String?
+	var HEADER_ACTION: RCAction?
+	var FOOTER_ACTION: RCAction?
+	
 	var type: ScaleTypes?
 	
 	var handle = UIView(frame: CGRect.zero)
-	var touchPosition = UIView(frame: CGRect.zero)
+	var HANDLE_GRABBER = UIView(frame: CGRect.zero)
 	
 	var range = [Any]()
 	var SliderValue: RCLabel?
@@ -29,7 +31,7 @@ class RCScale: UIViewController {
 	
 	init(title: String, range: [Any]) {
 		super.init(nibName: nil, bundle: nil)
-		self.RCHeaderTitle = title
+		HEADER_TITLE = title
 		self.range = range
 		
 		if range[0] is Int {
@@ -44,26 +46,35 @@ class RCScale: UIViewController {
 	}
 	
 	deinit {
+		HEADER_TITLE = nil
+		HEADER_ACTION = nil
+		FOOTER_ACTION = nil
+		type = nil
+		SliderValue = nil
+		SliderEndValues = nil
+		
 		range.removeAll()
+		stops.removeAll()
+		bufferZones.removeAll()
+		ticks.removeAll()
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
 		if let superview = view.superview {
-			view.frame = superview.bounds
+			view.setFrame(equalTo: superview.bounds)
 		}
 		
+		handle.resizeTo(width: 8, height: view.frame.height - (ALT_spacing(.small) * 2))
+		handle.moveTo(x: origins.center, y: origins.middle)
 		handle.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: roundedCorners(size: handle.frame.width), masksToBounds: true, alpha: nil)
-		
-		handle.frame.size = CGSize(width: 8, height: view.frame.height - 12)
-		handle.frame.origin = CGPoint(x: (view.frame.width - handle.frame.width) / 2, y: (view.frame.height - handle.frame.height) / 2)
 		view.addSubview(handle)
 		
-		touchPosition.frame = handle.frame
+		HANDLE_GRABBER.setFrame(equalTo: handle)
 		makeSliderGrabbable()
-		touchPosition.backgroundColor = UIColor.clear
-		touchPosition.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
-		touchPosition.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(sliderWasTapped(gesture:))))
-		view.addSubview(touchPosition)
+		HANDLE_GRABBER.visualSetup(backgroundColor: UIColor.clear, cornerRadius: nil, masksToBounds: nil, alpha: nil)
+		HANDLE_GRABBER.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(sliderWasDragged(gesture:))))
+		HANDLE_GRABBER.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(sliderWasTapped(gesture:))))
+		view.addSubview(HANDLE_GRABBER)
 		
 		if let sliderValue = SliderValue {
 			sliderValue.textColor = UIColor(named: "Orbita Blue")
@@ -151,13 +162,13 @@ class RCScale: UIViewController {
 	}
 	
 	func makeSliderGrabbable() {
-		touchPosition.frame = handle.frame
-		touchPosition.frame.size = CGSize(width: 44, height: touchPosition.frame.height)
-		touchPosition.frame.origin = CGPoint(x: touchPosition.frame.origin.x - (touchPosition.frame.width / 2), y: touchPosition.frame.origin.y)
+		HANDLE_GRABBER.setFrame(equalTo: handle)
+		HANDLE_GRABBER.resizeTo(width: 44, height: nil)
+		HANDLE_GRABBER.moveTo(x: HANDLE_GRABBER.frame.origin.x - (HANDLE_GRABBER.frame.width / 2), y: nil)
 	}
 	
 	func moveSlider(to index: Int) {
-		handle.frame.origin = CGPoint(x: stops[index], y: handle.frame.origin.y)
+		handle.moveTo(x: stops[index], y: nil)
 		if let sliderValue = SliderValue {
 			if (index == 0 || index == range.count - 1 ) {
 				sliderValue.alpha = 0
@@ -165,7 +176,7 @@ class RCScale: UIViewController {
 				sliderValue.text = (range[index] as! Int).description
 				sliderValue.alpha = 1
 				sliderValue.sizeToFit()
-				sliderValue.frame.origin = CGPoint(x: handle.frame.origin.x , y: sliderValue.frame.origin.y)
+				sliderValue.moveTo(x: handle.frame.origin.x, y: nil)
 			}
 		}
 	}
@@ -173,23 +184,23 @@ class RCScale: UIViewController {
 	@objc func leftValueSelected(sender: UIButton) {
 		moveSlider(to: 0)
 		makeSliderGrabbable()
-		RCHeaderSendButton!.isEnabled = true
+		HEADER_ACTION!.isEnabled = true
 	}
 	@objc func rightValueSelected(sender: UIButton) {
 		moveSlider(to: stops.count - 1)
 		makeSliderGrabbable()
-		RCHeaderSendButton!.isEnabled = true
+		HEADER_ACTION!.isEnabled = true
 	}
 	
 	@objc func sliderWasTapped(gesture: UITapGestureRecognizer) {
 		if gesture.state == .ended {
-			RCHeaderSendButton!.isEnabled = true
+			HEADER_ACTION!.isEnabled = true
 		}
 	}
 	
 	@objc func sliderWasDragged(gesture: UIPanGestureRecognizer) {
 		if gesture.state == .began  {
-			touchPosition.frame = handle.frame
+			HANDLE_GRABBER.setFrame(equalTo: handle)
 		}
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
@@ -197,10 +208,10 @@ class RCScale: UIViewController {
 			let margin: CGFloat = 16
 			if newPosition >= margin { // Leftmost stop
 				if newPosition <= view.frame.width - margin - handle.frame.width { // Rightmost stop
-					touchPosition.frame.origin = CGPoint(x: newPosition, y: gesture.view!.frame.origin.y)
+					HANDLE_GRABBER.moveTo(x: newPosition, y: nil)
 					switch type! {
 					case .continuous:
-						handle.frame = touchPosition.frame
+						handle.setFrame(equalTo: HANDLE_GRABBER)
 						handle.backgroundColor = UIColor.clear
 						var tickPlus1 = 0
 						for (index, tick) in ticks.enumerated() {
@@ -230,7 +241,7 @@ class RCScale: UIViewController {
 						break
 					case .discrete:
 						for (index, bufferZone) in bufferZones.enumerated() {
-							if touchPosition.frame.origin.x < bufferZone {
+							if HANDLE_GRABBER.frame.origin.x < bufferZone {
 								moveSlider(to: index)
 							}
 						}
@@ -240,8 +251,8 @@ class RCScale: UIViewController {
 			}
 		}
 		if gesture.state == .ended {
-			RCHeaderSendButton!.isEnabled = true
-			touchPosition.frame = handle.frame
+			HEADER_ACTION!.isEnabled = true
+			HANDLE_GRABBER.setFrame(equalTo: handle)
 			makeSliderGrabbable()
 		}
 	}

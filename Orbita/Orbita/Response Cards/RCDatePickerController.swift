@@ -7,14 +7,16 @@
 
 import UIKit
 
-class RCDatePickerController: UIViewController, RCResponseCardComponents {
-	var HeaderTitle: String!
-	var RCHeaderSendButton: RCAction?
+class RCDatePickerController: UIViewController, RCResponseCardDataSource {
+	var HEADER_TITLE: String?
+	var HEADER_ACTION: RCAction?
+	var FOOTER_ACTION: RCAction?
+	
 	var picker: RCDatePickerView!
 	
 	convenience init(HeaderTitle: String, pickerStyle: RCDatePickerStyles) {
 		self.init(nibName: nil, bundle: nil)
-		self.HeaderTitle = HeaderTitle
+		HEADER_TITLE = HeaderTitle
 		
 		picker = RCDatePickerView(pickerStyle: pickerStyle, in: self)
 	}
@@ -198,12 +200,12 @@ class RCDatePickerComponent: UIScrollView {
 extension RCDatePickerComponent: UIScrollViewDelegate {
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		if let parentView = superview as? RCDatePickerView {
-			parentView.DatePickerController.RCHeaderSendButton!.isEnabled = true
+			parentView.DatePickerController.HEADER_ACTION!.isEnabled = true
 		}
 	}
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		if let parentView = superview as? RCDatePickerView {
-			parentView.DatePickerController.RCHeaderSendButton!.isEnabled = true
+			parentView.DatePickerController.HEADER_ACTION!.isEnabled = true
 		}
 	}
 }

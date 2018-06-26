@@ -20,6 +20,15 @@ enum sizes {
 	case large
 }
 
+enum origins {
+	case top
+	case middle
+	case bottom
+	case left
+	case center
+	case right
+}
+
 enum colors {
 	case lighterGrey
 	case lightGrey
@@ -69,6 +78,17 @@ func spacing(_ size: sizes) -> CGFloat {
 	}
 }
 
+func ALT_spacing(_ size: sizes) -> CGFloat {
+	switch size {
+	case .small:
+		return 6
+	case .medium:
+		return 12
+	case .large:
+		return 18
+	}
+}
+
 func glyph(_ glyph: glyphs) -> UIImage {
 	switch glyph {
 	case .checkmark:
@@ -102,28 +122,59 @@ func roundedCorners(size: CGFloat) -> CGFloat {
 
 extension UIView {
 	
-	func moveTo(x: CGFloat?, y: CGFloat?) {
-		var ELECT_X = frame.origin.x
-		var ELECT_Y = frame.origin.y
+	func moveTo(x: Any?, y: Any?) {
+		func origin(from ORIGIN: Any) -> CGFloat {
+			if let origin = ORIGIN as? CGFloat {
+				return origin
+			} else if let ORIGIN = ORIGIN as? origins {
+				if let parent = superview {
+					switch ORIGIN {
+					case .top:
+						return 0
+					case .middle:
+						return origin(from: origins.bottom) / 2
+					case .bottom:
+						return parent.frame.height - frame.height
+					case .left:
+						return 0
+					case .center:
+						return origin(from: origins.right) / 2
+					case .right:
+						return parent.frame.width - frame.width
+					}
+				} else { return 0 }
+			} else { return 0 }
+		}
 		
-		if let x = x { ELECT_X = x }
-		if let y = y { ELECT_Y = y }
+		let X: CGFloat
+		let Y: CGFloat
 		
-		frame.origin = CGPoint(x: ELECT_X, y: ELECT_Y)
+		if let x = x { X = origin(from: x) }
+		else { X = frame.origin.x }
+		
+		if let y = y { Y = origin(from: y) }
+		else { Y = frame.origin.y }
+		
+		frame.origin = CGPoint(x: X, y: Y)
 	}
 	
 	func resizeTo(width: CGFloat?, height: CGFloat?) {
-		var ELECT_WIDTH = frame.size.width
-		var ELECT_HEIGHT = frame.size.height
+		var WIDTH = frame.size.width
+		var HEIGHT = frame.size.height
 		
-		if let width = width { ELECT_WIDTH = width }
-		if let height = height { ELECT_HEIGHT = height }
+		if let width = width { WIDTH = width }
+		if let height = height { HEIGHT = height }
 		
-		frame.size = CGSize(width: ELECT_WIDTH, height: ELECT_HEIGHT)
+		frame.size = CGSize(width: WIDTH, height: HEIGHT)
 	}
 	
-	func setFrame(equalTo view: UIView) {
-		frame = view.frame
+	func setFrame(equalTo view: Any) {
+		if let view = view as? UIView {
+			frame = view.frame
+		} else if let rect = view as? CGRect {
+			frame.origin = rect.origin
+			frame.size = rect.size
+		}
 	}
 	
 	func setOrigin(equalTo view: UIView) {
@@ -147,7 +198,7 @@ extension UIView {
 		if let alpha = alpha { self.alpha = alpha }
 	}
 	
-	func createShadow(opacity: Float, offset: CGSize, cornerRadius: CGFloat, shadowRadius: CGFloat) {
+	func convertToShadow(opacity: Float, offset: CGSize, cornerRadius: CGFloat, shadowRadius: CGFloat) {
 		backgroundColor = UIColor.white
 		layer.shadowColor = UIColor.black.cgColor
 		layer.cornerRadius = cornerRadius

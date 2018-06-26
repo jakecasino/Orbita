@@ -7,8 +7,10 @@
 
 import UIKit
 
-class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RCResponseCardComponents {
-	var RCHeaderSendButton: RCAction?
+class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RCResponseCardDataSource {
+	var HEADER_TITLE: String?
+	var HEADER_ACTION: RCAction?
+	var FOOTER_ACTION: RCAction?
 	
 	var mediaType: mediaTypes?
 	var media: UIImageView?
@@ -21,7 +23,7 @@ class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavig
 		case video
 	}
 	
-	init(type: mediaTypes, enableLive liveIsEnabled: Bool) {
+	init(title: String, type: mediaTypes, enableLive liveIsEnabled: Bool) {
 		super.init(nibName: nil, bundle: nil)
 		self.mediaType = type
 		self.liveIsEnabled = liveIsEnabled
@@ -90,7 +92,7 @@ class RCVisualUpload: UIViewController, UIImagePickerControllerDelegate, UINavig
 		if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
 			media!.image = image
 			media!.contentMode = .scaleAspectFill
-			RCHeaderSendButton!.isEnabled = true
+			HEADER_ACTION!.isEnabled = true
 		}
 		
 		self.dismiss(animated: true, completion: nil)

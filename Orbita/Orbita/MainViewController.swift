@@ -10,7 +10,6 @@ import UIKit
 class MainViewController: UIViewController {
 	var ChatToolbarDelegate: ChatToolbarDelegate?
 	var ResponseCard: RCResponseCard?
-	var RCViewController: RCDelegate?
 	
 	@IBOutlet weak var ChatToolbar: UIView!
 	
@@ -24,25 +23,34 @@ class MainViewController: UIViewController {
 		
 		// Resize Chat Toolbar
 		ChatToolbar.resizeTo(width: view.bounds.width, height: 108 + view.safeAreaInsets.bottom)
-		ChatToolbar.moveTo(x: 0, y: view.bounds.height - ChatToolbar.frame.height)
+		ChatToolbar.moveTo(x: origins.left, y: origins.bottom)
 		
-		let chat = ChatViewController(withMessages: [])
+		let chat = ChatViewController(Demo().ChatExample1())
 		addChildViewController(chat)
 		chat.didMove(toParentViewController: self)
 	}
 	
 	func showResponseCard(RCContent: RCContent) {
-		ResponseCard = RCResponseCard(RCContent: RCContent, in: self)
-		UIView.animate(withDuration: 0.3) { self.ResponseCard!.alpha = 1 }
-		self.RCViewController!.RCResponseCardChangeState(to: .minimized)
+		func show() {
+			ResponseCard = RCResponseCard(content: RCContent, in: self)
+			UIView.animate(withDuration: 0.3) { self.ResponseCard!.alpha = 1 }
+			ResponseCard!.delegate.changeState(to: .minimized)
+		}
+		if let ResponseCard = ResponseCard {
+			ResponseCard.dismiss {
+				show()
+			}
+		} else {
+			show()
+		}
 	}
 	
 	@objc func responseCardWasDragged(gesture: UIPanGestureRecognizer) {
 		if gesture.state == .changed {
 			let translation = gesture.translation(in: self.view)
 			let newPosition = gesture.view!.frame.origin.y + translation.y
-			let minimumStop = RCViewController!.cardConstraint(.originYwhenMinimized) + 24
-			if newPosition > RCViewController!.cardConstraint(.originYwhenMaximized) {
+			let minimumStop = ResponseCard!.delegate.cardConstraint(.OriginY_Minimized) + 24
+			if newPosition > ResponseCard!.delegate.cardConstraint(.OriginY_Maximized) {
 				if newPosition < minimumStop {
 					ResponseCard!.resizeTo(width: nil, height: gesture.view!.frame.height - translation.y)
 					ResponseCard!.moveTo(x: nil, y: newPosition)
@@ -50,15 +58,15 @@ class MainViewController: UIViewController {
 					
 					gesture.setTranslation(CGPoint.zero, in: self.view)
 					
-					if let RCFooter = ResponseCard!.RCContent!.RCFooter {
-						RCFooter.moveTo(x: nil, y: ResponseCard!.frame.height - RCFooter.frame.height)
+					if let RCFooter = ResponseCard!.content!.footer {
+						RCFooter.moveTo(x: nil, y: origins.bottom)
 						RCFooter.shadow!.setOrigin(equalTo: RCFooter)
 					}
 				}
 			}
 		}
 		if gesture.state == .ended {
-			self.RCViewController!.RCResponseCardViewDidChange()
+			ResponseCard!.delegate.RCResponseCardViewDidChange()
 		}
 	}
 

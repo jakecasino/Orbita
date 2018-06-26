@@ -8,9 +8,10 @@
 import UIKit
 import AVFoundation
 
-class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardComponents {
-	var RCHeaderTitle: String?
-	var RCHeaderSendButton: RCAction?
+class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardDataSource {
+	var HEADER_TITLE: String?
+	var HEADER_ACTION: RCAction?
+	var FOOTER_ACTION: RCAction?
 	
 	var recordingSession: AVAudioSession?
 	var recorder: AVAudioRecorder?
@@ -26,7 +27,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 	
 	init(title: String) {
 		super.init(nibName: nil, bundle: nil)
-		RCHeaderTitle = title
+		HEADER_TITLE = title
 		
 		AVAudioSession.sharedInstance().requestRecordPermission { (hasPermission) in
 			if hasPermission {
@@ -65,7 +66,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 	
 	@objc func toggleRecordingSession(sender: UIButton) {
 		if recorder == nil {
-			RCHeaderSendButton!.isEnabled = false
+			HEADER_ACTION!.isEnabled = false
 			
 			let filename = getDirectory().appendingPathComponent("audio.m4a")
 			let settings = [AVFormatIDKey: Int(kAudioFormatMPEG4AAC), AVSampleRateKey: 12000, AVNumberOfChannelsKey: 1, AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue]
@@ -133,7 +134,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 			let path = getDirectory().appendingPathComponent("audio.m4a")
 			do {
 				audioPlayer = try AVAudioPlayer(contentsOf: path)
-				RCHeaderSendButton!.isEnabled = true
+				HEADER_ACTION!.isEnabled = true
 				audioPlayerView = AudioPlayerView(audioPlayer: audioPlayer!, in: self)
 				view.addSubview(audioPlayerView!)
 			} catch {
@@ -160,7 +161,7 @@ class RCAudioUpload: UIViewController, AVAudioRecorderDelegate, RCResponseCardCo
 				}
 			}
 		}
-		RCHeaderSendButton!.isEnabled = false
+		HEADER_ACTION!.isEnabled = false
 	}
 	
 	class AudioPlayerView: UIView {
