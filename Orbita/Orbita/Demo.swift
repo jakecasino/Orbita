@@ -12,7 +12,10 @@ class Demo {
 		var content = [RCChatBubble]()
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Hello Rachel!"))
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "I'm your Orbita Assistant"))
-		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "Tap below to see some of the things I can do for you"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Tap below to see some of the things I can do for you"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "thanks"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "Can you help me schedule an appointment with my doctor?"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Sure!"))
 		
 		return content
 	}

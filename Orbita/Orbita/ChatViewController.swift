@@ -84,7 +84,7 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		
 		switch content[indexPath.row].type! {
 		case .incomingText, .outgoingText:
-			let size = CGSize(width: view.frame.width, height: 1000.0)
+			let size = CGSize(width: view.bounds.width, height: 1000.0)
 			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
 			let estimatedFrame = NSString(string: content[indexPath.row].content as! String).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
 			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: estimatedFrame.height + (spacing(.medium) * 2))
@@ -101,6 +101,7 @@ class RCChatBubbleText: UICollectionViewCell {
 		let estimatedFrame = NSString(string: text).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
 		
 		let label = UILabel(frame: CGRect.zero)
+		label.resizeTo(width: estimatedFrame.width, height: estimatedFrame.height)
 		label.lineBreakMode = .byWordWrapping
 		label.numberOfLines = 0
 		label.font = label.Raleway(textStyle: .body, weight: .regular)
@@ -108,13 +109,12 @@ class RCChatBubbleText: UICollectionViewCell {
 		
 		switch source {
 		case .incoming:
-			label.resizeTo(width: estimatedFrame.width, height: estimatedFrame.height)
 			label.moveTo(x: spacing(.medium), y: spacing(.medium))
 			break
 		case .outgoing:
-			label.resizeTo(width: estimatedFrame.width, height: estimatedFrame.height)
 			label.moveTo(x: frame.width - label.frame.width - spacing(.medium), y: spacing(.medium))
 			label.textColor = UIColor.white
+			label.textAlignment = .right
 			break
 		}
 		
