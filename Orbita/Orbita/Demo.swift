@@ -16,6 +16,7 @@ class Demo {
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "thanks"))
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.outgoingText, content: "Can you help me schedule an appointment with my doctor?"))
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Sure!"))
+		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.chatbotThinking, content: "Sure!"))
 		
 		return content
 	}

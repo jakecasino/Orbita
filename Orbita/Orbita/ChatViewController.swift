@@ -16,12 +16,14 @@ struct RCChatBubble {
 enum RCChatBubbleTypes {
 	case incomingText
 	case outgoingText
+	case chatbotThinking
 	case audioFile
 }
 
 class ChatViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 	private let BUBBLE_TEXT = "cell0"
-	private let BUBBLE_AUDIO = "cell1"
+	private let BUBBLE_CHATBOT_THINKING = "cell1"
+	private let BUBBLE_AUDIO = "cell2"
 	var content = [RCChatBubble]()
 	
 	init(_ content: [RCChatBubble]) {
@@ -37,6 +39,7 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		collectionView!.alwaysBounceVertical = true
 		
 		self.collectionView!.register(RCChatBubbleText.self, forCellWithReuseIdentifier: BUBBLE_TEXT)
+		self.collectionView!.register(RCChatBubbleChatbotThinking.self, forCellWithReuseIdentifier: BUBBLE_CHATBOT_THINKING)
 		self.collectionView!.register(RCChatBubbleAudioFile.self, forCellWithReuseIdentifier: BUBBLE_AUDIO)
 	}
 	
@@ -73,6 +76,10 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BUBBLE_TEXT, for: indexPath) as! RCChatBubbleText
 			cell.setup(text: content[indexPath.row].content as! String, source: .outgoing)
 			return cell
+		case .chatbotThinking:
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BUBBLE_CHATBOT_THINKING, for: indexPath) as! RCChatBubbleChatbotThinking
+			cell.setup()
+			return cell
 		case .audioFile:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BUBBLE_AUDIO, for: indexPath) as! RCChatBubbleAudioFile
 			cell.setupVisualLayout()
@@ -87,6 +94,11 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 			let size = CGSize(width: view.bounds.width, height: 1000.0)
 			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
 			let estimatedFrame = NSString(string: content[indexPath.row].content as! String).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
+			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: estimatedFrame.height + (spacing(.medium) * 2))
+		case .chatbotThinking:
+			let size = CGSize(width: view.bounds.width, height: 1000.0)
+			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+			let estimatedFrame = NSString(string: " ").boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
 			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: estimatedFrame.height + (spacing(.medium) * 2))
 		case .audioFile:
 			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: 115)
@@ -110,16 +122,23 @@ class RCChatBubbleText: UICollectionViewCell {
 		switch source {
 		case .incoming:
 			label.moveTo(x: spacing(.medium), y: spacing(.medium))
+			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: UIColor.white, alignedRight: false)
 			break
 		case .outgoing:
 			label.moveTo(x: frame.width - label.frame.width - spacing(.medium), y: spacing(.medium))
 			label.textColor = UIColor.white
 			label.textAlignment = .right
+			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: color(.orbitaBlue), alignedRight: true)
 			break
 		}
 		
-		RCSetupChatBubble(source: source, width: estimatedFrame.width + (spacing(.medium) * 2))
 		addSubview(label)
+	}
+}
+
+class RCChatBubbleChatbotThinking: UICollectionViewCell {
+	func setup() {
+		RCSetupChatBubble(width: 144, BACKGROUND_COLOR: UIColor.gray, alignedRight: false)
 	}
 }
 
@@ -128,21 +147,11 @@ extension UICollectionViewCell {
 		case incoming
 		case outgoing
 	}
-	func RCSetupChatBubble(source: RCChatBubbleTextSources, width: CGFloat) {
+	func RCSetupChatBubble(width: CGFloat, BACKGROUND_COLOR: UIColor, alignedRight: Bool) {
 		let bubble = UIView(frame: bounds)
 		bubble.resizeTo(width: width, height: nil)
-		
-		let BACKGROUND_COLOR: UIColor
-		switch source {
-		case .incoming:
-			BACKGROUND_COLOR = UIColor.white
-		case .outgoing:
-			bubble.moveTo(x: bounds.width - width, y: nil)
-			BACKGROUND_COLOR = color(.orbitaBlue)
-		}
-		
+		if alignedRight { bubble.moveTo(x: bounds.width - width, y: nil) }
 		bubble.visualSetup(backgroundColor: BACKGROUND_COLOR, cornerRadius: cornerRadius(.large), masksToBounds: true, alpha: nil)
-		
 		addSubview(bubble)
 	}
 }
