@@ -137,8 +137,62 @@ class RCChatBubbleText: UICollectionViewCell {
 }
 
 class RCChatBubbleChatbotThinking: UICollectionViewCell {
+	var thinkingDots = [UIView]()
 	func setup() {
-		RCSetupChatBubble(width: 144, BACKGROUND_COLOR: UIColor.gray, alignedRight: false)
+		
+		let numberOfDots = 5
+		let dotSize: CGFloat = 5
+		let dotSpacing: CGFloat = 10
+		let dotPadding = (bounds.height - dotSize) / 2
+		let width = (dotSize * CGFloat(numberOfDots)) + ((CGFloat(numberOfDots) - 1) * dotSpacing) + (dotPadding * 2)
+		RCSetupChatBubble(width: width, BACKGROUND_COLOR: color(.lightGrey), alignedRight: false)
+		
+		
+		for index in 0...(numberOfDots - 1) {
+			let dot = UIView(frame: CGRect.zero)
+			dot.resizeTo(width: dotSize, height: dotSize)
+			dot.moveTo(x: dotPadding + (CGFloat(index) * (dotSize + dotSpacing)), y: (bounds.height - dotSize) / 2)
+			dot.visualSetup(backgroundColor: UIColor.white, cornerRadius: dotSize / 2, masksToBounds: nil, alpha: nil)
+			thinkingDots.append(dot)
+			addSubview(dot)
+		}
+		
+		startAnimating()
+	}
+	
+	func startAnimating() {
+		
+		enum directions {
+			case scaleUp
+			case scaleDown
+		}
+		func move(_ direction: directions, index: Int, delay: TimeInterval) {
+			switch direction {
+			case .scaleUp:
+				UIView.animate(withDuration: 0.5, delay: delay, options: .curveLinear, animations: {
+					self.thinkingDots[index].transform = CGAffineTransform(scaleX: 2, y: 2)
+					//self.thinkingDots[index].backgroundColor = UIColor.white
+				}) { (_) in
+					move(.scaleDown, index: index, delay: 0)
+				}
+				break
+			case .scaleDown:
+				UIView.animate(withDuration: 0.5, delay: delay, options: .curveLinear, animations: {
+					self.thinkingDots[index].transform = CGAffineTransform(scaleX: 1, y: 1)
+					//self.thinkingDots[index].backgroundColor = color(.orbitaBlue)
+				}) { (_) in
+					move(.scaleUp, index: index, delay: 0)
+				}
+				break
+			}
+		}
+		
+		move(.scaleUp, index: 0, delay: 0)
+		move(.scaleUp, index: 1, delay: 0.67)
+		move(.scaleUp, index: 2, delay: 1.42)
+		move(.scaleUp, index: 3, delay: 0.86)
+		move(.scaleUp, index: 4, delay: 0.23)
+		
 	}
 }
 
