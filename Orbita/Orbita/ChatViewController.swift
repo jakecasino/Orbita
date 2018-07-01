@@ -31,7 +31,8 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		self.content = content
 		
 		let layout = UICollectionViewFlowLayout()
-		layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+		layout.sectionInset = UIEdgeInsets(top: spacing(.medium), left: spacing(.medium), bottom: spacing(.medium), right: spacing(.medium))
+		layout.minimumLineSpacing = spacing(.extraSmall)
 		
 		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
 		collectionView!.backgroundColor = color(.lighterGrey)
@@ -88,21 +89,31 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		let width = collectionView.frame.width - (spacing(.medium) * 2)
+		var height: CGFloat
+		
+		func findBubbleHeight(fromText TEXT: String?) -> CGFloat {
+			let text: String
+			if let TEXT = TEXT {
+				text = TEXT
+			} else { text = " " }
+			
+			let size = CGSize(width: 250, height: 1000.0)
+			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+			let estimatedFrame = NSString(string: text).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
+			return estimatedFrame.height + (spacing(.medium) * 2)
+		}
 		
 		switch content[indexPath.row].type! {
 		case .incomingText, .outgoingText:
-			let size = CGSize(width: view.bounds.width, height: 1000.0)
-			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-			let estimatedFrame = NSString(string: content[indexPath.row].content as! String).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
-			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: estimatedFrame.height + (spacing(.medium) * 2))
+			height = findBubbleHeight(fromText: (content[indexPath.row].content as! String))
 		case .chatbotThinking:
-			let size = CGSize(width: view.bounds.width, height: 1000.0)
-			let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-			let estimatedFrame = NSString(string: " ").boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UILabel().Raleway(textStyle: .body, weight: .regular)], context: nil)
-			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: estimatedFrame.height + (spacing(.medium) * 2))
+			height = findBubbleHeight(fromText: nil)
 		case .audioFile:
-			return CGSize(width: collectionView.frame.width - (spacing(.small) * 2), height: 115)
+			height = 115
 		}
+		
+		return CGSize(width: width, height: height)
 	}
 }
 

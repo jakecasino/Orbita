@@ -25,7 +25,7 @@ class RCResponseCard: UIView {
 		// response card visual setup
 		resizeTo(width: main.view.frame.width - (spacing(.medium) * 2), height: delegate.minimumHeight)
 		moveTo(x: spacing(.medium), y: main.view.frame.height)
-		main.view.insertSubview(self, belowSubview: main.ChatToolbar)
+		main.view.insertSubview(self, belowSubview: main.ChatToolbar.view)
 		
 		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: 0)
 		shadow = RCResponseCardViewShadow(for: self)
@@ -271,9 +271,9 @@ class RCDelegate: UIViewController {
 		if let main = parent as? MainViewController {
 			switch object {
 			case .maximumHeight:
-				return constraint(.deviceHeight) - main.ChatToolbar.frame.height - self.cardConstraint(.OriginY_Maximized) - constraint(.contentSpacing)
+				return constraint(.deviceHeight) - main.ChatToolbar.view.frame.height - self.cardConstraint(.OriginY_Maximized) - constraint(.contentSpacing)
 			case .OriginY_Minimized:
-				return constraint(.deviceHeight) - main.ChatToolbar.frame.height - constraint(.contentSpacing) -  self.minimumHeight!
+				return constraint(.deviceHeight) - main.ChatToolbar.view.frame.height - constraint(.contentSpacing) -  self.minimumHeight!
 			case .OriginY_Maximized:
 				return main.view.safeAreaInsets.top + constraint(.contentSpacing)
 			}

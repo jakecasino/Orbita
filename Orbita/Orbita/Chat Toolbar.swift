@@ -8,8 +8,32 @@
 import UIKit
 
 class ChatToolbarDelegate: UIViewController {
+	var microphone: Button!
+	var more: Button!
 	
-	@IBAction func ShowResponseCard(_ sender: Any) {
+	override func didMove(toParentViewController parent: UIViewController?) {
+		if let main = parent {
+			let microphoneSize: CGFloat = 76
+			let	secondaryButtonSize: CGFloat = 34
+			
+			view.resizeTo(width: constraint(.deviceWidth), height: microphoneSize + main.view.safeAreaInsets.bottom + (spacing(.medium) * 2))
+			view.moveTo(x: nil, y: origins.bottom)
+			view.visualSetup(backgroundColor: UIColor.white, cornerRadius: nil, masksToBounds: nil, alpha: nil)
+			
+			microphone = Button(withGlyph: UIImage(named: "Microphone")!, backgroundColor: color(.orbitaBlue), nil, cornerRadius: roundedCorners(size: microphoneSize))
+			microphone.resizeTo(width: microphoneSize, height: microphoneSize)
+			view.addSubview(microphone)
+			microphone.moveTo(x: origins.center, y: origins.middle)
+			
+			more = Button(withGlyph: UIImage(named: "More")!, backgroundColor: UIColor.clear, color(.mediumGrey), cornerRadius: nil)
+			more.resizeTo(width: secondaryButtonSize, height: secondaryButtonSize)
+			view.addSubview(more)
+			more.moveTo(x: view.bounds.width - secondaryButtonSize - spacing(.extraLarge), y: origins.middle)
+			more.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ShowResponseCard(_:))))
+		}
+	}
+	
+	@objc func ShowResponseCard(_ sender: Any) {
 		if let main = parent as? MainViewController {
 			
 			let alertView = UIAlertController(title: "Response Cards", message: "Which one did you want to see?", preferredStyle: .actionSheet)

@@ -8,22 +8,16 @@
 import UIKit
 
 class MainViewController: UIViewController {
-	var ChatToolbarDelegate: ChatToolbarDelegate?
+	var ChatToolbar: ChatToolbarDelegate!
 	var ResponseCard: RCResponseCard?
-	
-	@IBOutlet weak var ChatToolbar: UIView!
-	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if let view = segue.destination as? ChatToolbarDelegate {
-			ChatToolbarDelegate = view
-		}
-	}
 	
 	override func viewDidLoad() {
 		
-		// Resize Chat Toolbar
-		ChatToolbar.resizeTo(width: view.bounds.width, height: 108 + view.safeAreaInsets.bottom)
-		ChatToolbar.moveTo(x: origins.left, y: origins.bottom)
+		ChatToolbar = ChatToolbarDelegate(nibName: nil, bundle: nil)
+		addChildViewController(ChatToolbar)
+		view.addSubview(ChatToolbar.view)
+		ChatToolbar.didMove(toParentViewController: self)
+		
 		
 		let chat = ChatViewController(Demo().ChatExample1())
 		addChildViewController(chat)
