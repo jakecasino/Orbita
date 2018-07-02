@@ -65,7 +65,7 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 		}
 		
 		handle.resizeTo(width: 8, height: view.frame.height - (ALT_spacing(.small) * 2))
-		handle.moveTo(x: origins.center, y: origins.middle)
+		handle.move(x: origins.center, y: origins.middle)
 		handle.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: roundedCorners(size: handle.frame.width), masksToBounds: true, alpha: nil)
 		view.addSubview(handle)
 		
@@ -164,11 +164,11 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 	func makeSliderGrabbable() {
 		HANDLE_GRABBER.setFrame(equalTo: handle)
 		HANDLE_GRABBER.resizeTo(width: 44, height: nil)
-		HANDLE_GRABBER.moveTo(x: HANDLE_GRABBER.frame.origin.x - (HANDLE_GRABBER.frame.width / 2), y: nil)
+		HANDLE_GRABBER.move(x: HANDLE_GRABBER.frame.origin.x - (HANDLE_GRABBER.frame.width / 2), y: nil)
 	}
 	
 	func moveSlider(to index: Int) {
-		handle.moveTo(x: stops[index], y: nil)
+		handle.move(x: stops[index], y: nil)
 		if let sliderValue = SliderValue {
 			if (index == 0 || index == range.count - 1 ) {
 				sliderValue.alpha = 0
@@ -176,7 +176,7 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 				sliderValue.text = (range[index] as! Int).description
 				sliderValue.alpha = 1
 				sliderValue.sizeToFit()
-				sliderValue.moveTo(x: handle.frame.origin.x, y: nil)
+				sliderValue.move(x: handle.frame.origin.x, y: nil)
 			}
 		}
 	}
@@ -208,7 +208,7 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 			let margin: CGFloat = 16
 			if newPosition >= margin { // Leftmost stop
 				if newPosition <= view.frame.width - margin - handle.frame.width { // Rightmost stop
-					HANDLE_GRABBER.moveTo(x: newPosition, y: nil)
+					HANDLE_GRABBER.move(x: newPosition, y: nil)
 					switch type! {
 					case .continuous:
 						handle.setFrame(equalTo: HANDLE_GRABBER)

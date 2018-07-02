@@ -24,7 +24,7 @@ class RCResponseCard: UIView {
 		
 		// response card visual setup
 		resizeTo(width: main.view.frame.width - (spacing(.medium) * 2), height: delegate.minimumHeight)
-		moveTo(x: spacing(.medium), y: main.view.frame.height)
+		move(x: spacing(.medium), y: main.view.frame.height)
 		main.view.insertSubview(self, belowSubview: main.ChatToolbar.view)
 		
 		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: 0)
@@ -149,7 +149,7 @@ class RCDelegate: UIViewController {
 				
 			}
 			let BODY_VIEW = UIView(frame: CGRect.zero)
-			BODY_VIEW.moveTo(x: nil, y: header.frame.height)
+			BODY_VIEW.move(x: nil, y: header.frame.height)
 			BODY_VIEW.resizeTo(width: constraint(.contentWidth), height: height)
 			view.addSubview(BODY_VIEW)
 			
@@ -196,7 +196,7 @@ class RCDelegate: UIViewController {
 			view.addSubview(header.shadow)
 			view.addSubview(header)
 			if let footer = footer {
-				footer.moveTo(x: nil, y: origins.bottom)
+				footer.move(x: nil, y: origins.bottom)
 				footer.shadow!.setOrigin(equalTo: footer)
 				view.addSubview(footer.shadow)
 				view.addSubview(footer)
@@ -249,12 +249,12 @@ class RCDelegate: UIViewController {
 			}
 			
 			UIView.animate(withDuration: 0.3) {
-				ResponseCard.moveTo(x: nil, y: NEW_OriginY)
+				ResponseCard.move(x: nil, y: NEW_OriginY)
 				ResponseCard.resizeTo(width: nil, height: NEW_Height)
 				ResponseCard.shadow!.setFrame(equalTo: ResponseCard)
 				
 				if let footer = ResponseCard.content!.footer {
-					footer.moveTo(x: nil, y: origins.bottom)
+					footer.move(x: nil, y: origins.bottom)
 					footer.shadow!.setFrame(equalTo: footer)
 				}
 			}

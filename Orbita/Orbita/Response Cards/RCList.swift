@@ -122,7 +122,7 @@ class RCListItem: UICollectionViewCell {
 				
 				let checkmarkSize: CGFloat = 30
 				checkmark.resizeTo(width: checkmarkSize, height: checkmarkSize)
-				checkmark.moveTo(x: self.frame.width - checkmarkSize - spacing(.small), y: origins.middle)
+				checkmark.move(x: self.frame.width - checkmarkSize - spacing(.small), y: origins.middle)
 				checkmark.setImage(glyph(.checkmark), for: .normal)
 				checkmark.tintColor = UIColor.white
 				
@@ -146,7 +146,7 @@ class RCListItem: UICollectionViewCell {
 		label.textColor = UIColor.white
 		label.font = label.Raleway(textStyle: .body, weight: .regular)
 		label.sizeToFit()
-		label.moveTo(x: spacing(.medium), y: ALT_spacing(.medium))
+		label.move(x: spacing(.medium), y: ALT_spacing(.medium))
 		addSubview(label)
 	}
 }

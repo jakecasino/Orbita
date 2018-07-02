@@ -132,11 +132,11 @@ class RCChatBubbleText: UICollectionViewCell {
 		
 		switch source {
 		case .incoming:
-			label.moveTo(x: spacing(.medium), y: spacing(.medium))
+			label.move(x: spacing(.medium), y: spacing(.medium))
 			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: UIColor.white, alignedRight: false)
 			break
 		case .outgoing:
-			label.moveTo(x: frame.width - label.frame.width - spacing(.medium), y: spacing(.medium))
+			label.move(x: frame.width - label.frame.width - spacing(.medium), y: spacing(.medium))
 			label.textColor = UIColor.white
 			label.textAlignment = .right
 			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: color(.orbitaBlue), alignedRight: true)
@@ -162,7 +162,7 @@ class RCChatBubbleChatbotThinking: UICollectionViewCell {
 		for index in 0...(numberOfDots - 1) {
 			let dot = UIView(frame: CGRect.zero)
 			dot.resizeTo(width: dotSize, height: dotSize)
-			dot.moveTo(x: dotPadding + (CGFloat(index) * (dotSize + dotSpacing)), y: (bounds.height - dotSize) / 2)
+			dot.move(x: dotPadding + (CGFloat(index) * (dotSize + dotSpacing)), y: (bounds.height - dotSize) / 2)
 			dot.visualSetup(backgroundColor: UIColor.white, cornerRadius: dotSize / 2, masksToBounds: nil, alpha: nil)
 			thinkingDots.append(dot)
 			addSubview(dot)
@@ -215,7 +215,7 @@ extension UICollectionViewCell {
 	func RCSetupChatBubble(width: CGFloat, BACKGROUND_COLOR: UIColor, alignedRight: Bool) {
 		let bubble = UIView(frame: bounds)
 		bubble.resizeTo(width: width, height: nil)
-		if alignedRight { bubble.moveTo(x: bounds.width - width, y: nil) }
+		if alignedRight { bubble.move(x: bounds.width - width, y: nil) }
 		bubble.visualSetup(backgroundColor: BACKGROUND_COLOR, cornerRadius: cornerRadius(.large), masksToBounds: true, alpha: nil)
 		addSubview(bubble)
 	}
@@ -237,13 +237,13 @@ class RCChatBubbleAudioFile: UICollectionViewCell {
 		addSubview(skipBackButton)
 		
 		playButton.setImage(glyph(.play), for: .normal)
-		playButton.moveTo(x: origins.center, y: scrubber.frame.origin.x + scrubber.frame.height + spacing(.large))
+		playButton.move(x: origins.center, y: scrubber.frame.origin.x + scrubber.frame.height + spacing(.large))
 		
 		skipBackButton.setImage(glyph(.skipBack), for: .normal)
-		skipBackButton.moveTo(x: spacing(.large), y: playButton.frame.origin.y)
+		skipBackButton.move(x: spacing(.large), y: playButton.frame.origin.y)
 		
 		skipButton.setImage(glyph(.skip), for: .normal)
-		skipButton.moveTo(x: origins.right, y: playButton.frame.origin.y)
+		skipButton.move(x: origins.right, y: playButton.frame.origin.y)
 	}
 }
 
@@ -273,7 +273,7 @@ class RCScrubberBar: UIView {
 	
 	override func didMoveToSuperview() {
 		// Frame setup
-		moveTo(x: spacing(.medium), y: spacing(.large))
+		move(x: spacing(.medium), y: spacing(.large))
 		if let superview = superview {
 			resizeTo(width: superview.bounds.width - (spacing(.medium) * 2), height: 6)
 			

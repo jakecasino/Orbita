@@ -44,6 +44,9 @@ enum glyphs {
 	case send
 	case skip
 	case skipBack
+	case microphone
+	case close
+	case more
 }
 
 func constraint(_ object: constraints) -> CGFloat {
@@ -114,6 +117,12 @@ func glyph(_ glyph: glyphs) -> UIImage {
 		return UIImage(named: "Skip")!
 	case .skipBack:
 		return UIImage(named: "Skip Back")!
+	case .microphone:
+		return UIImage(named: "Microphone")!
+	case .close:
+		return UIImage(named: "close")!
+	case .more:
+		return UIImage(named: "More")!
 	}
 }
 
@@ -137,6 +146,8 @@ func roundedCorners(size: CGFloat) -> CGFloat {
 }
 
 class Button: UIButton {
+	var persistentBackgroundColor: UIColor!
+	var persistentTintColor: UIColor!
 	override var isHighlighted: Bool {
 		didSet {
 			if isHighlighted {
@@ -167,16 +178,30 @@ class Button: UIButton {
 	
 	convenience init(withGlyph glyph: UIImage, backgroundColor BACKGROUND_COLOR: UIColor, _ TINT_COLOR: UIColor?, cornerRadius: CGFloat?) {
 		self.init(frame: CGRect.zero)
-		
-		visualSetup(backgroundColor: BACKGROUND_COLOR, cornerRadius: cornerRadius, masksToBounds: true, alpha: nil)
+		persistentBackgroundColor = BACKGROUND_COLOR
 		if let TINT_COLOR = TINT_COLOR {
-			tintColor = TINT_COLOR
+			persistentTintColor = TINT_COLOR
 		} else {
-			tintColor = UIColor.white
+			persistentTintColor = UIColor.white
 		}
+		
+		visualSetup(backgroundColor: persistentBackgroundColor, cornerRadius: cornerRadius, masksToBounds: true, alpha: nil)
+		tintColor = persistentTintColor
+		
 		setImage(glyph, for: .normal)
 		adjustsImageWhenHighlighted = false
 		
+	}
+	
+	typealias action = () -> ()
+	func toggle(isSelected IS_SELECTED: action, isNotSelected IS_NOT_SELECTED: action) {
+		if isSelected {
+			isSelected = false
+			IS_NOT_SELECTED()
+		} else {
+			isSelected = true
+			IS_SELECTED()
+		}
 	}
 	
 	class overlay: UIView {
@@ -208,8 +233,9 @@ class Button: UIButton {
 }
 
 extension UIView {
-	func moveTo(x: Any?, y: Any?) {
+	func translator(x: Any?, y: Any?, considersSafeAreaFrom main: UIView?) {
 		func origin(from ORIGIN: Any) -> CGFloat {
+			var safeArea: CGFloat = 0
 			if let origin = ORIGIN as? CGFloat {
 				return origin
 			} else if let ORIGIN = ORIGIN as? origins {
@@ -218,7 +244,10 @@ extension UIView {
 					case .top:
 						return 0
 					case .middle:
-						return origin(from: origins.bottom) / 2
+						if let main = main {
+							safeArea += main.safeAreaInsets.bottom
+						}
+						return (origin(from: origins.bottom) - safeArea) / 2
 					case .bottom:
 						return parent.frame.height - frame.height
 					case .left:
@@ -242,6 +271,14 @@ extension UIView {
 		else { Y = frame.origin.y }
 		
 		frame.origin = CGPoint(x: X, y: Y)
+	}
+	
+	func move(x: Any?, y: Any?) {
+		translator(x: x, y: y, considersSafeAreaFrom: nil)
+	}
+	
+	func move(x: Any?, y: Any?, considerSafeAreaFrom main: UIViewController) {
+		translator(x: x, y: y, considersSafeAreaFrom: main.view)
 	}
 	
 	func resizeTo(width: CGFloat?, height: CGFloat?) {

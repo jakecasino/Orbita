@@ -8,18 +8,17 @@
 import UIKit
 
 class MainViewController: UIViewController {
+	var chat: ChatViewController!
 	var ChatToolbar: ChatToolbarDelegate!
 	var ResponseCard: RCResponseCard?
 	
 	override func viewDidLoad() {
-		
 		ChatToolbar = ChatToolbarDelegate(nibName: nil, bundle: nil)
 		addChildViewController(ChatToolbar)
 		view.addSubview(ChatToolbar.view)
 		ChatToolbar.didMove(toParentViewController: self)
 		
-		
-		let chat = ChatViewController(Demo().ChatExample1())
+		chat = ChatViewController(Demo().ChatExample1())
 		addChildViewController(chat)
 		chat.didMove(toParentViewController: self)
 	}
@@ -47,13 +46,13 @@ class MainViewController: UIViewController {
 			if newPosition > ResponseCard!.delegate.cardConstraint(.OriginY_Maximized) {
 				if newPosition < minimumStop {
 					ResponseCard!.resizeTo(width: nil, height: gesture.view!.frame.height - translation.y)
-					ResponseCard!.moveTo(x: nil, y: newPosition)
+					ResponseCard!.move(x: nil, y: newPosition)
 					ResponseCard!.shadow!.setFrame(equalTo: ResponseCard!)
 					
 					gesture.setTranslation(CGPoint.zero, in: self.view)
 					
 					if let RCFooter = ResponseCard!.content!.footer {
-						RCFooter.moveTo(x: nil, y: origins.bottom)
+						RCFooter.move(x: nil, y: origins.bottom)
 						RCFooter.shadow!.setOrigin(equalTo: RCFooter)
 					}
 				}
