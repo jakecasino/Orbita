@@ -66,7 +66,7 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 		
 		handle.resizeTo(width: 8, height: view.frame.height - (ALT_spacing(.small) * 2))
 		handle.move(x: origins.center, y: origins.middle)
-		handle.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: roundedCorners(size: handle.frame.width), masksToBounds: true, alpha: nil)
+		handle.visualSetup(backgroundColor: UIColor.orbitaBlue, cornerRadius: roundedCorners(size: handle.frame.width), masksToBounds: true, alpha: nil)
 		view.addSubview(handle)
 		
 		HANDLE_GRABBER.setFrame(equalTo: handle)
@@ -143,7 +143,7 @@ class RCScale: UIViewController, RCResponseCardDataSource {
 			let tick = UIView(frame: CGRect.zero)
 			tick.frame.size = CGSize(width: 2, height: 12)
 			tick.frame.origin = CGPoint(x: stop + (handle.frame.width / 2) - (tick.frame.width / 2), y: ((view.frame.height - tick.frame.height) / 2))
-			tick.visualSetup(backgroundColor: color(.lightGrey), cornerRadius: roundedCorners(size: tick.frame.width), masksToBounds: nil, alpha: nil)
+			tick.visualSetup(backgroundColor: UIColor.whiteD, cornerRadius: roundedCorners(size: tick.frame.width), masksToBounds: nil, alpha: nil)
 			ticks.append(tick)
 			view.insertSubview(ticks[index], belowSubview: handle)
 			if ((type! == .continuous) && (index == stops.count - 2)) {

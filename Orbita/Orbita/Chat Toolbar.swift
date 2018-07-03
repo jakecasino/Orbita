@@ -32,7 +32,7 @@ class ChatToolbarDelegate: UIViewController {
 		for _ in 1...numberOfGrills {
 			let grill = UIView(frame: CGRect.zero)
 			grill.resizeTo(width: grillWidth, height: grillHeight)
-			grill.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: roundedCorners(size: grillWidth), masksToBounds: nil, alpha: nil)
+			grill.visualSetup(backgroundColor: UIColor.orbitaBlue, cornerRadius: roundedCorners(size: grillWidth), masksToBounds: nil, alpha: nil)
 			speakerGrills.append(grill)
 		}
 	}
@@ -46,13 +46,13 @@ class ChatToolbarDelegate: UIViewController {
 				view.move(x: nil, y: origins.bottom)
 				view.visualSetup(backgroundColor: UIColor.white, cornerRadius: nil, masksToBounds: nil, alpha: nil)
 				
-				microphone = Button(withGlyph: glyph(.microphone), backgroundColor: color(.orbitaBlue), nil, cornerRadius: roundedCorners(size: microphoneSize_regular))
+				microphone = Button(withGlyph: glyph(.microphone), backgroundColor: UIColor.orbitaBlue, nil, cornerRadius: roundedCorners(size: microphoneSize_regular))
 				microphone.resizeTo(width: microphoneSize_regular, height: microphoneSize_regular)
 				view.addSubview(microphone)
 				microphone.move(x: origins.center, y: (view.bounds.height - main.view.safeAreaInsets.bottom - microphoneSize_regular) / 2)
 				microphone.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(microphoneTapped(_:))))
 				
-				more = Button(withGlyph: glyph(.more), backgroundColor: UIColor.clear, color(.mediumGrey), cornerRadius: nil)
+				more = Button(withGlyph: glyph(.more), backgroundColor: UIColor.clear, UIColor.whiteC, cornerRadius: nil)
 				more.resizeTo(width: secondaryButtonSize, height: secondaryButtonSize)
 				view.addSubview(more)
 				more.move(x: view.bounds.width - secondaryButtonSize - spacing(.extraLarge), y: (view.bounds.height - main.view.safeAreaInsets.bottom - secondaryButtonSize) / 2)

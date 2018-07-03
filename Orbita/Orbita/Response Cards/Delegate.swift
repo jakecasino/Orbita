@@ -27,7 +27,7 @@ class RCResponseCard: UIView {
 		move(x: spacing(.medium), y: main.view.frame.height)
 		main.view.insertSubview(self, belowSubview: main.ChatToolbar.view)
 		
-		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: 0)
+		visualSetup(backgroundColor: UIColor.whiteF2, cornerRadius: cornerRadius(.medium), masksToBounds: true, alpha: 0)
 		shadow = RCResponseCardViewShadow(for: self)
 		main.view.insertSubview(shadow, belowSubview: self)
 		

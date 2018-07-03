@@ -35,7 +35,7 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		layout.minimumLineSpacing = spacing(.extraSmall)
 		
 		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-		collectionView!.backgroundColor = color(.lighterGrey)
+		collectionView!.backgroundColor = UIColor.whiteF2
 		collectionView!.allowsSelection = false
 		collectionView!.alwaysBounceVertical = true
 		
@@ -139,7 +139,7 @@ class RCChatBubbleText: UICollectionViewCell {
 			label.move(x: frame.width - label.frame.width - spacing(.medium), y: spacing(.medium))
 			label.textColor = UIColor.white
 			label.textAlignment = .right
-			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: color(.orbitaBlue), alignedRight: true)
+			RCSetupChatBubble(width: estimatedFrame.width + (spacing(.medium) * 2), BACKGROUND_COLOR: UIColor.orbitaBlue, alignedRight: true)
 			break
 		}
 		
@@ -156,7 +156,7 @@ class RCChatBubbleChatbotThinking: UICollectionViewCell {
 		let dotSpacing: CGFloat = 10
 		let dotPadding = (bounds.height - dotSize) / 2
 		let width = (dotSize * CGFloat(numberOfDots)) + ((CGFloat(numberOfDots) - 1) * dotSpacing) + (dotPadding * 2)
-		RCSetupChatBubble(width: width, BACKGROUND_COLOR: color(.lightGrey), alignedRight: false)
+		RCSetupChatBubble(width: width, BACKGROUND_COLOR: UIColor.whiteD, alignedRight: false)
 		
 		
 		for index in 0...(numberOfDots - 1) {
@@ -258,7 +258,7 @@ class RCButton: UIButton {
 		
 		switch type {
 		case .glyph:
-			tintColor = color(.orbitaBlue)
+			tintColor = UIColor.orbitaBlue
 			break
 		}
 	}
@@ -282,7 +282,7 @@ class RCScrubberBar: UIView {
 		}
 		
 		// Design setup
-		visualSetup(backgroundColor: color(.lighterGrey), cornerRadius: roundedCorners(size: frame.height), masksToBounds: true, alpha: nil)
-		cap.visualSetup(backgroundColor: color(.orbitaBlue), cornerRadius: layer.cornerRadius, masksToBounds: nil, alpha: nil)
+		visualSetup(backgroundColor: UIColor.whiteF2, cornerRadius: roundedCorners(size: frame.height), masksToBounds: true, alpha: nil)
+		cap.visualSetup(backgroundColor: UIColor.orbitaBlue, cornerRadius: layer.cornerRadius, masksToBounds: nil, alpha: nil)
 	}
 }

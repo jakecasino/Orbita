@@ -29,7 +29,7 @@ class RCList: UICollectionViewController, UICollectionViewDelegateFlowLayout, RC
 		layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
 		
 		collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-		collectionView!.backgroundColor = color(.lighterGrey)
+		collectionView!.backgroundColor = UIColor.whiteF2
 		collectionView!.isScrollEnabled = false
 		view.addSubview(collectionView!)
 		
@@ -127,7 +127,7 @@ class RCListItem: UICollectionViewCell {
 				checkmark.tintColor = UIColor.white
 				
 				UIView.animate(withDuration: 0.15) {
-					self.backgroundColor = color(.orbitaBlue)
+					self.backgroundColor = UIColor.orbitaBlue
 				}
 			} else {
 				backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15)
