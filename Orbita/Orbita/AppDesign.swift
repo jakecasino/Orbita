@@ -250,28 +250,62 @@ class Button: UIButton {
 }
 
 extension UIView {
-	func translator(x: Any?, y: Any?, considersSafeAreaFrom main: UIView?) {
+	enum safeAreaInsetConsiderations {
+		case top
+		case bottom
+		case left
+		case right
+	}
+	
+	func move(x: Any?, y: Any?) {
+		translator(x: x, y: y, considersSafeAreaFrom: nil, safeAreaInsets: [])
+	}
+	
+	func move(x: Any?, y: Any?, considerSafeAreaFrom view: UIView, safeAreaInsets considerations: [safeAreaInsetConsiderations]) {
+		translator(x: x, y: y, considersSafeAreaFrom: view, safeAreaInsets: considerations)
+	}
+	
+	func translator(x: Any?, y: Any?, considersSafeAreaFrom view: UIView?, safeAreaInsets considerations: [safeAreaInsetConsiderations]) {
 		func origin(from ORIGIN: Any) -> CGFloat {
 			var safeArea: CGFloat = 0
+			func considerSafeAreaForTopAndBottom() {
+				if let view = view {
+					considerations.forEach { (consideration) in
+						if consideration == .top { safeArea += view.safeAreaInsets.top }
+						if consideration == .bottom { safeArea += view.safeAreaInsets.bottom }
+					}
+				}
+			}
+			func considerSafeAreaForLeftAndRight() {
+				if let view = view {
+					considerations.forEach { (consideration) in
+						if consideration == .left { safeArea += view.safeAreaInsets.left }
+						if consideration == .right { safeArea += view.safeAreaInsets.right }
+					}
+				}
+			}
 			if let origin = ORIGIN as? CGFloat {
 				return origin
 			} else if let ORIGIN = ORIGIN as? origins {
 				if let parent = superview {
 					switch ORIGIN {
 					case .top:
-						return 0
+						considerSafeAreaForTopAndBottom()
+						return 0 + safeArea
 					case .middle:
-						if let main = main {
-							safeArea += main.safeAreaInsets.bottom
-						}
-						return (origin(from: origins.bottom) - safeArea) / 2
+						considerSafeAreaForTopAndBottom()
+						return origin(from: origins.bottom) / 2
 					case .bottom:
-						return parent.frame.height - frame.height
+						considerSafeAreaForTopAndBottom()
+						return parent.frame.height - frame.height - safeArea
 					case .left:
-						return 0
+						considerSafeAreaForLeftAndRight()
+						return 0 + safeArea
 					case .center:
+						considerSafeAreaForLeftAndRight()
 						return origin(from: origins.right) / 2
 					case .right:
+						considerSafeAreaForLeftAndRight()
 						return parent.frame.width - frame.width
 					}
 				} else { return 0 }
@@ -290,20 +324,38 @@ extension UIView {
 		frame.origin = CGPoint(x: X, y: Y)
 	}
 	
-	func move(x: Any?, y: Any?) {
-		translator(x: x, y: y, considersSafeAreaFrom: nil)
-	}
-	
-	func move(x: Any?, y: Any?, considerSafeAreaFrom main: UIViewController) {
-		translator(x: x, y: y, considersSafeAreaFrom: main.view)
-	}
-	
 	func resizeTo(width: CGFloat?, height: CGFloat?) {
+		resizer(width: width, height: height, considersSafeAreaFrom: nil, safeAreaInsets: [])
+	}
+	
+	func resizeTo(width: CGFloat?, height: CGFloat?, considersSafeAreaFrom view: UIView, safeAreaInsets considerations: [safeAreaInsetConsiderations]) {
+		resizer(width: width, height: height, considersSafeAreaFrom: view, safeAreaInsets: considerations)
+	}
+	
+	func resizer(width: CGFloat?, height: CGFloat?, considersSafeAreaFrom view: UIView?, safeAreaInsets considerations: [safeAreaInsetConsiderations]) {
 		var WIDTH = frame.size.width
 		var HEIGHT = frame.size.height
 		
-		if let width = width { WIDTH = width }
-		if let height = height { HEIGHT = height }
+		if let width = width {
+			var safeArea: CGFloat = 0
+			if let view = view {
+				considerations.forEach { (consideration) in
+					if consideration == .left { safeArea += view.safeAreaInsets.left }
+					if consideration == .right { safeArea += view.safeAreaInsets.right }
+				}
+			}
+			WIDTH = width + safeArea
+		}
+		if let height = height {
+			var safeArea: CGFloat = 0
+			if let view = view {
+				considerations.forEach { (consideration) in
+					if consideration == .top { safeArea += view.safeAreaInsets.top }
+					if consideration == .bottom { safeArea += view.safeAreaInsets.bottom }
+				}
+			}
+			HEIGHT = height + safeArea
+		}
 		
 		frame.size = CGSize(width: WIDTH, height: HEIGHT)
 	}

@@ -8,19 +8,19 @@
 import UIKit
 
 class MainViewController: UIViewController {
-	var chat: ChatViewController!
-	var ChatToolbar: ChatToolbarDelegate!
+	var conversationThread: ConversationThreadViewController!
+	var chatToolbar: ChatToolbarDelegate!
 	var ResponseCard: RCResponseCard?
 	
 	override func viewDidLoad() {
-		ChatToolbar = ChatToolbarDelegate(nibName: nil, bundle: nil)
-		addChildViewController(ChatToolbar)
-		view.addSubview(ChatToolbar.view)
-		ChatToolbar.didMove(toParentViewController: self)
+		chatToolbar = ChatToolbarDelegate(nibName: nil, bundle: nil)
+		addChildViewController(chatToolbar)
+		view.addSubview(chatToolbar.view)
+		chatToolbar.didMove(toParentViewController: self)
 		
-		chat = ChatViewController(Demo().ChatExample1())
-		addChildViewController(chat)
-		chat.didMove(toParentViewController: self)
+		conversationThread = ConversationThreadViewController(demo.conversation)
+		addChildViewController(conversationThread)
+		conversationThread.didMove(toParentViewController: self)
 	}
 	
 	func showResponseCard(RCContent: RCContent) {

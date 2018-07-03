@@ -7,8 +7,8 @@
 
 import Foundation
 
-class Demo {
-	func ChatExample1() -> [RCChatBubble] {
+class demo {
+	class var conversation: [RCChatBubble] {
 		var content = [RCChatBubble]()
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "Hello Rachel!"))
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.incomingText, content: "I'm your Orbita Assistant"))
@@ -19,5 +19,9 @@ class Demo {
 		content.append(RCChatBubble(sender: "ChatBot", type: RCChatBubbleTypes.chatbotThinking, content: "Sure!"))
 		
 		return content
+	}
+	
+	class var dictation: String {
+		return "I would like to schedule for tomorrow at 8"
 	}
 }

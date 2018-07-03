@@ -20,7 +20,7 @@ enum RCChatBubbleTypes {
 	case audioFile
 }
 
-class ChatViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ConversationThreadViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 	private let BUBBLE_TEXT = "cell0"
 	private let BUBBLE_CHATBOT_THINKING = "cell1"
 	private let BUBBLE_AUDIO = "cell2"
@@ -49,11 +49,20 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 	}
 	
 	override func didMove(toParentViewController parent: UIViewController?) {
-		if let Main = parent as? MainViewController {
-			Main.view.addSubview(collectionView!)
-			Main.view.sendSubview(toBack: collectionView!)
-			
-			collectionView!.setFrame(equalTo: Main.view)
+		if let main = parent as? MainViewController {
+			main.view.addSubview(collectionView!)
+			main.view.sendSubview(toBack: collectionView!)
+			collectionView!.setFrame(equalTo: main.view)
+			sizeToFitConversation()
+		}
+	}
+	
+	func sizeToFitConversation() {
+		if let parent = parent as? MainViewController {
+			collectionView!.resizeTo(width: nil, height: parent.view.bounds.height - parent.chatToolbar.view.frame.height)
+			if collectionView!.contentSize.height > collectionView!.bounds.size.height {
+				collectionView!.setContentOffset(CGPoint(x: 0, y: (collectionView!.contentSize.height - collectionView!.bounds.size.height)), animated: true)
+			}
 		}
 	}
 
@@ -114,6 +123,14 @@ class ChatViewController: UICollectionViewController, UICollectionViewDelegateFl
 		}
 		
 		return CGSize(width: width, height: height)
+	}
+	
+	override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+		if let parent = parent as? MainViewController {
+			if parent.chatToolbar.micButton.isSelected {
+				parent.chatToolbar.toggleListeningMode()
+			}
+		}
 	}
 }
 
