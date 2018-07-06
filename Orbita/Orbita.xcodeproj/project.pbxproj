@@ -10,7 +10,7 @@
 		0B0C624720787C2400422130 /* RCScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0C624620787C2400422130 /* RCScale.swift */; };
 		0B1950B22074193200E1AEFE /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1950B12074193200E1AEFE /* Components.swift */; };
 		0B1EFAB22093898600E6AEB7 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1EFAB12093898600E6AEB7 /* Conversation.swift */; };
-		0B1EFAB420938FE600E6AEB7 /* Demo Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1EFAB320938FE600E6AEB7 /* Demo Content.swift */; };
+		0B1EFAB420938FE600E6AEB7 /* Demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1EFAB320938FE600E6AEB7 /* Demo.swift */; };
 		0B1EFAB62095385800E6AEB7 /* AppDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1EFAB52095385800E6AEB7 /* AppDesign.swift */; };
 		0B1EFDF12090757000B10447 /* RCDatePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1EFDF02090757000B10447 /* RCDatePickerController.swift */; };
 		0B27C50D207C712F0051966D /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B27C50C207C711C0051966D /* Raleway-Bold.ttf */; };
@@ -46,11 +46,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		0BECC69420ED8C22001D2186 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0B0C624620787C2400422130 /* RCScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCScale.swift; sourceTree = "<group>"; };
 		0B1950B12074193200E1AEFE /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		0B1EFAB12093898600E6AEB7 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
-		0B1EFAB320938FE600E6AEB7 /* Demo Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Demo Content.swift"; sourceTree = "<group>"; };
+		0B1EFAB320938FE600E6AEB7 /* Demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo.swift; sourceTree = "<group>"; };
 		0B1EFAB52095385800E6AEB7 /* AppDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDesign.swift; sourceTree = "<group>"; };
 		0B1EFDF02090757000B10447 /* RCDatePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCDatePickerController.swift; sourceTree = "<group>"; };
 		0B27C50C207C711C0051966D /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Bold.ttf"; sourceTree = "<group>"; };
@@ -149,7 +162,7 @@
 				0BB7BB88206EEBF500F0CEE7 /* Main.storyboard */,
 				0BB7BB86206EEBF500F0CEE7 /* MainViewController.swift */,
 				0B1EFAB12093898600E6AEB7 /* Conversation.swift */,
-				0B1EFAB320938FE600E6AEB7 /* Demo Content.swift */,
+				0B1EFAB320938FE600E6AEB7 /* Demo.swift */,
 				0B49B35D206F27670059565C /* Toolbar.swift */,
 				0B1950B02074161900E1AEFE /* Response Cards */,
 				0BB7BB84206EEBF500F0CEE7 /* AppDelegate.swift */,
@@ -190,6 +203,7 @@
 				0BB7BB7D206EEBF500F0CEE7 /* Sources */,
 				0BB7BB7E206EEBF500F0CEE7 /* Frameworks */,
 				0BB7BB7F206EEBF500F0CEE7 /* Resources */,
+				0BECC69420ED8C22001D2186 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -314,7 +328,7 @@
 			files = (
 				0BB7BBB3206EF33000F0CEE7 /* Delegate.swift in Sources */,
 				0BEE86FA207FCCCA00F477EB /* RCVisualUpload.swift in Sources */,
-				0B1EFAB420938FE600E6AEB7 /* Demo Content.swift in Sources */,
+				0B1EFAB420938FE600E6AEB7 /* Demo.swift in Sources */,
 				0B1EFAB22093898600E6AEB7 /* Conversation.swift in Sources */,
 				0B49B35E206F27670059565C /* Toolbar.swift in Sources */,
 				0B1950B22074193200E1AEFE /* Components.swift in Sources */,
@@ -496,6 +510,7 @@
 		0BB7BBAA206EEBF700F0CEE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 28CLY5Z59P;
@@ -514,6 +529,7 @@
 		0BB7BBAB206EEBF700F0CEE7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 28CLY5Z59P;
